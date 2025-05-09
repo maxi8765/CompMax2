@@ -10,9 +10,7 @@
         window.onload = function() {
             // Initialize EmailJS only after window loads
             try {
-                // Use the EMAILJS_PUBLIC_KEY that will be injected during build
-                const emailJsKey = "EMAILJS_PUBLIC_KEY_PLACEHOLDER";
-                emailjs.init(emailJsKey);
+                emailjs.init("aC33MyvXhim_7HkU6"); // Your actual EmailJS public key
                 console.log("EmailJS initialized successfully");
                 window.emailJsLoaded = true;
             } catch (error) {
@@ -311,32 +309,18 @@
         
         <div class="calculator">
             <div class="employee-mode-banner" id="employee-mode-banner">
-                Employee View Mode - Make your selection below
+                Offeree View Mode - Make your selection below
             </div>
             
+            <!-- Fields in the requested order -->
             <div class="input-group">
                 <label for="company-name">Company Name</label>
                 <input type="text" id="company-name" placeholder="Enter company name" class="standard-input">
             </div>
             
-            <div class="input-group">
-                <label for="position-title">Position Title</label>
-                <input type="text" id="position-title" placeholder="Enter position title" class="standard-input">
-            </div>
-            
-            <div class="input-group">
-                <label for="offer-date">Offer Date</label>
-                <input type="date" id="offer-date" class="standard-input">
-            </div>
-            
-            <div class="input-group">
-                <label for="employee-name">Employee Name</label>
-                <input type="text" id="employee-name" placeholder="Enter employee name" class="standard-input">
-            </div>
-            
-            <div class="input-group">
-                <label for="employee-email">Employee Email</label>
-                <input type="email" id="employee-email" placeholder="Enter employee email" class="standard-input">
+            <div class="input-group" id="sender-name-group">
+                <label for="sender-name">Your Name</label>
+                <input type="text" id="sender-name" placeholder="Enter your name" class="standard-input">
             </div>
             
             <div class="input-group" id="employer-email-group">
@@ -345,12 +329,32 @@
             </div>
             
             <div class="input-group">
-                <label for="max-salary">Maximum Salary ($)</label>
+                <label for="offer-date">Offer Date</label>
+                <input type="date" id="offer-date" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="position-title">Position under Offer</label>
+                <input type="text" id="position-title" placeholder="Enter position title" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="employee-name">Offeree Name</label>
+                <input type="text" id="employee-name" placeholder="Enter offeree name" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="employee-email">Offeree Email</label>
+                <input type="email" id="employee-email" placeholder="Enter offeree email" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="max-salary">Max Salary ($)</label>
                 <input type="number" id="max-salary" min="0" step="1000" value="150000">
             </div>
             
             <div class="input-group">
-                <label for="max-equity">Maximum Equity (%)</label>
+                <label for="max-equity">Max Equity (%)</label>
                 <input type="number" id="max-equity" min="0" max="100" step="0.1" value="1.5">
             </div>
             
@@ -385,7 +389,7 @@
                 <div id="acceptance-email-controls" style="display: none; margin-top: 1rem; background-color: #f8f9fa; padding: 1rem; border-radius: 4px; text-align: left;">
                     <p style="font-weight: 600; margin-bottom: 0.5rem; text-align: center;">Send acceptance directly to employer:</p>
                     <div class="input-group" style="margin-bottom: 1rem;">
-                        <label for="employee-sender-name">Your Name (Employee)</label>
+                        <label for="employee-sender-name">Your Name (Offeree)</label>
                         <input type="text" id="employee-sender-name" class="standard-input">
                     </div>
                     <button id="send-acceptance-email-button" class="accept-button" style="width: 100%;">Send Acceptance Email</button>
@@ -416,11 +420,7 @@
             <div class="share-container" id="share-container">
                 <button id="generate-link" class="share-button">Generate Link</button>
                 <div id="email-sending-controls" style="display: none; margin-top: 1rem; background-color: #f8f9fa; padding: 1rem; border-radius: 4px;">
-                    <p style="font-weight: 600; margin-bottom: 0.5rem;">Send offer directly to employee:</p>
-                    <div class="input-group" style="margin-bottom: 1rem;">
-                        <label for="sender-name">Your Name (Sender)</label>
-                        <input type="text" id="sender-name" placeholder="Enter your name" class="standard-input">
-                    </div>
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">Send offer directly to offeree:</p>
                     <button id="send-email-button" class="share-button" style="background-color: var(--success); width: 100%;">Send Offer Email</button>
                     <div id="email-status" style="margin-top: 0.5rem; text-align: center; display: none;">
                         <p id="sending-status" style="font-weight: 600;"></p>
@@ -430,7 +430,7 @@
                     <p style="color: var(--success); font-weight: 600; text-align: center; margin-bottom: 1rem;">
                         Link has been generated successfully!
                     </p>
-                    <p style="margin-bottom: 0.5rem;"><strong>To send this offer to the employee manually:</strong></p>
+                    <p style="margin-bottom: 0.5rem;"><strong>To send this offer to the offeree manually:</strong></p>
                     <ol style="margin-left: 1.5rem;">
                         <li>Copy the email content below</li>
                         <li>Open your email program</li>
@@ -474,6 +474,7 @@
             const copyLinkButton = document.getElementById('copy-link');
             const employeeModeBanner = document.getElementById('employee-mode-banner');
             const shareContainer = document.getElementById('share-container');
+            const senderNameInput = document.getElementById('sender-name');
             
             // Parse URL parameters
             const urlParams = new URLSearchParams(window.location.search);
@@ -494,6 +495,7 @@
             
             const isEmployeeView = urlParams.has('name') && urlParams.has('maxSalary') && urlParams.has('maxEquity');
             let employerEmail = '';
+            let senderName = '';
             
             // Set today's date as default for the offer date
             const today = new Date();
@@ -513,11 +515,13 @@
                 const maxEquity = safeParseFloat(urlParams.get('maxEquity'), 1.5);
                 const sliderPosition = safeParseInt(urlParams.get('sliderpos'), 50);
                 employerEmail = urlParams.get('email') || '';
+                senderName = urlParams.get('sender') || '';
                 
                 // Set values
                 if (companyName) document.getElementById('company-name').value = companyName;
                 if (positionTitle) document.getElementById('position-title').value = positionTitle;
                 if (offerDate) document.getElementById('offer-date').value = offerDate;
+                if (senderName) document.getElementById('sender-name').value = senderName;
                 employeeNameInput.value = employeeName;
                 maxSalaryInput.value = maxSalary;
                 maxEquityInput.value = maxEquity;
@@ -527,6 +531,7 @@
                 document.getElementById('company-name').disabled = true;
                 document.getElementById('position-title').disabled = true;
                 document.getElementById('offer-date').disabled = true;
+                document.getElementById('sender-name').disabled = true;
                 employeeNameInput.disabled = true;
                 maxSalaryInput.disabled = true;
                 maxEquityInput.disabled = true;
@@ -539,6 +544,7 @@
                 
                 // Hide the employer email input
                 document.getElementById('employer-email-group').style.display = 'none';
+                document.getElementById('sender-name-group').style.display = 'none';
                 
                 // Hide the share section
                 shareContainer.style.display = 'none';
@@ -591,6 +597,7 @@
                 const employeeName = employeeNameInput.value.trim();
                 const employeeEmail = document.getElementById('employee-email').value.trim();
                 const employerEmail = document.getElementById('employer-email').value.trim();
+                const senderName = document.getElementById('sender-name').value.trim();
                 const maxSalary = safeParseFloat(maxSalaryInput.value, 0);
                 const maxEquity = safeParseFloat(maxEquityInput.value, 0);
                 const sliderPosition = salarySlider.value;
@@ -607,8 +614,14 @@
                     return;
                 }
                 
+                if (!senderName) {
+                    alert('Please enter your name.');
+                    document.getElementById('sender-name').focus();
+                    return;
+                }
+                
                 if (!positionTitle) {
-                    alert('Please enter the position title.');
+                    alert('Please enter the position under offer.');
                     document.getElementById('position-title').focus();
                     return;
                 }
@@ -620,19 +633,19 @@
                 }
                 
                 if (!employeeName) {
-                    alert('Please enter an employee name before generating a share link.');
+                    alert('Please enter an offeree name before generating a share link.');
                     employeeNameInput.focus();
                     return;
                 }
                 
                 if (!employeeEmail) {
-                    alert('Please enter the employee\'s email address to send the link.');
+                    alert('Please enter the offeree\'s email address to send the link.');
                     document.getElementById('employee-email').focus();
                     return;
                 }
                 
                 if (!isValidEmail(employeeEmail)) {
-                    alert('Please enter a valid employee email address.');
+                    alert('Please enter a valid offeree email address.');
                     document.getElementById('employee-email').focus();
                     return;
                 }
@@ -644,14 +657,14 @@
                 }
                 
                 if (!isValidEmail(employerEmail)) {
-                    alert('Please enter a valid employer email address.');
+                    alert('Please enter a valid email address for notifications.');
                     document.getElementById('employer-email').focus();
                     return;
                 }
                 
                 // Create the URL with parameters
                 const currentUrl = window.location.href.split('?')[0]; // Remove any existing query params
-                const shareUrl = `${currentUrl}?company=${encodeURIComponent(companyName)}&position=${encodeURIComponent(positionTitle)}&date=${encodeURIComponent(offerDate)}&name=${encodeURIComponent(employeeName)}&maxSalary=${maxSalary}&maxEquity=${maxEquity}&sliderpos=${sliderPosition}&email=${encodeURIComponent(employerEmail)}`;
+                const shareUrl = `${currentUrl}?company=${encodeURIComponent(companyName)}&position=${encodeURIComponent(positionTitle)}&date=${encodeURIComponent(offerDate)}&name=${encodeURIComponent(employeeName)}&maxSalary=${maxSalary}&maxEquity=${maxEquity}&sliderpos=${sliderPosition}&email=${encodeURIComponent(employerEmail)}&sender=${encodeURIComponent(senderName)}`;
                 
                 // Display the share link
                 shareLinkContainer.textContent = shareUrl;
@@ -665,6 +678,7 @@
                     employeeName,
                     employeeEmail,
                     employerEmail,
+                    senderName,
                     maxSalary,
                     maxEquity,
                     shareUrl,
@@ -677,13 +691,13 @@
                 const allDetailsText = `CompMax Compensation Offer Details
 ----------------------------------------
 Company: ${companyName}
-Position: ${positionTitle}
+Your Name: ${senderName}
+Your Email: ${employerEmail}
 Offer Date: ${offerDate}
+Position under Offer: ${positionTitle}
 
-Employee: ${employeeName}
-Employee Email: ${employeeEmail}
-
-Employer Email: ${employerEmail}
+Offeree: ${employeeName}
+Offeree Email: ${employeeEmail}
 
 Maximum Salary: ${formatCurrency(maxSalary)}
 Maximum Equity: ${formatPercent(maxEquity)}
@@ -703,23 +717,17 @@ Link to Share: ${shareUrl}
                 // Show email sending controls
                 document.getElementById('email-sending-controls').style.display = 'block';
                 
-                // Pre-populate the sender name field if employer email is filled
-                if (document.getElementById('sender-name')) {
-                    document.getElementById('sender-name').value = companyName + ' HR';
-                }
-                
                 // Setup email sending
-                setupEmailSending(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity);
+                setupEmailSending(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity, senderName);
                 
                 // Show manual sending instructions as a fallback
-                displayManualEmailInstructions(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity);
+                displayManualEmailInstructions(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity, senderName);
             }
             
-            function setupEmailSending(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity) {
+            function setupEmailSending(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity, senderName) {
                 const sendEmailButton = document.getElementById('send-email-button');
                 
                 sendEmailButton.addEventListener('click', function() {
-                    const senderName = document.getElementById('sender-name').value.trim();
                     if (!senderName) {
                         alert('Please enter your name as the sender.');
                         document.getElementById('sender-name').focus();
@@ -765,9 +773,9 @@ This message was automatically generated by CompMax.`;
                         reply_to: document.getElementById('employer-email').value.trim()
                     };
                     
-                    // These values will be injected during GitHub Actions build
-                    const EMAILJS_SERVICE_ID = "EMAILJS_SERVICE_ID_PLACEHOLDER";
-                    const EMAILJS_TEMPLATE_ID = "EMAILJS_TEMPLATE_ID_PLACEHOLDER";
+                    // Use direct IDs instead of placeholders
+                    const EMAILJS_SERVICE_ID = "service_0zbtwjq";
+                    const EMAILJS_TEMPLATE_ID = "template_vd3qwz8";
                     
                     // Check if EmailJS is available
                     if (typeof emailjs !== 'undefined' && window.emailJsLoaded) {
@@ -793,7 +801,7 @@ This message was automatically generated by CompMax.`;
                 });
             }
             
-            function displayManualEmailInstructions(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity) {
+            function displayManualEmailInstructions(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity, senderName) {
                 // Format date display
                 const formattedDate = offerDate;
                 
@@ -811,7 +819,7 @@ ${shareUrl}
 Once you have made your selection and submitted your response, formal contracts will be sent accordingly.
 
 Yours sincerely,
-[Your Name]
+${senderName}
 
 This message was automatically generated by CompMax.`;
 
@@ -853,7 +861,7 @@ This message was automatically generated by CompMax.`;
                 
                 // Create email subject and body
                 const subject = `${employeeName} has accepted the compensation offer for ${positionTitle}`;
-                const body = `Hello,
+                const body = `Hello ${senderName},
 
 ${employeeName} has accepted the following compensation package for the ${positionTitle} position at ${companyName}:
 
@@ -878,6 +886,7 @@ This message was automatically generated by CompMax.`;
                         offerDate: displayDate,
                         employeeName,
                         employerEmail,
+                        senderName,
                         maxSalary,
                         maxEquity,
                         selectedSalary,
@@ -924,8 +933,8 @@ This message was automatically generated by CompMax.`;
                     return;
                 }
                 
-                const senderName = document.getElementById('employee-sender-name').value.trim();
-                if (!senderName) {
+                const offereeNameSending = document.getElementById('employee-sender-name').value.trim();
+                if (!offereeNameSending) {
                     alert('Please enter your name.');
                     document.getElementById('employee-sender-name').focus();
                     return;
@@ -939,7 +948,7 @@ This message was automatically generated by CompMax.`;
                 sendingStatus.style.color = '#666';
                 
                 const subject = `${details.employeeName} has accepted the compensation offer for ${details.positionTitle}`;
-                const body = `Hello,
+                const body = `Hello ${details.senderName},
 
 ${details.employeeName} has accepted the following compensation package for the ${details.positionTitle} position at ${details.companyName}:
 
@@ -951,24 +960,24 @@ This is based on the offer dated ${details.offerDate} with maximum salary of ${f
 Please prepare the formal contracts accordingly.
 
 Yours sincerely,
-${senderName}
+${offereeNameSending}
 
 This message was automatically generated by CompMax.`;
                 
                 // Prepare template parameters
                 const templateParams = {
                     to_name: details.employerEmail, // Changed to match the template
-                    name: 'Hiring Manager',        // Added to match the template
+                    name: details.senderName,      // Added to match the template - send to the sender
                     time: new Date().toLocaleString(), // Added timestamp
-                    from_name: senderName,
+                    from_name: offereeNameSending,
                     subject: subject,
                     message: body,
                     reply_to: ''  // No reply-to for acceptance emails
                 };
                 
-                // These values will be injected during GitHub Actions build
-                const EMAILJS_SERVICE_ID = "EMAILJS_SERVICE_ID_PLACEHOLDER";
-                const EMAILJS_TEMPLATE_ID = "EMAILJS_TEMPLATE_ID_PLACEHOLDER";
+                // Use direct IDs instead of placeholders
+                const EMAILJS_SERVICE_ID = "service_0zbtwjq";
+                const EMAILJS_TEMPLATE_ID = "template_vd3qwz8";
                 
                 // Check if EmailJS is available
                 if (typeof emailjs !== 'undefined' && window.emailJsLoaded) {
