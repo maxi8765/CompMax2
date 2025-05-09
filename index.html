@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CompMax - Salary & Equity Calculator</title>
+    <!-- Load EmailJS library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            // Initialize EmailJS only after window loads
+            try {
+                // Use the EMAILJS_PUBLIC_KEY that will be injected during build
+                const emailJsKey = "aC33MyvXhim_7HkU6";
+                emailjs.init(emailJsKey);
+                console.log("EmailJS initialized successfully");
+                window.emailJsLoaded = true;
+            } catch (error) {
+                console.error("EmailJS initialization error:", error);
+                window.emailJsLoaded = false;
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
+            --warning: #ff9e00;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            font-weight: 300;
+        }
+        
+        .calculator {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input[type="number"], input[type="text"], input[type="email"], input[type="date"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        input:disabled {
+            background-color: #f1f1f1;
+            cursor: not-allowed;
+        }
+        
+        .slider-container {
+            margin-top: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            margin: 1rem 0;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.15s ease-in-out;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        .result {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .result-item {
+            text-align: center;
+            flex: 1;
+            padding: 1rem;
+        }
+        
+        .result-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .equity-value {
+            color: var(--success);
+        }
+        
+        .info-text {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .share-container {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .share-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .share-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .share-button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        
+        .accept-button {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 600;
+        }
+        
+        .accept-button:hover {
+            background-color: #2d9900;
+        }
+        
+        .share-link {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            font-family: monospace;
+            word-break: break-all;
+            display: none;
+        }
+        
+        .share-link-container {
+            position: relative;
+            margin-top: 1rem;
+        }
+        
+        .copy-button {
+            background-color: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .employee-mode-banner {
+            background-color: var(--warning);
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .copyright-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .calculator {
+                padding: 1rem;
+            }
+            
+            .result {
+                flex-direction: column;
+            }
+            
+            .result-item {
+                margin-bottom: 1rem;
+            }
+            
+            input[type="number"], input[type="text"], input[type="email"], input[type="date"] {
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 0.5rem;
+            }
+            
+            .share-button, .accept-button {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            textarea {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* Fix for the copy button layout on mobile */
+            div[style*="display: flex; align-items: center;"] {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .copy-button {
+                margin-top: 0.5rem;
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CompMax</h1>
+            <p class="subtitle">Salary & Equity Compensation Calculator</p>
+        </header>
+        
+        <div class="calculator">
+            <div class="employee-mode-banner" id="employee-mode-banner">
+                Employee View Mode - Make your selection below
+            </div>
+            
+            <div class="input-group">
+                <label for="company-name">Company Name</label>
+                <input type="text" id="company-name" placeholder="Enter company name" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="position-title">Position Title</label>
+                <input type="text" id="position-title" placeholder="Enter position title" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="offer-date">Offer Date</label>
+                <input type="date" id="offer-date" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="employee-name">Employee Name</label>
+                <input type="text" id="employee-name" placeholder="Enter employee name" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="employee-email">Employee Email</label>
+                <input type="email" id="employee-email" placeholder="Enter employee email" class="standard-input">
+            </div>
+            
+            <div class="input-group" id="employer-email-group">
+                <label for="employer-email">Your Email (for notifications)</label>
+                <input type="email" id="employer-email" placeholder="Enter your email address" class="standard-input">
+            </div>
+            
+            <div class="input-group">
+                <label for="max-salary">Maximum Salary ($)</label>
+                <input type="number" id="max-salary" min="0" step="1000" value="150000">
+            </div>
+            
+            <div class="input-group">
+                <label for="max-equity">Maximum Equity (%)</label>
+                <input type="number" id="max-equity" min="0" max="100" step="0.1" value="1.5">
+            </div>
+            
+            <div class="slider-container">
+                <label for="salary-slider">Adjust Compensation Balance</label>
+                <div class="slider-label">
+                    <span>More Equity</span>
+                    <span>More Salary</span>
+                </div>
+                <input type="range" id="salary-slider" min="0" max="100" value="50">
+            </div>
+            
+            <div class="result">
+                <div class="result-item">
+                    <div class="result-label">Selected Salary</div>
+                    <div class="result-value" id="current-salary">$75,000</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">Selected Equity</div>
+                    <div class="result-value equity-value" id="current-equity">0.75%</div>
+                </div>
+            </div>
+            
+            <p class="info-text">
+                Adjust the slider to find your ideal balance between salary and equity. 
+                The higher the salary, the lower the equity percentage. 
+                Once we have received your response we will send you formal contracts accordingly.
+            </p>
+            
+            <div id="accept-offer-container" style="display: none; text-align: center; margin-top: 2rem;">
+                <button id="accept-offer-button" class="accept-button">Accept This Offer</button>
+                <div id="acceptance-email-controls" style="display: none; margin-top: 1rem; background-color: #f8f9fa; padding: 1rem; border-radius: 4px; text-align: left;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem; text-align: center;">Send acceptance directly to employer:</p>
+                    <div class="input-group" style="margin-bottom: 1rem;">
+                        <label for="employee-sender-name">Your Name (Employee)</label>
+                        <input type="text" id="employee-sender-name" class="standard-input">
+                    </div>
+                    <button id="send-acceptance-email-button" class="accept-button" style="width: 100%;">Send Acceptance Email</button>
+                    <div id="acceptance-email-status" style="margin-top: 0.5rem; text-align: center; display: none;">
+                        <p id="acceptance-sending-status" style="font-weight: 600;"></p>
+                    </div>
+                </div>
+                <div id="offer-accepted-message" style="display: none; margin-top: 1rem; text-align: left; background-color: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                    <p style="color: var(--success); font-weight: 600; text-align: center; margin-bottom: 1rem;">Your compensation choice is ready to be submitted!</p>
+                    <p style="margin-bottom: 0.5rem;"><strong>To send your acceptance manually:</strong></p>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Copy the email content below</li>
+                        <li>Open your email program</li>
+                        <li>Create a new email to: <span id="employer-email-display" style="font-weight: bold;"></span></li>
+                        <li>Use subject: <span id="acceptance-subject-display" style="font-weight: bold;"></span></li>
+                        <li>Paste the content and send</li>
+                    </ol>
+                    <div style="margin-top: 1rem; border: 1px solid #ddd; padding: 1rem; background-color: white;">
+                        <p style="font-weight: bold;">Email Content:</p>
+                        <textarea id="acceptance-email-content" style="width: 100%; height: 150px; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #ddd; font-family: inherit;"></textarea>
+                        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
+                            <button id="copy-acceptance-content" class="copy-button">Copy Email Content</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="share-container" id="share-container">
+                <button id="generate-link" class="share-button">Generate Link</button>
+                <div id="email-sending-controls" style="display: none; margin-top: 1rem; background-color: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">Send offer directly to employee:</p>
+                    <div class="input-group" style="margin-bottom: 1rem;">
+                        <label for="sender-name">Your Name (Sender)</label>
+                        <input type="text" id="sender-name" placeholder="Enter your name" class="standard-input">
+                    </div>
+                    <button id="send-email-button" class="share-button" style="background-color: var(--success); width: 100%;">Send Offer Email</button>
+                    <div id="email-status" style="margin-top: 0.5rem; text-align: center; display: none;">
+                        <p id="sending-status" style="font-weight: 600;"></p>
+                    </div>
+                </div>
+                <div id="link-status-message" style="margin-top: 1rem; display: none; text-align: left; background-color: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                    <p style="color: var(--success); font-weight: 600; text-align: center; margin-bottom: 1rem;">
+                        Link has been generated successfully!
+                    </p>
+                    <p style="margin-bottom: 0.5rem;"><strong>To send this offer to the employee manually:</strong></p>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Copy the email content below</li>
+                        <li>Open your email program</li>
+                        <li>Create a new email to: <span id="employee-email-display" style="font-weight: bold;"></span></li>
+                        <li>Use subject: <span id="offer-subject-display" style="font-weight: bold;"></span></li>
+                        <li>Paste the content and send</li>
+                    </ol>
+                    <div style="margin-top: 1rem; border: 1px solid #ddd; padding: 1rem; background-color: white;">
+                        <p style="font-weight: bold;">Email Content:</p>
+                        <textarea id="offer-email-content" style="width: 100%; height: 150px; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #ddd; font-family: inherit;"></textarea>
+                        <div style="display: flex; align-items: center; margin-top: 0.5rem;">
+                            <button id="copy-offer-content" class="copy-button">Copy Email Content</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="share-link-container" style="display: none; margin-top: 1rem;">
+                    <div id="share-link" class="share-link"></div>
+                    <button id="copy-link" class="copy-button">Copy Link to Clipboard</button>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <textarea id="all-details" style="width: 100%; height: 200px; display: none; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-family: monospace;"></textarea>
+                </div>
+            </div>
+            
+            <p class="copyright-footer">© MXX1</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize EmailJS
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get DOM elements
+            const employeeNameInput = document.getElementById('employee-name');
+            const maxSalaryInput = document.getElementById('max-salary');
+            const maxEquityInput = document.getElementById('max-equity');
+            const salarySlider = document.getElementById('salary-slider');
+            const currentSalaryDisplay = document.getElementById('current-salary');
+            const currentEquityDisplay = document.getElementById('current-equity');
+            const generateLinkButton = document.getElementById('generate-link');
+            const shareLinkContainer = document.getElementById('share-link');
+            const copyLinkButton = document.getElementById('copy-link');
+            const employeeModeBanner = document.getElementById('employee-mode-banner');
+            const shareContainer = document.getElementById('share-container');
+            
+            // Parse URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Function to safely parse float parameters with fallback
+            const safeParseFloat = (paramValue, defaultValue) => {
+                if (!paramValue) return defaultValue;
+                const parsed = parseFloat(paramValue);
+                return isNaN(parsed) ? defaultValue : parsed;
+            };
+            
+            // Function to safely parse integer parameters with fallback
+            const safeParseInt = (paramValue, defaultValue) => {
+                if (!paramValue) return defaultValue;
+                const parsed = parseInt(paramValue, 10);
+                return isNaN(parsed) ? defaultValue : parsed;
+            };
+            
+            const isEmployeeView = urlParams.has('name') && urlParams.has('maxSalary') && urlParams.has('maxEquity');
+            let employerEmail = '';
+            
+            // Set today's date as default for the offer date
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
+            const dd = String(today.getDate()).padStart(2, '0');
+            const formattedToday = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('offer-date').value = formattedToday;
+            
+            if (isEmployeeView) {
+                // Employee view mode
+                const companyName = urlParams.get('company') || '';
+                const positionTitle = urlParams.get('position') || '';
+                const offerDate = urlParams.get('date') || '';
+                const employeeName = urlParams.get('name');
+                const maxSalary = safeParseFloat(urlParams.get('maxSalary'), 150000);
+                const maxEquity = safeParseFloat(urlParams.get('maxEquity'), 1.5);
+                const sliderPosition = safeParseInt(urlParams.get('sliderpos'), 50);
+                employerEmail = urlParams.get('email') || '';
+                
+                // Set values
+                if (companyName) document.getElementById('company-name').value = companyName;
+                if (positionTitle) document.getElementById('position-title').value = positionTitle;
+                if (offerDate) document.getElementById('offer-date').value = offerDate;
+                employeeNameInput.value = employeeName;
+                maxSalaryInput.value = maxSalary;
+                maxEquityInput.value = maxEquity;
+                salarySlider.value = sliderPosition;
+                
+                // Disable inputs that shouldn't be changed
+                document.getElementById('company-name').disabled = true;
+                document.getElementById('position-title').disabled = true;
+                document.getElementById('offer-date').disabled = true;
+                employeeNameInput.disabled = true;
+                maxSalaryInput.disabled = true;
+                maxEquityInput.disabled = true;
+                
+                // Hide employee email field in employee view
+                document.getElementById('employee-email').parentElement.style.display = 'none';
+                
+                // Show the employee mode banner
+                employeeModeBanner.style.display = 'block';
+                
+                // Hide the employer email input
+                document.getElementById('employer-email-group').style.display = 'none';
+                
+                // Hide the share section
+                shareContainer.style.display = 'none';
+                
+                // Show the accept offer button
+                document.getElementById('accept-offer-container').style.display = 'block';
+                
+                // Update page title
+                document.title = `CompMax - ${employeeName}'s Compensation Package`;
+            }
+            
+            // Initial calculation
+            calculateCompensation();
+            
+            // Event listeners
+            maxSalaryInput.addEventListener('input', calculateCompensation);
+            maxEquityInput.addEventListener('input', calculateCompensation);
+            salarySlider.addEventListener('input', calculateCompensation);
+            
+            // Share functionality
+            generateLinkButton.addEventListener('click', generateShareLink);
+            copyLinkButton.addEventListener('click', copyShareLink);
+            
+            // Accept offer functionality
+            if (isEmployeeView) {
+                const acceptOfferButton = document.getElementById('accept-offer-button');
+                acceptOfferButton.addEventListener('click', function() {
+                    sendOfferToEmployer();
+                });
+            }
+            
+            function calculateCompensation() {
+                const maxSalary = safeParseFloat(maxSalaryInput.value, 0);
+                const maxEquity = safeParseFloat(maxEquityInput.value, 0);
+                const sliderValue = safeParseFloat(salarySlider.value, 50) / 100; // Convert to 0-1 range
+                
+                // Calculate current salary and equity based on slider position
+                const currentSalary = maxSalary * sliderValue;
+                const currentEquity = maxEquity * (1 - sliderValue);
+                
+                // Format and display values
+                currentSalaryDisplay.textContent = formatCurrency(currentSalary);
+                currentEquityDisplay.textContent = formatPercent(currentEquity);
+            }
+            
+            function generateShareLink() {
+                const companyName = document.getElementById('company-name').value.trim();
+                const positionTitle = document.getElementById('position-title').value.trim();
+                const offerDate = document.getElementById('offer-date').value;
+                const employeeName = employeeNameInput.value.trim();
+                const employeeEmail = document.getElementById('employee-email').value.trim();
+                const employerEmail = document.getElementById('employer-email').value.trim();
+                const maxSalary = safeParseFloat(maxSalaryInput.value, 0);
+                const maxEquity = safeParseFloat(maxEquityInput.value, 0);
+                const sliderPosition = salarySlider.value;
+                
+                // Calculate current values for summary
+                const sliderValue = safeParseFloat(salarySlider.value, 50) / 100;
+                const currentSalary = maxSalary * sliderValue;
+                const currentEquity = maxEquity * (1 - sliderValue);
+                
+                // Validate required fields
+                if (!companyName) {
+                    alert('Please enter the company name.');
+                    document.getElementById('company-name').focus();
+                    return;
+                }
+                
+                if (!positionTitle) {
+                    alert('Please enter the position title.');
+                    document.getElementById('position-title').focus();
+                    return;
+                }
+                
+                if (!offerDate) {
+                    alert('Please enter the offer date.');
+                    document.getElementById('offer-date').focus();
+                    return;
+                }
+                
+                if (!employeeName) {
+                    alert('Please enter an employee name before generating a share link.');
+                    employeeNameInput.focus();
+                    return;
+                }
+                
+                if (!employeeEmail) {
+                    alert('Please enter the employee\'s email address to send the link.');
+                    document.getElementById('employee-email').focus();
+                    return;
+                }
+                
+                if (!isValidEmail(employeeEmail)) {
+                    alert('Please enter a valid employee email address.');
+                    document.getElementById('employee-email').focus();
+                    return;
+                }
+                
+                if (!employerEmail) {
+                    alert('Please enter your email address to receive notifications.');
+                    document.getElementById('employer-email').focus();
+                    return;
+                }
+                
+                if (!isValidEmail(employerEmail)) {
+                    alert('Please enter a valid employer email address.');
+                    document.getElementById('employer-email').focus();
+                    return;
+                }
+                
+                // Create the URL with parameters
+                const currentUrl = window.location.href.split('?')[0]; // Remove any existing query params
+                const shareUrl = `${currentUrl}?company=${encodeURIComponent(companyName)}&position=${encodeURIComponent(positionTitle)}&date=${encodeURIComponent(offerDate)}&name=${encodeURIComponent(employeeName)}&maxSalary=${maxSalary}&maxEquity=${maxEquity}&sliderpos=${sliderPosition}&email=${encodeURIComponent(employerEmail)}`;
+                
+                // Display the share link
+                shareLinkContainer.textContent = shareUrl;
+                shareLinkContainer.parentElement.style.display = 'block';
+                
+                // Store values globally for email sending
+                window.offerDetails = {
+                    companyName,
+                    positionTitle,
+                    offerDate,
+                    employeeName,
+                    employeeEmail,
+                    employerEmail,
+                    maxSalary,
+                    maxEquity,
+                    shareUrl,
+                    formattedMaxSalary: formatCurrency(maxSalary),
+                    formattedMaxEquity: formatPercent(maxEquity)
+                };
+                
+                // Prepare complete details for copying
+                const allDetailsTextarea = document.getElementById('all-details');
+                const allDetailsText = `CompMax Compensation Offer Details
+----------------------------------------
+Company: ${companyName}
+Position: ${positionTitle}
+Offer Date: ${offerDate}
+
+Employee: ${employeeName}
+Employee Email: ${employeeEmail}
+
+Employer Email: ${employerEmail}
+
+Maximum Salary: ${formatCurrency(maxSalary)}
+Maximum Equity: ${formatPercent(maxEquity)}
+
+Current Selection:
+- Salary: ${formatCurrency(currentSalary)}
+- Equity: ${formatPercent(currentEquity)}
+
+Link to Share: ${shareUrl}
+----------------------------------------
+© MXX1
+`;
+                
+                allDetailsTextarea.value = allDetailsText;
+                allDetailsTextarea.style.display = 'block';
+                
+                // Show email sending controls
+                document.getElementById('email-sending-controls').style.display = 'block';
+                
+                // Pre-populate the sender name field if employer email is filled
+                if (document.getElementById('sender-name')) {
+                    document.getElementById('sender-name').value = companyName + ' HR';
+                }
+                
+                // Setup email sending
+                setupEmailSending(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity);
+                
+                // Show manual sending instructions as a fallback
+                displayManualEmailInstructions(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity);
+            }
+            
+            function setupEmailSending(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity) {
+                const sendEmailButton = document.getElementById('send-email-button');
+                
+                sendEmailButton.addEventListener('click', function() {
+                    const senderName = document.getElementById('sender-name').value.trim();
+                    if (!senderName) {
+                        alert('Please enter your name as the sender.');
+                        document.getElementById('sender-name').focus();
+                        return;
+                    }
+                    
+                    // Show sending status
+                    const emailStatus = document.getElementById('email-status');
+                    const sendingStatus = document.getElementById('sending-status');
+                    emailStatus.style.display = 'block';
+                    sendingStatus.textContent = 'Sending email...';
+                    sendingStatus.style.color = '#666';
+                    
+                    // Format date display
+                    const formattedDate = offerDate;
+                    
+                    const subject = `Your Compensation Offer from ${companyName} for ${positionTitle} Position`;
+                    const body = `Hello ${employeeName},
+
+You've received a compensation offer from ${companyName} for the ${positionTitle} position as of ${formattedDate} with the following parameters:
+
+- Maximum Salary: ${formatCurrency(maxSalary)}
+- Maximum Equity: ${formatPercent(maxEquity)}
+
+Please use the link below to choose your preferred combination of salary and equity:
+${shareUrl}
+
+Once you have made your selection and submitted your response, formal contracts will be sent accordingly.
+
+Yours sincerely,
+${senderName}
+
+This message was automatically generated by CompMax.`;
+
+                    // Prepare template parameters
+                    const templateParams = {
+                        to_name: employeeEmail, // Changed to match the template
+                        name: employeeName,     // Added to match the template
+                        time: new Date().toLocaleString(), // Added timestamp
+                        from_name: senderName,
+                        subject: subject,
+                        message: body,
+                        reply_to: document.getElementById('employer-email').value.trim()
+                    };
+                    
+                    // These values will be injected during GitHub Actions build
+                    const EMAILJS_SERVICE_ID = "service_0zbtwjq";
+                    const EMAILJS_TEMPLATE_ID = "template_vd3qwz8";
+                    
+                    // Check if EmailJS is available
+                    if (typeof emailjs !== 'undefined' && window.emailJsLoaded) {
+                        // Send email using EmailJS
+                        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+                            .then(function(response) {
+                                console.log('SUCCESS!', response.status, response.text);
+                                sendingStatus.textContent = 'Email sent successfully!';
+                                sendingStatus.style.color = 'var(--success)';
+                                sendEmailButton.disabled = true;
+                                sendEmailButton.textContent = 'Email Sent ✓';
+                            })
+                            .catch(function(error) {
+                                console.log('FAILED...', error);
+                                sendingStatus.textContent = 'Failed to send email. Please use the manual method below.';
+                                sendingStatus.style.color = 'red';
+                            });
+                    } else {
+                        // EmailJS not available
+                        sendingStatus.textContent = 'Email service unavailable. Please use the manual method below.';
+                        sendingStatus.style.color = 'red';
+                    }
+                });
+            }
+            
+            function displayManualEmailInstructions(companyName, positionTitle, offerDate, employeeName, employeeEmail, shareUrl, maxSalary, maxEquity) {
+                // Format date display
+                const formattedDate = offerDate;
+                
+                const subject = `Your Compensation Offer from ${companyName} for ${positionTitle} Position`;
+                const body = `Hello ${employeeName},
+
+You've received a compensation offer from ${companyName} for the ${positionTitle} position as of ${formattedDate} with the following parameters:
+
+- Maximum Salary: ${formatCurrency(maxSalary)}
+- Maximum Equity: ${formatPercent(maxEquity)}
+
+Please use the link below to choose your preferred combination of salary and equity:
+${shareUrl}
+
+Once you have made your selection and submitted your response, formal contracts will be sent accordingly.
+
+Yours sincerely,
+[Your Name]
+
+This message was automatically generated by CompMax.`;
+
+                // Display the email address and subject
+                document.getElementById('employee-email-display').textContent = employeeEmail;
+                document.getElementById('offer-subject-display').textContent = subject;
+                
+                // Set the email content in the textarea
+                document.getElementById('offer-email-content').value = body;
+                
+                // Setup copy button for email content
+                document.getElementById('copy-offer-content').addEventListener('click', function() {
+                    copyTextToClipboard(document.getElementById('offer-email-content'), this);
+                });
+                
+                // Show the link status message
+                document.getElementById('link-status-message').style.display = 'block';
+            }
+            
+            function sendOfferToEmployer() {
+                const companyName = document.getElementById('company-name').value;
+                const positionTitle = document.getElementById('position-title').value;
+                const offerDate = document.getElementById('offer-date').value;
+                const employeeName = employeeNameInput.value;
+                const maxSalary = safeParseFloat(maxSalaryInput.value, 0);
+                const maxEquity = safeParseFloat(maxEquityInput.value, 0);
+                const sliderValue = safeParseFloat(salarySlider.value, 50) / 100;
+                
+                // Calculate final values
+                const selectedSalary = maxSalary * sliderValue;
+                const selectedEquity = maxEquity * (1 - sliderValue);
+                
+                // Format values for email
+                const formattedSalary = formatCurrency(selectedSalary);
+                const formattedEquity = formatPercent(selectedEquity);
+                
+                // Format date for display - just use the ISO format date string
+                const displayDate = offerDate;
+                
+                // Create email subject and body
+                const subject = `${employeeName} has accepted the compensation offer for ${positionTitle}`;
+                const body = `Hello,
+
+${employeeName} has accepted the following compensation package for the ${positionTitle} position at ${companyName}:
+
+- Salary: ${formattedSalary}
+- Equity: ${formattedEquity}
+
+This is based on the offer dated ${displayDate} with maximum salary of ${formatCurrency(maxSalary)} and maximum equity of ${formatPercent(maxEquity)}.
+
+Please prepare the formal contracts accordingly.
+
+Yours sincerely,
+${employeeName}
+
+This message was automatically generated by CompMax.`;
+
+                // Create mailto link
+                if (employerEmail) {
+                    // Store for direct email sending
+                    window.acceptanceDetails = {
+                        companyName,
+                        positionTitle,
+                        offerDate: displayDate,
+                        employeeName,
+                        employerEmail,
+                        maxSalary,
+                        maxEquity,
+                        selectedSalary,
+                        selectedEquity,
+                        formattedSalary,
+                        formattedEquity
+                    };
+                    
+                    // Pre-populate employee name
+                    if (document.getElementById('employee-sender-name')) {
+                        document.getElementById('employee-sender-name').value = employeeName;
+                    }
+                    
+                    // Show direct email controls
+                    document.getElementById('acceptance-email-controls').style.display = 'block';
+                    document.getElementById('send-acceptance-email-button').addEventListener('click', sendAcceptanceEmail);
+                    
+                    // Show acceptance message with the email content
+                    document.getElementById('accept-offer-button').style.display = 'none';
+                    
+                    // Also display manual instructions
+                    document.getElementById('offer-accepted-message').style.display = 'block';
+                    
+                    // Display the employer email and subject
+                    document.getElementById('employer-email-display').textContent = employerEmail;
+                    document.getElementById('acceptance-subject-display').textContent = subject;
+                    
+                    // Set the email content in the textarea
+                    document.getElementById('acceptance-email-content').value = body;
+                    
+                    // Setup copy button for acceptance email content
+                    document.getElementById('copy-acceptance-content').addEventListener('click', function() {
+                        copyTextToClipboard(document.getElementById('acceptance-email-content'), this);
+                    });
+                } else {
+                    alert('Cannot send acceptance notification: Employer email not found.');
+                }
+            }
+            
+            function sendAcceptanceEmail() {
+                const details = window.acceptanceDetails;
+                if (!details) {
+                    alert('Error: Acceptance details not found.');
+                    return;
+                }
+                
+                const senderName = document.getElementById('employee-sender-name').value.trim();
+                if (!senderName) {
+                    alert('Please enter your name.');
+                    document.getElementById('employee-sender-name').focus();
+                    return;
+                }
+                
+                // Show sending status
+                const emailStatus = document.getElementById('acceptance-email-status');
+                const sendingStatus = document.getElementById('acceptance-sending-status');
+                emailStatus.style.display = 'block';
+                sendingStatus.textContent = 'Sending email...';
+                sendingStatus.style.color = '#666';
+                
+                const subject = `${details.employeeName} has accepted the compensation offer for ${details.positionTitle}`;
+                const body = `Hello,
+
+${details.employeeName} has accepted the following compensation package for the ${details.positionTitle} position at ${details.companyName}:
+
+- Salary: ${details.formattedSalary}
+- Equity: ${details.formattedEquity}
+
+This is based on the offer dated ${details.offerDate} with maximum salary of ${formatCurrency(details.maxSalary)} and maximum equity of ${formatPercent(details.maxEquity)}.
+
+Please prepare the formal contracts accordingly.
+
+Yours sincerely,
+${senderName}
+
+This message was automatically generated by CompMax.`;
+                
+                // Prepare template parameters
+                const templateParams = {
+                    to_name: details.employerEmail, // Changed to match the template
+                    name: 'Hiring Manager',        // Added to match the template
+                    time: new Date().toLocaleString(), // Added timestamp
+                    from_name: senderName,
+                    subject: subject,
+                    message: body,
+                    reply_to: ''  // No reply-to for acceptance emails
+                };
+                
+                // These values will be injected during GitHub Actions build
+                const EMAILJS_SERVICE_ID = "service_0zbtwjq";
+                const EMAILJS_TEMPLATE_ID = "template_vd3qwz8";
+                
+                // Check if EmailJS is available
+                if (typeof emailjs !== 'undefined' && window.emailJsLoaded) {
+                    // Send email using EmailJS
+                    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+                        .then(function(response) {
+                            console.log('SUCCESS!', response.status, response.text);
+                            sendingStatus.textContent = 'Acceptance email sent successfully!';
+                            sendingStatus.style.color = 'var(--success)';
+                            document.getElementById('send-acceptance-email-button').disabled = true;
+                            document.getElementById('send-acceptance-email-button').textContent = 'Email Sent ✓';
+                        })
+                        .catch(function(error) {
+                            console.log('FAILED...', error);
+                            sendingStatus.textContent = 'Failed to send email. Please use the manual method below.';
+                            sendingStatus.style.color = 'red';
+                        });
+                } else {
+                    // EmailJS not available
+                    sendingStatus.textContent = 'Email service unavailable. Please use the manual method below.';
+                    sendingStatus.style.color = 'red';
+                }
+            }
+            
+            function copyShareLink() {
+                // Instead of copying just the link, copy all the details
+                const allDetailsTextarea = document.getElementById('all-details');
+                copyTextToClipboard(allDetailsTextarea, copyLinkButton, 'Copy All Details', 'Copied All Details!');
+            }
+            
+            // Modern clipboard API with fallback
+            function copyTextToClipboard(textElement, buttonElement, originalText = null, successText = null) {
+                try {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        // Use modern Clipboard API if available
+                        navigator.clipboard.writeText(textElement.value)
+                            .then(() => {
+                                if (buttonElement && successText) {
+                                    buttonElement.textContent = successText;
+                                    setTimeout(() => {
+                                        buttonElement.textContent = originalText || 'Copy';
+                                    }, 2000);
+                                }
+                            })
+                            .catch(err => {
+                                console.error('Failed to copy: ', err);
+                                // Fallback to selection method
+                                copyWithSelection();
+                            });
+                    } else {
+                        // Fallback for browsers without Clipboard API
+                        copyWithSelection();
+                    }
+                } catch (err) {
+                    console.error('Copy failed: ', err);
+                    alert('Unable to copy automatically. Please select the text and use Ctrl+C / Cmd+C to copy.');
+                }
+                
+                function copyWithSelection() {
+                    // Select the text
+                    textElement.select();
+                    textElement.setSelectionRange(0, 99999); // For mobile devices
+                    
+                    try {
+                        // Try to copy using document.execCommand
+                        const successful = document.execCommand('copy');
+                        
+                        if (successful && buttonElement && successText) {
+                            buttonElement.textContent = successText;
+                            setTimeout(() => {
+                                buttonElement.textContent = originalText || 'Copy';
+                            }, 2000);
+                        } else {
+                            // Manual selection fallback
+                            alert('Please press Ctrl+C (or Cmd+C on Mac) to copy.');
+                        }
+                    } catch (err) {
+                        console.error('Could not copy text: ', err);
+                        alert('Please select all text manually and press Ctrl+C (or Cmd+C on Mac) to copy.');
+                    }
+                }
+            }
+            
+            function formatCurrency(value) {
+                return '$' + value.toLocaleString().replace(/,/g, ',');
+            }
+            
+            function formatPercent(value) {
+                return value.toFixed(2) + '%';
+            }
+            
+            function isValidEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+        });
+    </script>
+</body>
+</html>
