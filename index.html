@@ -62,30 +62,6 @@
             font-weight: 300;
         }
         
-        .logo {
-            max-width: 400px;
-            margin: 0 auto 1rem;
-            display: block;
-        }
-        
-        .tagline {
-            color: var(--primary);
-            font-size: 1.1rem;
-            margin: 0.5rem 0 1.5rem;
-            font-weight: 500;
-        }
-        
-        .privacy-notice {
-            background-color: rgba(67, 97, 238, 0.05);
-            border: 1px solid rgba(67, 97, 238, 0.2);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: #555;
-        }
-        
         .calculator {
             background-color: white;
             border-radius: 8px;
@@ -321,25 +297,14 @@
                 margin-left: 0;
                 width: 100%;
             }
-            
-            .logo {
-                max-width: 80%;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <!-- Replace static text with logo image -->
-            <img src="compmax-logo.png" alt="CompMax" class="logo">
-            
-            <!-- Privacy notice (only shown in employer view) -->
-            <div class="privacy-notice" id="privacy-notice">
-                CompMax is a fully frontend-based tool. We do not collect, store, or transmit any user data to a backend server. 
-                All information entered into this site remains entirely on your device and is never shared with us or any third parties. 
-                We use no cookies, no analytics, and no tracking scripts. Your data stays yours — always.
-            </div>
+            <h1>CompMax</h1>
+            <p class="subtitle">Salary & Equity Compensation Calculator</p>
         </header>
         
         <div class="calculator">
@@ -414,9 +379,9 @@
             </div>
             
             <p class="info-text">
-                Your potential employee will adjust the slider to find their ideal balance between salary and equity. 
+                Adjust the slider to find your ideal balance between salary and equity. 
                 The higher the salary, the lower the equity percentage. 
-                Once they have selected their compensation balance it will be emailed back to you so you can prepare formal contracts.
+                Once we have received your response we will send you formal contracts accordingly.
             </p>
             
             <div id="accept-offer-container" style="display: none; text-align: center; margin-top: 2rem;">
@@ -461,7 +426,7 @@
                         <p id="sending-status" style="font-weight: 600;"></p>
                     </div>
                 </div>
-                <div id="link-status-message" style="display: none; text-align: left; background-color: #f8f9fa; padding: 1rem; border-radius: 4px;">
+                <div id="link-status-message" style="margin-top: 1rem; display: none; text-align: left; background-color: #f8f9fa; padding: 1rem; border-radius: 4px;">
                     <p style="color: var(--success); font-weight: 600; text-align: center; margin-bottom: 1rem;">
                         Link has been generated successfully!
                     </p>
@@ -490,7 +455,7 @@
                 </div>
             </div>
             
-            <p class="copyright-footer">© MXX1 Holdings Pty Ltd 2025</p>
+            <p class="copyright-footer">© MXX1</p>
         </div>
     </div>
 
@@ -510,7 +475,6 @@
             const employeeModeBanner = document.getElementById('employee-mode-banner');
             const shareContainer = document.getElementById('share-container');
             const senderNameInput = document.getElementById('sender-name');
-            const privacyNotice = document.getElementById('privacy-notice');
             
             // Parse URL parameters
             const urlParams = new URLSearchParams(window.location.search);
@@ -532,28 +496,6 @@
             const isEmployeeView = urlParams.has('name') && urlParams.has('maxSalary') && urlParams.has('maxEquity');
             let employerEmail = '';
             let senderName = '';
-            
-            // Get the info-text element
-            const infoTextElement = document.querySelector('.info-text');
-
-            // Set different text based on whether it's employer or employee view
-            if (isEmployeeView) {
-                // Employee view - use employee text
-                infoTextElement.innerHTML = `
-                    Adjust the slider to find your ideal balance between salary and equity. 
-                    The higher the salary, the lower the equity percentage. 
-                    Once we have received your response we will send you formal contracts accordingly.
-                `;
-                
-                // Hide privacy notice in employee view
-                privacyNotice.style.display = 'none';
-            } else {
-                // Employer view - use employer text (already set in HTML)
-                // No need to change it as it's already set as the default in the HTML
-                
-                // Show privacy notice in employer view
-                privacyNotice.style.display = 'block';
-            }
             
             // Set today's date as default for the offer date
             const today = new Date();
@@ -766,7 +708,7 @@ Current Selection:
 
 Link to Share: ${shareUrl}
 ----------------------------------------
-© MXX1 Holdings Pty Ltd
+© MXX1
 `;
                 
                 allDetailsTextarea.value = allDetailsText;
@@ -1120,7 +1062,7 @@ This message was automatically generated by CompMax.`;
             }
             
             function formatCurrency(value) {
-                return ' + value.toLocaleString().replace(/,/g, ',');
+                return '$' + value.toLocaleString().replace(/,/g, ',');
             }
             
             function formatPercent(value) {
