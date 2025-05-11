@@ -22,16 +22,16 @@ jobs:
           
       - name: Replace API Keys and Service IDs
         run: |
-          # Use proper quoting to ensure values are replaced correctly
-          sed -i "s/EMAILJS_PUBLIC_KEY_PLACEHOLDER/${{ secrets.EMAILJS_PUBLIC_KEY }}/g" index.html
-          sed -i "s/EMAILJS_SERVICE_ID_PLACEHOLDER/${{ secrets.EMAILJS_SERVICE_ID }}/g" index.html
-          sed -i "s/EMAILJS_TEMPLATE_ID_PLACEHOLDER/${{ secrets.EMAILJS_TEMPLATE_ID }}/g" index.html
+          # Update paths to target config.js instead of index.html
+          sed -i "s/YOUR_PUBLIC_KEY/${{ secrets.EMAILJS_PUBLIC_KEY }}/g" js/config.js
+          sed -i "s/YOUR_SERVICE_ID/${{ secrets.EMAILJS_SERVICE_ID }}/g" js/config.js
+          sed -i "s/YOUR_TEMPLATE_ID/${{ secrets.EMAILJS_TEMPLATE_ID }}/g" js/config.js
           
           # Debug - show the replaced content (remove this in production)
           echo "Checking replacements..."
-          grep -n "emailjs.init" index.html
-          grep -n "EMAILJS_SERVICE_ID" index.html
-          grep -n "EMAILJS_TEMPLATE_ID" index.html
+          grep -n "publicKey" js/config.js
+          grep -n "serviceId" js/config.js
+          grep -n "templateId" js/config.js
           
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
