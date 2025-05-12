@@ -10,7 +10,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Explicitly grant write permission
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -22,12 +22,12 @@ jobs:
           
       - name: Replace API Keys and Service IDs
         run: |
-          # Update the sed commands to match the placeholders in config.js
+          # Match the exact placeholder text in your config.js
           sed -i "s/EMAILJS_PUBLIC_KEY/${{ secrets.EMAILJS_PUBLIC_KEY }}/g" js/config.js
           sed -i "s/EMAILJS_SERVICE_ID/${{ secrets.EMAILJS_SERVICE_ID }}/g" js/config.js
           sed -i "s/EMAILJS_TEMPLATE_ID/${{ secrets.EMAILJS_TEMPLATE_ID }}/g" js/config.js
           
-          # Debug - show the replaced content (remove this in production)
+          # Debug - show the replaced content
           echo "Checking replacements..."
           grep -n "publicKey" js/config.js
           grep -n "serviceId" js/config.js
@@ -36,5 +36,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: .  # The folder the action should deploy
-          branch: gh-pages  # The branch the action should deploy to
+          folder: .
+          branch: gh-pages
