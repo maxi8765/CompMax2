@@ -375,7 +375,7 @@ function calculateCompensation() {
     );
     
     // Get slider value (0-1 range)
-    const sliderValue = parseInt(Elements['salary-slider'].value) / 100;
+    const sliderValue = parseInt(Elements['salary-slider'].value) / 100; // Convert to 0-1 range
     
     // Calculate current salary
     const currentSalary = maxSalary * sliderValue;
@@ -393,13 +393,17 @@ function calculateCompensation() {
         const currentEquity = maxEquity * (1 - sliderValue);
         Elements['current-equity'].textContent = formatPercent(currentEquity);
     } else {
+        // Parse the max shares from the formatted input
+        const maxSharesRaw = parseFormattedNumber(Elements['max-shares'].value);
+        
         const maxShares = validateNumericInput(
-            parseFormattedNumber(Elements['max-shares'].value),
+            maxSharesRaw,
             CONFIG.validation.shares.min,
             CONFIG.validation.shares.max,
             CONFIG.defaults.maxShares
         );
         
+        // Calculate current shares
         const currentShares = Math.round(maxShares * (1 - sliderValue));
         Elements['current-shares'].textContent = formatNumber(currentShares);
     }
@@ -1053,6 +1057,7 @@ function closeErrorModal() {
  * @returns {string} Formatted currency string
  */
 function formatCurrency(value) {
+    // Enhanced currency formatting to ensure commas are always included
     return '$' + value.toLocaleString('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
