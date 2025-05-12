@@ -195,6 +195,10 @@ function processUrlParams() {
  * Set up the view for an employee reviewing an offer
  * @param {URLSearchParams} urlParams - URL parameters containing offer details
  */
+/**
+ * Set up the view for an employee reviewing an offer
+ * @param {URLSearchParams} urlParams - URL parameters containing offer details
+ */
 function setupEmployeeView(urlParams) {
     // Extract parameters with fallbacks
     const companyName = urlParams.get('company') || '';
@@ -238,35 +242,83 @@ function setupEmployeeView(urlParams) {
     if (offerDate) Elements['offer-date'].value = offerDate;
     if (AppState.senderName) Elements['sender-name'].value = AppState.senderName;
     Elements['employee-name'].value = employeeName;
+    Elements['employer-email'].value = AppState.employerEmail;
     Elements['max-salary'].value = maxSalary.toLocaleString('en-US');
     Elements['salary-slider'].value = sliderPosition;
     
     // Update ARIA attributes for slider
     Elements['salary-slider'].setAttribute('aria-valuenow', sliderPosition);
     
-    // Disable inputs that shouldn't be changed
-    Elements['company-name'].disabled = true;
-    Elements['position-title'].disabled = true;
-    Elements['offer-date'].disabled = true;
-    Elements['sender-name'].disabled = true;
-    Elements['employee-name'].disabled = true;
-    Elements['max-salary'].disabled = true;
-    Elements['max-equity'].disabled = true;
-    Elements['max-shares'].disabled = true;
-    Elements['equity-percentage'].disabled = true;
-    Elements['equity-shares'].disabled = true;
+    // Change labels for clarity in employee view
+    const senderNameLabel = document.querySelector('label[for="sender-name"]');
+    if (senderNameLabel) {
+        senderNameLabel.textContent = 'Offer Made By';
+    }
     
-    // Hide employee email field in employee view
+    const employerEmailLabel = document.querySelector('label[for="employer-email"]');
+    if (employerEmailLabel) {
+        employerEmailLabel.textContent = 'Return Email';
+    }
+    
+    const employeeNameLabel = document.querySelector('label[for="employee-name"]');
+    if (employeeNameLabel) {
+        employeeNameLabel.textContent = 'Your Name';
+    }
+    
+    // Reorder fields - get all input groups
+    const formElement = document.getElementById('compensation-form');
+    const inputGroups = formElement.querySelectorAll('.input-group');
+    const orderedIds = [
+        'company-name',        // Company Name
+        'offer-date',          // Offer Date 
+        'position-title',      // Position under Offer
+        'employee-name',       // Your Name (offeree)
+        'sender-name',         // Offer Made By
+        'employer-email'       // Return Email
+    ];
+    
+    // Create a mapping of elements to reorder
+    const inputGroupMap = {};
+    inputGroups.forEach(group => {
+        const input = group.querySelector('input');
+        if (input && orderedIds.includes(input.id)) {
+            inputGroupMap[input.id] = group;
+        }
+    });
+    
+    // Hide the employee email field in employee view
     if (Elements['employee-email-group']) {
         Elements['employee-email-group'].style.display = 'none';
     }
     
+    // Show the employer email input and sender name group
+    Elements['employer-email-group'].style.display = 'block';
+    Elements['sender-name-group'].style.display = 'block';
+    
+    // Reorder by inserting elements in the correct order
+    for (let i = orderedIds.length - 1; i >= 0; i--) {
+        const group = inputGroupMap[orderedIds[i]];
+        if (group && formElement.firstChild) {
+            formElement.insertBefore(group, formElement.firstChild);
+        }
+    }
+    
+    // Disable all informational fields that shouldn't be edited
+    const fieldsToDisable = [
+        'company-name', 'position-title', 'offer-date', 
+        'sender-name', 'employer-email', 'employee-name',
+        'max-salary', 'max-equity', 'max-shares', 
+        'equity-percentage', 'equity-shares'
+    ];
+    
+    fieldsToDisable.forEach(id => {
+        if (Elements[id]) {
+            Elements[id].disabled = true;
+        }
+    });
+    
     // Show the employee mode banner
     Elements['employee-mode-banner'].style.display = 'block';
-    
-    // Hide the employer email input and sender name group
-    Elements['employer-email-group'].style.display = 'none';
-    Elements['sender-name-group'].style.display = 'none';
     
     // Hide the share section
     Elements['share-container'].style.display = 'none';
