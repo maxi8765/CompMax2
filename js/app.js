@@ -1056,15 +1056,27 @@ function closeErrorModal() {
  * @param {number} value - Number to format
  * @returns {string} Formatted currency string
  */
+/**
+ * Format a number as currency with proper thousand separators
+ * @param {number} value - Number to format
+ * @returns {string} Formatted currency string
+ */
 function formatCurrency(value) {
-    // Ensure the value is treated as a number
-    const numberValue = Number(value);
+    // Make sure we're working with a number
+    const num = typeof value === 'string' ? parseFloat(value) : value;
     
-    // Use Intl.NumberFormat for more consistent formatting with commas
-    return '$' + new Intl.NumberFormat('en-US', {
+    // Handle NaN or invalid values
+    if (isNaN(num)) {
+        return '$0';
+    }
+    
+    // Force formatting with commas by creating a number formatter with explicit options
+    return '$' + num.toLocaleString('en-US', {
+        style: 'decimal',
         minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-    }).format(numberValue);
+        maximumFractionDigits: 0,
+        useGrouping: true
+    });
 }
 
 /**
