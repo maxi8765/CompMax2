@@ -1,40 +1,38 @@
-name: Build and Deploy CompMax
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # Explicitly grant write permission
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          
-      - name: Replace API Keys and Service IDs
-        run: |
-          # Update paths to target config.js instead of index.html
-          sed -i "s/YOUR_PUBLIC_KEY/${{ secrets.EMAILJS_PUBLIC_KEY }}/g" js/config.js
-          sed -i "s/YOUR_SERVICE_ID/${{ secrets.EMAILJS_SERVICE_ID }}/g" js/config.js
-          sed -i "s/YOUR_TEMPLATE_ID/${{ secrets.EMAILJS_TEMPLATE_ID }}/g" js/config.js
-          
-          # Debug - show the replaced content (remove this in production)
-          echo "Checking replacements..."
-          grep -n "publicKey" js/config.js
-          grep -n "serviceId" js/config.js
-          grep -n "templateId" js/config.js
-          
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: .  # The folder the action should deploy
-          branch: gh-pages  # The branch the action should deploy to
+/**
+ * Configuration file for CompMax application
+ * This approach helps keep sensitive configuration separate from application logic
+ * In a production environment, these values should be injected during build
+ */
+const CONFIG = {
+    // EmailJS configuration
+    emailjs: {
+        // Public key for EmailJS - will be replaced during build process
+        publicKey: "YOUR_PUBLIC_KEY",
+        serviceId: "YOUR_SERVICE_ID",
+        templateId: "YOUR_TEMPLATE_ID"
+    },
+    
+    // Application defaults
+    defaults: {
+        maxSalary: 150000,
+        maxEquity: 1.5,
+        maxShares: 100000,
+        sliderPosition: 50
+    },
+    
+    // Validation constraints
+    validation: {
+        salary: {
+            min: 0,
+            max: 10000000
+        },
+        equity: {
+            min: 0,
+            max: 100
+        },
+        shares: {
+            min: 0,
+            max: 100000000
+        }
+    }
+};
