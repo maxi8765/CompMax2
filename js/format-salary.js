@@ -4,63 +4,81 @@
  */
 
 (function() {
-    // Function to format a number with commas
+    // Format number with commas
     function formatWithCommas(value) {
-        // Remove any existing commas and non-digits
+        if (!value) return '';
+        // Remove any non-digit characters
         const rawValue = value.toString().replace(/[^\d]/g, '');
         if (!rawValue) return '';
-        return parseInt(rawValue).toLocaleString('en-US');
+        // Format with commas
+        return parseInt(rawValue, 10).toLocaleString('en-US');
     }
     
-    // Function to format the max salary field
-    function formatMaxSalaryField() {
-        const salaryField = document.getElementById('max-salary');
-        if (!salaryField) return;
-        
-        // Only format if not in employee view (where field is disabled)
-        if (!salaryField.disabled) {
-            // Save cursor position relative to the end
-            const cursorFromEnd = salaryField.value.length - salaryField.selectionStart;
-            
-            // Format the value
-            const currentVal = salaryField.value;
-            salaryField.value = formatWithCommas(currentVal);
-            
-            // Restore cursor position
-            try {
-                const newCursorPos = Math.max(0, salaryField.value.length - cursorFromEnd);
-                salaryField.setSelectionRange(newCursorPos, newCursorPos);
-            } catch (e) {
-                // Ignore errors with cursor positioning
-            }
-        }
-    }
-    
-    // Function to run on page load
+    // Main function to setup the salary field formatting
     function initSalaryFormat() {
         const salaryField = document.getElementById('max-salary');
         if (!salaryField) return;
         
-        // Format on load
-        const originalValue = salaryField.value;
-        salaryField.value = formatWithCommas(originalValue);
+        // Format on page load if the field is not empty and not already formatted
+        if (salaryField.value && !salaryField.disabled && !salaryField.value.includes(',')) {
+            salaryField.value = formatWithCommas(salaryField.value);
+        }
         
-        // Add event listener to format on input
-        salaryField.addEventListener('input', formatMaxSalaryField);
+        // Format as user types
+        salaryField.addEventListener('input', function(event) {
+            if (salaryField.disabled) return;
+            
+            // Save cursor position
+            const cursorPos = salaryField.selectionStart;
+            const valueBeforeCursor = salaryField.value.substring(0, cursorPos);
+            const digitsBeforeCursor = valueBeforeCursor.replace(/[^\d]/g, '').length;
+            
+            // Get raw value and format
+            const rawValue = salaryField.value.replace(/[^\d]/g, '');
+            
+            if (rawValue) {
+                // Format the value
+                const formattedValue = formatWithCommas(rawValue);
+                salaryField.value = formattedValue;
+                
+                // Calculate new cursor position
+                const newValue = salaryField.value;
+                let newPos = 0;
+                let digitCount = 0;
+                
+                // Find position that matches the number of digits before the old cursor
+                for (let i = 0; i < newValue.length; i++) {
+                    if (/\d/.test(newValue[i])) {
+                        digitCount++;
+                    }
+                    if (digitCount > digitsBeforeCursor) break;
+                    newPos = i + 1;
+                }
+                
+                // Set the cursor position
+                salaryField.setSelectionRange(newPos, newPos);
+            }
+        });
         
-        // Make sure we don't lose formatting on blur
+        // Ensure value is formatted when field loses focus
         salaryField.addEventListener('blur', function() {
-            if (salaryField.value && !salaryField.value.includes(',')) {
+            if (!salaryField.disabled && salaryField.value && !salaryField.value.includes(',')) {
                 salaryField.value = formatWithCommas(salaryField.value);
             }
         });
+        
+        // Check again after a short delay to ensure the field has a value
+        setTimeout(function() {
+            if (!salaryField.disabled && (!salaryField.value || !salaryField.value.includes(','))) {
+                salaryField.value = formatWithCommas(salaryField.value || '150000');
+            }
+        }, 200);
     }
     
-    // Run when DOM is loaded
+    // Run initialization when DOM is ready
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initSalaryFormat);
     } else {
-        // DOM already loaded
         initSalaryFormat();
     }
 })();
