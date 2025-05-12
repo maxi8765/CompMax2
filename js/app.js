@@ -8,6 +8,7 @@ const AppState = {
     isEmployeeView: false,
     employerEmail: '',
     senderName: '',
+    equityType: 'percentage', // Default to percentage
     offerDetails: null,
     acceptanceDetails: null
 };
@@ -48,9 +49,11 @@ function cacheElements() {
     const ids = [
         'company-name', 'sender-name', 'employer-email', 'offer-date', 
         'position-title', 'employee-name', 'employee-email', 'max-salary', 'max-equity',
-        'salary-slider', 'current-salary', 'current-equity', 'generate-link', 'share-link',
-        'copy-link', 'employee-mode-banner', 'share-container', 'sender-name-group',
-        'employer-email-group', 'employee-email-group', 'accept-offer-container',
+        'max-shares', 'equity-percentage', 'equity-shares', 'max-equity-group', 'max-shares-group',
+        'salary-slider', 'current-salary', 'current-equity', 'current-shares',
+        'current-equity-container', 'current-shares-container',
+        'generate-link', 'share-link', 'copy-link', 'employee-mode-banner', 'share-container', 
+        'sender-name-group', 'employer-email-group', 'employee-email-group', 'accept-offer-container',
         'accept-offer-button', 'acceptance-email-controls', 'offer-accepted-message',
         'employer-email-display', 'acceptance-subject-display', 'acceptance-email-content',
         'copy-acceptance-content', 'employee-sender-name', 'send-acceptance-email-button',
@@ -106,7 +109,8 @@ function processUrlParams() {
     const urlParams = new URLSearchParams(window.location.search);
     
     // Check if we're in employee view mode
-    AppState.isEmployeeView = urlParams.has('name') && urlParams.has('maxSalary') && urlParams.has('maxEquity');
+    AppState.isEmployeeView = urlParams.has('name') && urlParams.has('maxSalary') && 
+                             (urlParams.has('maxEquity') || urlParams.has('maxShares'));
     
     if (AppState.isEmployeeView) {
         setupEmployeeView(urlParams);
@@ -124,19 +128,43 @@ function setupEmployeeView(urlParams) {
     const offerDate = urlParams.get('date') || '';
     const employeeName = urlParams.get('name') || '';
     const maxSalary = safeParseFloat(urlParams.get('maxSalary'), CONFIG.defaults.maxSalary);
-    const maxEquity = safeParseFloat(urlParams.get('maxEquity'), CONFIG.defaults.maxEquity);
     const sliderPosition = safeParseInt(urlParams.get('sliderpos'), CONFIG.defaults.sliderPosition);
     AppState.employerEmail = urlParams.get('email') || '';
     AppState.senderName = urlParams.get('sender') || '';
     
-    // Set values
+    // Get equity type and value
+    AppState.equityType = urlParams.get('equityType') || 'percentage';
+    
+    // Set values based on equity type
+    if (AppState.equityType === 'percentage') {
+        Elements['equity-percentage'].checked = true;
+        Elements['equity-shares'].checked = false;
+        Elements['max-equity-group'].style.display = 'block';
+        Elements['max-shares-group'].style.display = 'none';
+        Elements['current-equity-container'].style.display = 'block';
+        Elements['current-shares-container'].style.display = 'none';
+        
+        const maxEquity = safeParseFloat(urlParams.get('maxEquity'), CONFIG.defaults.maxEquity);
+        Elements['max-equity'].value = maxEquity;
+    } else {
+        Elements['equity-percentage'].checked = false;
+        Elements['equity-shares'].checked = true;
+        Elements['max-equity-group'].style.display = 'none';
+        Elements['max-shares-group'].style.display = 'block';
+        Elements['current-equity-container'].style.display = 'none';
+        Elements['current-shares-container'].style.display = 'block';
+        
+        const maxShares = safeParseInt(urlParams.get('maxShares'), CONFIG.defaults.maxShares);
+        Elements['max-shares'].value = maxShares;
+    }
+    
+    // Set other values
     if (companyName) Elements['company-name'].value = companyName;
     if (positionTitle) Elements['position-title'].value = positionTitle;
     if (offerDate) Elements['offer-date'].value = offerDate;
     if (AppState.senderName) Elements['sender-name'].value = AppState.senderName;
     Elements['employee-name'].value = employeeName;
     Elements['max-salary'].value = maxSalary;
-    Elements['max-equity'].value = maxEquity;
     Elements['salary-slider'].value = sliderPosition;
     
     // Update ARIA attributes for slider
@@ -150,6 +178,9 @@ function setupEmployeeView(urlParams) {
     Elements['employee-name'].disabled = true;
     Elements['max-salary'].disabled = true;
     Elements['max-equity'].disabled = true;
+    Elements['max-shares'].disabled = true;
+    Elements['equity-percentage'].disabled = true;
+    Elements['equity-shares'].disabled = true;
     
     // Hide employee email field in employee view
     if (Elements['employee-email-group']) {
@@ -196,7 +227,12 @@ function setupEventListeners() {
     // Input change events
     Elements['max-salary'].addEventListener('input', calculateCompensation);
     Elements['max-equity'].addEventListener('input', calculateCompensation);
+    Elements['max-shares'].addEventListener('input', calculateCompensation);
     Elements['salary-slider'].addEventListener('input', onSliderChange);
+    
+    // Equity type radio buttons
+    Elements['equity-percentage'].addEventListener('change', handleEquityTypeChange);
+    Elements['equity-shares'].addEventListener('change', handleEquityTypeChange);
     
     // Button click events
     Elements['generate-link'].addEventListener('click', generateShareLink);
@@ -213,6 +249,29 @@ function setupEventListeners() {
     
     // Keyboard accessibility for slider
     Elements['salary-slider'].addEventListener('keydown', handleSliderKeydown);
+}
+
+/**
+ * Handle equity type change
+ */
+function handleEquityTypeChange(event) {
+    AppState.equityType = event.target.value;
+    
+    // Toggle visibility of input fields and results
+    if (AppState.equityType === 'percentage') {
+        Elements['max-equity-group'].style.display = 'block';
+        Elements['max-shares-group'].style.display = 'none';
+        Elements['current-equity-container'].style.display = 'block';
+        Elements['current-shares-container'].style.display = 'none';
+    } else {
+        Elements['max-equity-group'].style.display = 'none';
+        Elements['max-shares-group'].style.display = 'block';
+        Elements['current-equity-container'].style.display = 'none';
+        Elements['current-shares-container'].style.display = 'block';
+    }
+    
+    // Recalculate compensation
+    calculateCompensation();
 }
 
 /**
@@ -266,7 +325,7 @@ function handleSliderKeydown(event) {
  * Calculate and display the current compensation values
  */
 function calculateCompensation() {
-    // Validate inputs
+    // Get the max salary with validation
     const maxSalary = validateNumericInput(
         Elements['max-salary'].value,
         CONFIG.validation.salary.min,
@@ -274,22 +333,35 @@ function calculateCompensation() {
         CONFIG.defaults.maxSalary
     );
     
-    const maxEquity = validateNumericInput(
-        Elements['max-equity'].value,
-        CONFIG.validation.equity.min,
-        CONFIG.validation.equity.max,
-        CONFIG.defaults.maxEquity
-    );
+    // Get slider value (0-1 range)
+    const sliderValue = parseInt(Elements['salary-slider'].value) / 100;
     
-    const sliderValue = parseInt(Elements['salary-slider'].value) / 100; // Convert to 0-1 range
-    
-    // Calculate current salary and equity based on slider position
+    // Calculate current salary
     const currentSalary = maxSalary * sliderValue;
-    const currentEquity = maxEquity * (1 - sliderValue);
-    
-    // Format and display values
     Elements['current-salary'].textContent = formatCurrency(currentSalary);
-    Elements['current-equity'].textContent = formatPercent(currentEquity);
+    
+    // Calculate equity or shares based on selected type
+    if (AppState.equityType === 'percentage') {
+        const maxEquity = validateNumericInput(
+            Elements['max-equity'].value,
+            CONFIG.validation.equity.min,
+            CONFIG.validation.equity.max,
+            CONFIG.defaults.maxEquity
+        );
+        
+        const currentEquity = maxEquity * (1 - sliderValue);
+        Elements['current-equity'].textContent = formatPercent(currentEquity);
+    } else {
+        const maxShares = validateNumericInput(
+            Elements['max-shares'].value,
+            CONFIG.validation.shares.min,
+            CONFIG.validation.shares.max,
+            CONFIG.defaults.maxShares
+        );
+        
+        const currentShares = Math.round(maxShares * (1 - sliderValue));
+        Elements['current-shares'].textContent = formatNumber(currentShares);
+    }
 }
 
 /**
@@ -313,7 +385,7 @@ function generateShareLink() {
         ...formData,
         shareUrl,
         formattedMaxSalary: formatCurrency(formData.maxSalary),
-        formattedMaxEquity: formatPercent(formData.maxEquity)
+        formattedMaxEquity: AppState.equityType === 'percentage' ? formatPercent(formData.maxEquity) : formatNumber(formData.maxShares)
     };
     
     // Prepare complete details for copying
@@ -348,14 +420,26 @@ function collectFormData() {
             CONFIG.validation.salary.max,
             CONFIG.defaults.maxSalary
         ),
-        maxEquity: validateNumericInput(
+        equityType: AppState.equityType,
+        sliderPosition: Elements['salary-slider'].value
+    };
+    
+    // Add either maxEquity or maxShares based on equityType
+    if (AppState.equityType === 'percentage') {
+        data.maxEquity = validateNumericInput(
             Elements['max-equity'].value,
             CONFIG.validation.equity.min,
             CONFIG.validation.equity.max,
             CONFIG.defaults.maxEquity
-        ),
-        sliderPosition: Elements['salary-slider'].value
-    };
+        );
+    } else {
+        data.maxShares = validateNumericInput(
+            Elements['max-shares'].value,
+            CONFIG.validation.shares.min,
+            CONFIG.validation.shares.max,
+            CONFIG.defaults.maxShares
+        );
+    }
     
     // Validate required fields
     const validationChecks = [
@@ -404,7 +488,14 @@ function buildShareUrl(baseUrl, data) {
     params.append('date', data.offerDate);
     params.append('name', data.employeeName);
     params.append('maxSalary', data.maxSalary);
-    params.append('maxEquity', data.maxEquity);
+    params.append('equityType', data.equityType);
+    
+    if (data.equityType === 'percentage') {
+        params.append('maxEquity', data.maxEquity);
+    } else {
+        params.append('maxShares', data.maxShares);
+    }
+    
     params.append('sliderpos', data.sliderPosition);
     params.append('email', data.employerEmail);
     params.append('sender', data.senderName);
@@ -421,7 +512,21 @@ function prepareOfferSummary(data, shareUrl) {
     // Calculate current values for summary
     const sliderValue = parseInt(data.sliderPosition) / 100;
     const currentSalary = data.maxSalary * sliderValue;
-    const currentEquity = data.maxEquity * (1 - sliderValue);
+    
+    let equityDetails = '';
+    if (data.equityType === 'percentage') {
+        const currentEquity = data.maxEquity * (1 - sliderValue);
+        equityDetails = `Maximum Equity: ${formatPercent(data.maxEquity)}
+Current Selection:
+- Salary: ${formatCurrency(currentSalary)}
+- Equity: ${formatPercent(currentEquity)}`;
+    } else {
+        const currentShares = Math.round(data.maxShares * (1 - sliderValue));
+        equityDetails = `Maximum Shares: ${formatNumber(data.maxShares)}
+Current Selection:
+- Salary: ${formatCurrency(currentSalary)}
+- Shares: ${formatNumber(currentShares)}`;
+    }
     
     const allDetailsText = `CompMax Compensation Offer Details
 ----------------------------------------
@@ -435,15 +540,11 @@ Offeree: ${data.employeeName}
 Offeree Email: ${data.employeeEmail}
 
 Maximum Salary: ${formatCurrency(data.maxSalary)}
-Maximum Equity: ${formatPercent(data.maxEquity)}
-
-Current Selection:
-- Salary: ${formatCurrency(currentSalary)}
-- Equity: ${formatPercent(currentEquity)}
+${equityDetails}
 
 Link to Share: ${shareUrl}
 ----------------------------------------
-© MXX1 Holdings Pty Ltd 2025
+© MXX1 Holdings Pty Ltd
 `;
     
     Elements['all-details'].value = allDetailsText;
@@ -516,12 +617,19 @@ function sendOfferEmail() {
  * @returns {string} Email body
  */
 function createOfferEmailBody(details) {
+    let equityText = '';
+    if (details.equityType === 'percentage') {
+        equityText = `- Maximum Equity: ${details.formattedMaxEquity}`;
+    } else {
+        equityText = `- Maximum Shares: ${details.formattedMaxEquity}`;
+    }
+    
     return `Hello ${details.employeeName},
 
 You've received a compensation offer from ${details.companyName} for the ${details.positionTitle} position as of ${details.offerDate} with the following parameters:
 
 - Maximum Salary: ${details.formattedMaxSalary}
-- Maximum Equity: ${details.formattedMaxEquity}
+${equityText}
 
 Please use the link below to choose your preferred combination of salary and equity:
 ${details.shareUrl}
@@ -586,21 +694,38 @@ function sendOfferToEmployer() {
         CONFIG.validation.salary.max,
         CONFIG.defaults.maxSalary
     );
-    const maxEquity = validateNumericInput(
-        Elements['max-equity'].value,
-        CONFIG.validation.equity.min,
-        CONFIG.validation.equity.max,
-        CONFIG.defaults.maxEquity
-    );
+    
+    // Get slider value
     const sliderValue = parseInt(Elements['salary-slider'].value) / 100;
     
-    // Calculate final values
+    // Calculate final salary
     const selectedSalary = maxSalary * sliderValue;
-    const selectedEquity = maxEquity * (1 - sliderValue);
-    
-    // Format values for email
     const formattedSalary = formatCurrency(selectedSalary);
-    const formattedEquity = formatPercent(selectedEquity);
+    
+    // Handle equity or shares based on type
+    let maxEquityValue, selectedEquityValue, formattedEquityValue, equityType;
+    
+    if (AppState.equityType === 'percentage') {
+        maxEquityValue = validateNumericInput(
+            Elements['max-equity'].value,
+            CONFIG.validation.equity.min,
+            CONFIG.validation.equity.max,
+            CONFIG.defaults.maxEquity
+        );
+        selectedEquityValue = maxEquityValue * (1 - sliderValue);
+        formattedEquityValue = formatPercent(selectedEquityValue);
+        equityType = 'equity';
+    } else {
+        maxEquityValue = validateNumericInput(
+            Elements['max-shares'].value,
+            CONFIG.validation.shares.min,
+            CONFIG.validation.shares.max,
+            CONFIG.defaults.maxShares
+        );
+        selectedEquityValue = Math.round(maxEquityValue * (1 - sliderValue));
+        formattedEquityValue = formatNumber(selectedEquityValue);
+        equityType = 'shares';
+    }
     
     // Create email subject and body
     const subject = `${employeeName} has accepted the compensation offer for ${positionTitle}`;
@@ -610,10 +735,11 @@ function sendOfferToEmployer() {
         positionTitle,
         companyName,
         formattedSalary,
-        formattedEquity,
+        formattedEquityValue,
+        equityType,
         offerDate,
         formatCurrency(maxSalary),
-        formatPercent(maxEquity)
+        AppState.equityType === 'percentage' ? formatPercent(maxEquityValue) : formatNumber(maxEquityValue)
     );
     
     // Store for direct email sending
@@ -626,11 +752,12 @@ function sendOfferToEmployer() {
             employerEmail: AppState.employerEmail,
             senderName: AppState.senderName,
             maxSalary,
-            maxEquity,
+            equityType: AppState.equityType,
+            maxEquityValue,
             selectedSalary,
-            selectedEquity,
+            selectedEquityValue,
             formattedSalary,
-            formattedEquity,
+            formattedEquityValue,
             subject,
             body
         };
@@ -687,23 +814,26 @@ function sendOfferToEmployer() {
  * Create the body for the acceptance email
  */
 function createAcceptanceEmailBody(senderName, employeeName, positionTitle, companyName, 
-                               formattedSalary, formattedEquity, offerDate, 
-                               formattedMaxSalary, formattedMaxEquity) {
+                               formattedSalary, formattedEquityValue, equityType, offerDate, 
+                               formattedMaxSalary, formattedMaxEquityValue) {
+    const equityLabel = equityType === 'equity' ? 'Equity' : 'Shares';
+    const maxEquityLabel = equityType === 'equity' ? 'maximum equity' : 'maximum number of shares';
+    
     return `Hello ${senderName},
 
 ${employeeName} has accepted the following compensation package for the ${positionTitle} position at ${companyName}:
 
 - Salary: ${formattedSalary}
-- Equity: ${formattedEquity}
+- ${equityLabel}: ${formattedEquityValue}
 
-This is based on the offer dated ${offerDate} with maximum salary of ${formattedMaxSalary} and maximum equity of ${formattedMaxEquity}.
+This is based on the offer dated ${offerDate} with maximum salary of ${formattedMaxSalary} and ${maxEquityLabel} of ${formattedMaxEquityValue}.
 
 Please prepare the formal contracts accordingly.
 
 Yours sincerely,
 ${employeeName}
 
-This message was automatically generated by CompMax.`;
+This message was automatically generated by CompMax by MXX1 Holdings Pty Ltd.`;
 }
 
 /**
@@ -728,26 +858,13 @@ function sendAcceptanceEmail() {
     Elements['acceptance-sending-status'].textContent = 'Sending email...';
     Elements['acceptance-sending-status'].style.color = '#666';
     
-    // Create acceptance email body
-    const body = createAcceptanceEmailBody(
-        details.senderName,
-        details.employeeName,
-        details.positionTitle,
-        details.companyName,
-        details.formattedSalary,
-        details.formattedEquity,
-        details.offerDate,
-        formatCurrency(details.maxSalary),
-        formatPercent(details.maxEquity)
-    );
-    
     // Prepare template parameters for EmailJS
     const templateParams = {
         to_name: details.senderName,
         to_email: details.employerEmail,
         subject: details.subject,
         time: new Date().toLocaleString(),
-        message: body,
+        message: details.body,
         from_name: offereeNameSending,
         reply_to: '' // No reply-to for acceptance emails
     };
@@ -906,6 +1023,15 @@ function formatCurrency(value) {
  */
 function formatPercent(value) {
     return value.toFixed(2) + '%';
+}
+
+/**
+ * Format a number with commas
+ * @param {number} value - Number to format
+ * @returns {string} Formatted number string
+ */
+function formatNumber(value) {
+    return value.toLocaleString('en-US');
 }
 
 /**
