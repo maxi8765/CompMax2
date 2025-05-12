@@ -688,7 +688,7 @@ function setupEmailSending() {
     
     // Add a debug log to confirm setup
     console.log('Email sending functionality set up');
-
+}
 /**
  * Send offer email to employee
  */
