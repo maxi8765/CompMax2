@@ -1,0 +1,23 @@
+name: Debug Config Replacement
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Debug - Show Original
+        run: cat js/config.js
+        
+      - name: Replace Values
+        run: |
+          sed -i "s/EMAILJS_PUBLIC_KEY/${{ secrets.EMAILJS_PUBLIC_KEY }}/g" js/config.js
+          sed -i "s/EMAILJS_SERVICE_ID/${{ secrets.EMAILJS_SERVICE_ID }}/g" js/config.js
+          sed -i "s/EMAILJS_TEMPLATE_ID/${{ secrets.EMAILJS_TEMPLATE_ID }}/g" js/config.js
+        
+      - name: Debug - Show After Replacement
+        run: cat js/config.js
