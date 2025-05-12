@@ -1174,6 +1174,45 @@ function validateNumericInput(value, min, max, defaultValue) {
  * @returns {string} Kebab-case string
  */
 function toKebabCase(str) {
+
+    // Add this code at the VERY END of your document.addEventListener('DOMContentLoaded', ...) function
+// This ensures it runs after everything else is initialized
+
+// Immediately format the max salary input with commas
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for all other initialization to complete
+    setTimeout(function() {
+        // Format max salary with commas
+        const maxSalaryInput = document.getElementById('max-salary');
+        if (maxSalaryInput && maxSalaryInput.value) {
+            const rawValue = maxSalaryInput.value.replace(/[^\d]/g, '');
+            if (rawValue) {
+                maxSalaryInput.value = parseInt(rawValue).toLocaleString('en-US');
+            }
+        }
+        
+        // Add event listener for input formatting
+        if (maxSalaryInput) {
+            maxSalaryInput.addEventListener('input', function(event) {
+                const input = event.target;
+                const cursorPos = input.selectionStart;
+                const rawValue = input.value.replace(/[^\d]/g, '');
+                
+                if (rawValue) {
+                    const formattedValue = parseInt(rawValue).toLocaleString('en-US');
+                    input.value = formattedValue;
+                    
+                    // Try to maintain cursor position
+                    try {
+                        input.setSelectionRange(cursorPos, cursorPos);
+                    } catch(e) {
+                        // Ignore errors
+                    }
+                }
+            });
+        }
+    }, 100); // Short delay to ensure other initialization is complete
+});
     return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
