@@ -477,7 +477,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .copyright-footer {
     text-align: center;
     margin-top: 1.5rem;
-    font-size: 0.9rem;
+    font-size: 0.6rem;
     color: var(--gray-600);
 }
 
