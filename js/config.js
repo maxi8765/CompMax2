@@ -7,15 +7,16 @@ const CONFIG = {
     // EmailJS configuration
     emailjs: {
         // Public key for EmailJS - should be replaced during build process
-        publicKey: "EMAILJS_PUBLIC_KEY",  
-        serviceId: "EMAILJS_SERVICE_ID",  
-        templateId: "EMAILJS_TEMPLATE_ID"  
+        publicKey: "aC33MyvXhim_7HkU6", // Replace with environment variable
+        serviceId: "service_0zbtwjq", // Replace with environment variable
+        templateId: "template_vd3qwz8" // Replace with environment variable
     },
     
     // Application defaults
     defaults: {
         maxSalary: 150000,
         maxEquity: 1.5,
+        maxShares: 10000,
         sliderPosition: 50
     },
     
@@ -28,6 +29,10 @@ const CONFIG = {
         equity: {
             min: 0,
             max: 100
+        },
+        shares: {
+            min: 0,
+            max: 10000000
         }
     }
 };
