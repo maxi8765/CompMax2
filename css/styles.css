@@ -491,6 +491,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
         padding: 1rem;
     }
     
+    /* Add more whitespace above the logo on mobile */
+    .logo-container {
+        margin-top: 1.5rem;
+    }
+    
     .result {
         flex-direction: column;
     }
