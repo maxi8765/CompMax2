@@ -74,13 +74,21 @@ function cacheElements() {
  */
 function initializeEmailJS() {
     try {
-        // Initialize EmailJS safely
+        // Check if EmailJS library is available
         if (typeof emailjs !== 'undefined') {
+            // Log configuration to ensure values are set
+            console.log('EmailJS Configuration:', {
+                publicKey: CONFIG.emailjs.publicKey,
+                serviceId: CONFIG.emailjs.serviceId,
+                templateId: CONFIG.emailjs.templateId
+            });
+            
+            // Initialize EmailJS with the configured public key
             emailjs.init(CONFIG.emailjs.publicKey);
             console.log("EmailJS initialized successfully");
             window.emailJsLoaded = true;
         } else {
-            console.warn("EmailJS library not loaded");
+            console.warn("EmailJS library not loaded - ensure script is included before app.js");
             window.emailJsLoaded = false;
         }
     } catch (error) {
@@ -357,10 +365,16 @@ function handleEquityTypeChange(event) {
         Elements['current-equity-container'].style.display = 'block';
         Elements['current-shares-container'].style.display = 'none';
     } else {
+        // Switching to shares mode
         Elements['max-equity-group'].style.display = 'none';
         Elements['max-shares-group'].style.display = 'block';
         Elements['current-equity-container'].style.display = 'none';
         Elements['current-shares-container'].style.display = 'block';
+        
+        // Make sure the default shares value is set if empty
+        if (!Elements['max-shares'].value) {
+            Elements['max-shares'].value = CONFIG.defaults.maxShares.toLocaleString('en-US');
+        }
     }
     
     // Recalculate compensation
@@ -655,15 +669,25 @@ Link to Share: ${shareUrl}
  */
 function setupEmailSending() {
     const sendEmailButton = Elements['send-email-button'];
+    if (!sendEmailButton) {
+        console.error('Send email button not found');
+        return;
+    }
     
     // Remove existing event listeners to avoid duplicates
     const newButton = sendEmailButton.cloneNode(true);
     sendEmailButton.parentNode.replaceChild(newButton, sendEmailButton);
     Elements['send-email-button'] = newButton;
     
-    // Add click event listener
-    Elements['send-email-button'].addEventListener('click', sendOfferEmail);
-}
+    // Directly add the click event (not using addEventListener)
+    Elements['send-email-button'].onclick = function(e) {
+        e.preventDefault();
+        console.log('Send email button clicked');
+        sendOfferEmail();
+    };
+    
+    // Add a debug log to confirm setup
+    console.log('Email sending functionality set up');
 
 /**
  * Send offer email to employee
