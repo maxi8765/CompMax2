@@ -199,10 +199,6 @@ function processUrlParams() {
  * Set up the view for an employee reviewing an offer
  * @param {URLSearchParams} urlParams - URL parameters containing offer details
  */
-/**
- * Set up the view for an employee reviewing an offer
- * @param {URLSearchParams} urlParams - URL parameters containing offer details
- */
 function setupEmployeeView(urlParams) {
     // Extract parameters with fallbacks
     const companyName = urlParams.get('company') || '';
@@ -239,109 +235,6 @@ function setupEmployeeView(urlParams) {
         const maxShares = safeParseInt(urlParams.get('maxShares'), CONFIG.defaults.maxShares);
         Elements['max-shares'].value = maxShares.toLocaleString('en-US');
     }
-    
-    // Set other values
-    if (companyName) Elements['company-name'].value = companyName;
-    if (positionTitle) Elements['position-title'].value = positionTitle;
-    if (offerDate) Elements['offer-date'].value = offerDate;
-    
-    // Set employer and employee info
-    Elements['employee-name'].value = employeeName;
-    if (AppState.senderName) Elements['sender-name'].value = AppState.senderName;
-    if (AppState.employerEmail) Elements['employer-email'].value = AppState.employerEmail;
-    Elements['max-salary'].value = maxSalary.toLocaleString('en-US');
-    Elements['salary-slider'].value = sliderPosition;
-    
-    // Update ARIA attributes for slider
-    Elements['salary-slider'].setAttribute('aria-valuenow', sliderPosition);
-    
-    // Modify the label elements directly for proper display
-    const updateLabel = (forAttr, newText) => {
-        const labelElements = document.querySelectorAll(`label[for="${forAttr}"]`);
-        labelElements.forEach(label => {
-            label.textContent = newText;
-        });
-    };
-    
-    // Update labels for employee view
-    updateLabel('sender-name', 'Offer Made By');
-    updateLabel('employer-email', 'Reply Email');
-    
-    // Make sure the employer name and email fields are visible
-    Elements['sender-name-group'].style.display = 'block';
-    Elements['employer-email-group'].style.display = 'block';
-    
-    // Enable sender name and employer email inputs for visibility, but then disable them
-    Elements['sender-name'].disabled = false;
-    Elements['employer-email'].disabled = false;
-    
-    // Reorder the form fields directly by manipulating the DOM
-    const form = document.getElementById('compensation-form');
-    if (form) {
-        // Define the order we want
-        const fieldOrder = [
-            'company-name',       // Company Name 
-            'offer-date',         // Offer Date
-            'position-title',     // Position under Offer
-            'employee-name',      // Offeree Name
-            'sender-name',        // Offer Made By
-            'employer-email'      // Reply Email
-        ];
-        
-        // Get all input groups and create a map for quick access
-        const inputGroups = {};
-        form.querySelectorAll('.input-group').forEach(group => {
-            const input = group.querySelector('input');
-            if (input && input.id) {
-                inputGroups[input.id] = group;
-            }
-        });
-        
-        // Reorder the fields
-        for (let i = fieldOrder.length - 1; i >= 0; i--) {
-            const id = fieldOrder[i];
-            if (inputGroups[id]) {
-                // Move this field to the top of the form
-                if (form.firstChild) {
-                    form.insertBefore(inputGroups[id], form.firstChild);
-                }
-            }
-        }
-    }
-    
-    // Disable all inputs that shouldn't be changed
-    Elements['company-name'].disabled = true;
-    Elements['position-title'].disabled = true;
-    Elements['offer-date'].disabled = true;
-    Elements['employee-name'].disabled = true;
-    Elements['sender-name'].disabled = true;
-    Elements['employer-email'].disabled = true;
-    Elements['max-salary'].disabled = true;
-    Elements['max-equity'].disabled = true;
-    Elements['max-shares'].disabled = true;
-    Elements['equity-percentage'].disabled = true;
-    Elements['equity-shares'].disabled = true;
-    
-    // Hide the employee email field in employee view
-    if (Elements['employee-email-group']) {
-        Elements['employee-email-group'].style.display = 'none';
-    }
-    
-    // Show the employee mode banner
-    Elements['employee-mode-banner'].style.display = 'block';
-    
-    // Hide the employer email input and sender name group display (they've been repositioned)
-    Elements['share-container'].style.display = 'none';
-    
-    // Show the accept offer button
-    Elements['accept-offer-container'].style.display = 'block';
-    
-    // Update page title
-    document.title = `CompMax - ${employeeName}'s Compensation Package`;
-    
-    // Update the info text to show employee message
-    updateInfoText();
-}
     
     // Set other values
     if (companyName) Elements['company-name'].value = companyName;
