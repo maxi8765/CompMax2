@@ -277,6 +277,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
     padding-top: 1rem;
     border-top: 1px solid var(--gray-300);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #accept-offer-container {
@@ -360,6 +363,22 @@ input[type="range"]::-webkit-slider-thumb:hover {
     border-radius: 4px;
     font-weight: 600;
     display: none;
+}
+
+/* Email sending controls - centered */
+#email-sending-controls {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+#send-email-button {
+    width: auto;
+    min-width: 200px;
+    margin: 0 auto;
 }
 
 /* Error Modal */
