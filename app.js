@@ -195,10 +195,6 @@ function processUrlParams() {
  * Set up the view for an employee reviewing an offer
  * @param {URLSearchParams} urlParams - URL parameters containing offer details
  */
-/**
- * Set up the view for an employee reviewing an offer
- * @param {URLSearchParams} urlParams - URL parameters containing offer details
- */
 function setupEmployeeView(urlParams) {
     // Extract parameters with fallbacks
     const companyName = urlParams.get('company') || '';
@@ -286,9 +282,18 @@ function setupEmployeeView(urlParams) {
         }
     });
     
-    // Hide the employee email field in employee view
+    // Hide the employee email field in employee view - MODIFIED
     if (Elements['employee-email-group']) {
         Elements['employee-email-group'].style.display = 'none';
+    } else {
+        // Fallback in case the group element isn't cached
+        const employeeEmailField = document.getElementById('employee-email');
+        if (employeeEmailField) {
+            let parentGroup = employeeEmailField.closest('.input-group');
+            if (parentGroup) {
+                parentGroup.style.display = 'none';
+            }
+        }
     }
     
     // Show the employer email input and sender name group
@@ -576,7 +581,7 @@ function collectFormData() {
         offerDate: Elements['offer-date'].value,
         positionTitle: Elements['position-title'].value.trim(),
         employeeName: Elements['employee-name'].value.trim(),
-        employeeEmail: Elements['employee-email'].value.trim(),
+        employeeEmail: Elements['employee-email'] ? Elements['employee-email'].value.trim() : '',
         maxSalary: validateNumericInput(
             parseFormattedNumber(Elements['max-salary'].value),
             CONFIG.validation.salary.min,
@@ -625,7 +630,7 @@ function collectFormData() {
     }
     
     // Validate email formats
-    if (!isValidEmail(data.employeeEmail)) {
+    if (data.employeeEmail && !isValidEmail(data.employeeEmail)) {
         showError('Please enter a valid offeree email address.');
         Elements['employee-email'].focus();
         return null;
@@ -1032,6 +1037,15 @@ function sendAcceptanceEmail() {
     Elements['acceptance-email-status'].style.display = 'block';
     Elements['acceptance-sending-status'].textContent = 'Sending email...';
     Elements['acceptance-sending-status'].style.color = '#666';
+    
+    // Hide the employee sender name field after validation - ADDED THIS
+    const employeeSenderNameField = document.getElementById('employee-sender-name');
+    if (employeeSenderNameField) {
+        let parent = employeeSenderNameField.closest('.input-group');
+        if (parent) {
+            parent.style.display = 'none';
+        }
+    }
     
     // Prepare template parameters for EmailJS
     const templateParams = {
