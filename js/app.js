@@ -102,6 +102,46 @@ function setDefaultDate() {
 }
 
 /**
+ * Format number input with commas as thousands separators
+ * @param {Event} event - Input event
+ */
+function formatSharesInput(event) {
+    const input = event.target;
+    
+    // Save cursor position relative to the end
+    const cursorFromEnd = input.value.length - input.selectionStart;
+    
+    // Get value without commas and other non-digits
+    const rawValue = input.value.replace(/[^\d]/g, '');
+    
+    // Format with commas
+    if (rawValue) {
+        const formattedValue = parseInt(rawValue).toLocaleString('en-US');
+        input.value = formattedValue;
+        
+        // Restore cursor position relative to the end
+        const newCursorPos = Math.max(0, input.value.length - cursorFromEnd);
+        input.setSelectionRange(newCursorPos, newCursorPos);
+    } else {
+        input.value = '';
+    }
+}
+
+/**
+ * Parse a number with comma separators
+ * @param {string} value - Formatted number string (e.g. "1,234,567")
+ * @returns {number} Parsed number
+ */
+function parseFormattedNumber(value) {
+    // Handle empty or non-string values
+    if (!value || typeof value !== 'string') return 0;
+    
+    // Remove all non-digit characters and parse
+    const cleanValue = value.replace(/[^\d]/g, '');
+    return cleanValue ? parseInt(cleanValue, 10) : 0;
+}
+
+/**
  * Process URL parameters to determine view mode and populate fields
  */
 function processUrlParams() {
@@ -155,7 +195,7 @@ function setupEmployeeView(urlParams) {
         Elements['current-shares-container'].style.display = 'block';
         
         const maxShares = safeParseInt(urlParams.get('maxShares'), CONFIG.defaults.maxShares);
-        Elements['max-shares'].value = maxShares;
+        Elements['max-shares'].value = maxShares.toLocaleString('en-US');
     }
     
     // Set other values
@@ -227,7 +267,8 @@ function setupEventListeners() {
     // Input change events
     Elements['max-salary'].addEventListener('input', calculateCompensation);
     Elements['max-equity'].addEventListener('input', calculateCompensation);
-    Elements['max-shares'].addEventListener('input', calculateCompensation);
+    Elements['max-shares'].addEventListener('input', formatSharesInput);
+    Elements['max-shares'].addEventListener('blur', calculateCompensation);
     Elements['salary-slider'].addEventListener('input', onSliderChange);
     
     // Equity type radio buttons
@@ -339,42 +380,6 @@ function calculateCompensation() {
     // Calculate current salary
     const currentSalary = maxSalary * sliderValue;
     Elements['current-salary'].textContent = formatCurrency(currentSalary);
-
-
-        /**
-     * Format number input with commas as thousands separators
-     * @param {Event} event - Input event
-     */
-    function formatSharesInput(event) {
-        const input = event.target;
-        
-        // Save cursor position relative to the end
-        const cursorFromEnd = input.value.length - input.selectionStart;
-        
-        // Get value without commas and other non-digits
-        const rawValue = input.value.replace(/[^\d]/g, '');
-        
-        // Format with commas
-        if (rawValue) {
-            const formattedValue = parseInt(rawValue).toLocaleString('en-US');
-            input.value = formattedValue;
-            
-            // Restore cursor position relative to the end
-            const newCursorPos = Math.max(0, input.value.length - cursorFromEnd);
-            input.setSelectionRange(newCursorPos, newCursorPos);
-        } else {
-            input.value = '';
-        }
-    }
-
-/**
- * Parse a number with comma separators
- * @param {string} value - Formatted number string (e.g. "1,234,567")
- * @returns {number} Parsed number
- */
-function parseFormattedNumber(value) {
-    return parseInt(value.replace(/,/g, ''), 10);
-}    
     
     // Calculate equity or shares based on selected type
     if (AppState.equityType === 'percentage') {
@@ -389,7 +394,7 @@ function parseFormattedNumber(value) {
         Elements['current-equity'].textContent = formatPercent(currentEquity);
     } else {
         const maxShares = validateNumericInput(
-            Elements['max-shares'].value,
+            parseFormattedNumber(Elements['max-shares'].value),
             CONFIG.validation.shares.min,
             CONFIG.validation.shares.max,
             CONFIG.defaults.maxShares
@@ -470,7 +475,7 @@ function collectFormData() {
         );
     } else {
         data.maxShares = validateNumericInput(
-            Elements['max-shares'].value,
+            parseFormattedNumber(Elements['max-shares'].value),
             CONFIG.validation.shares.min,
             CONFIG.validation.shares.max,
             CONFIG.defaults.maxShares
@@ -755,7 +760,7 @@ function sendOfferToEmployer() {
         equityType = 'equity';
     } else {
         maxEquityValue = validateNumericInput(
-            Elements['max-shares'].value,
+            parseFormattedNumber(Elements['max-shares'].value),
             CONFIG.validation.shares.min,
             CONFIG.validation.shares.max,
             CONFIG.defaults.maxShares
