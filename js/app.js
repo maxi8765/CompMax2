@@ -1052,31 +1052,23 @@ function closeErrorModal() {
 }
 
 /**
- * Format a number as currency
- * @param {number} value - Number to format
- * @returns {string} Formatted currency string
- */
-/**
- * Format a number as currency with proper thousand separators
+ * Format a number as currency with manual comma insertion
  * @param {number} value - Number to format
  * @returns {string} Formatted currency string
  */
 function formatCurrency(value) {
-    // Make sure we're working with a number
-    const num = typeof value === 'string' ? parseFloat(value) : value;
+    // Convert to string and remove any existing non-digit characters
+    let numStr = String(value).replace(/[^\d]/g, '');
     
-    // Handle NaN or invalid values
-    if (isNaN(num)) {
-        return '$0';
-    }
+    // If empty string, return $0
+    if (!numStr) return '$0';
     
-    // Force formatting with commas by creating a number formatter with explicit options
-    return '$' + num.toLocaleString('en-US', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-        useGrouping: true
-    });
+    // Use regex to add commas every 3 digits from the right
+    numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+    // Add dollar sign
+    return '$' + numStr;
+}
 }
 
 /**
