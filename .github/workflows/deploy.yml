@@ -20,22 +20,16 @@ jobs:
         with:
           node-version: '16'
           
-     - name: Replace API Keys and Service IDs
-  run: |
-    # More explicit replacements including quotes
-    sed -i 's/"EMAILJS_PUBLIC_KEY"/"${{ secrets.EMAILJS_PUBLIC_KEY }}"/g' js/config.js
-    sed -i 's/"EMAILJS_SERVICE_ID"/"${{ secrets.EMAILJS_SERVICE_ID }}"/g' js/config.js
-    sed -i 's/"EMAILJS_TEMPLATE_ID"/"${{ secrets.EMAILJS_TEMPLATE_ID }}"/g' js/config.js
-    
-    # Show the result (masked)
-    echo "After replacement:"
-    grep -n "publicKey\|serviceId\|templateId" js/config.js
+      - name: Replace API Keys and Service IDs
+        run: |
+          # More explicit replacements including quotes
+          sed -i 's/"EMAILJS_PUBLIC_KEY"/"${{ secrets.EMAILJS_PUBLIC_KEY }}"/g' js/config.js
+          sed -i 's/"EMAILJS_SERVICE_ID"/"${{ secrets.EMAILJS_SERVICE_ID }}"/g' js/config.js
+          sed -i 's/"EMAILJS_TEMPLATE_ID"/"${{ secrets.EMAILJS_TEMPLATE_ID }}"/g' js/config.js
           
-          # Debug - show the replaced content
-          echo "Checking replacements..."
-          grep -n "publicKey" js/config.js
-          grep -n "serviceId" js/config.js
-          grep -n "templateId" js/config.js
+          # Show the result (masked)
+          echo "After replacement:"
+          grep -n "publicKey\|serviceId\|templateId" js/config.js
           
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
