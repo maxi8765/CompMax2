@@ -1057,11 +1057,14 @@ function closeErrorModal() {
  * @returns {string} Formatted currency string
  */
 function formatCurrency(value) {
-    // Enhanced currency formatting to ensure commas are always included
-    return '$' + value.toLocaleString('en-US', {
+    // Ensure the value is treated as a number
+    const numberValue = Number(value);
+    
+    // Use Intl.NumberFormat for more consistent formatting with commas
+    return '$' + new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 0,
         maximumFractionDigits: 0
-    });
+    }).format(numberValue);
 }
 
 /**
