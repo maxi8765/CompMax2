@@ -187,14 +187,12 @@ function processUrlParams() {
                              (urlParams.has('maxEquity') || urlParams.has('maxShares'));
     
     if (AppState.isEmployeeView) {
+        // Add employee-view class to body for CSS targeting
+        document.body.classList.add('employee-view');
         setupEmployeeView(urlParams);
     }
 }
 
-/**
- * Set up the view for an employee reviewing an offer
- * @param {URLSearchParams} urlParams - URL parameters containing offer details
- */
 /**
  * Set up the view for an employee reviewing an offer
  * @param {URLSearchParams} urlParams - URL parameters containing offer details
@@ -286,9 +284,15 @@ function setupEmployeeView(urlParams) {
         }
     });
     
-    // Hide the employee email field in employee view
+    // Completely remove the employee email field from the DOM in employee view
     if (Elements['employee-email-group']) {
-        Elements['employee-email-group'].style.display = 'none';
+        if (Elements['employee-email-group'].parentNode) {
+            Elements['employee-email-group'].parentNode.removeChild(Elements['employee-email-group']);
+        } else {
+            // Fallback to hiding with CSS if removal isn't possible
+            Elements['employee-email-group'].style.display = 'none';
+            Elements['employee-email-group'].classList.add('employee-view');
+        }
     }
     
     // Show the employer email input and sender name group
@@ -576,7 +580,6 @@ function collectFormData() {
         offerDate: Elements['offer-date'].value,
         positionTitle: Elements['position-title'].value.trim(),
         employeeName: Elements['employee-name'].value.trim(),
-        employeeEmail: Elements['employee-email'].value.trim(),
         maxSalary: validateNumericInput(
             parseFormattedNumber(Elements['max-salary'].value),
             CONFIG.validation.salary.min,
@@ -586,6 +589,11 @@ function collectFormData() {
         equityType: AppState.equityType,
         sliderPosition: Elements['salary-slider'].value
     };
+    
+    // Only get employee email in employer view
+    if (!AppState.isEmployeeView && Elements['employee-email']) {
+        data.employeeEmail = Elements['employee-email'].value.trim();
+    }
     
     // Add either maxEquity or maxShares based on equityType
     if (AppState.equityType === 'percentage') {
@@ -611,9 +619,13 @@ function collectFormData() {
         { field: 'employerEmail', message: 'Please enter your email address for notifications.' },
         { field: 'offerDate', message: 'Please enter the offer date.' },
         { field: 'positionTitle', message: 'Please enter the position under offer.' },
-        { field: 'employeeName', message: 'Please enter an offeree name before generating a share link.' },
-        { field: 'employeeEmail', message: 'Please enter an offeree email address.' }
+        { field: 'employeeName', message: 'Please enter an offeree name before generating a share link.' }
     ];
+    
+    // Only validate employee email in employer view
+    if (!AppState.isEmployeeView) {
+        validationChecks.push({ field: 'employeeEmail', message: 'Please enter an offeree email address.' });
+    }
     
     for (const check of validationChecks) {
         if (!data[check.field]) {
@@ -625,9 +637,9 @@ function collectFormData() {
     }
     
     // Validate email formats
-    if (!isValidEmail(data.employeeEmail)) {
+    if (!AppState.isEmployeeView && data.employeeEmail && !isValidEmail(data.employeeEmail)) {
         showError('Please enter a valid offeree email address.');
-        Elements['employee-email'].focus();
+        if (Elements['employee-email']) Elements['employee-email'].focus();
         return null;
     }
     
@@ -693,6 +705,10 @@ Current Selection:
 - Shares: ${formatNumber(currentShares)}`;
     }
     
+    // Include employee email only if in employer view and it exists
+    const employeeEmailSection = !AppState.isEmployeeView && data.employeeEmail ? 
+        `Offeree Email: ${data.employeeEmail}` : '';
+    
     const allDetailsText = `CompMax Compensation Offer Details
 ----------------------------------------
 Company: ${data.companyName}
@@ -702,7 +718,7 @@ Offer Date: ${data.offerDate}
 Position under Offer: ${data.positionTitle}
 
 Offeree: ${data.employeeName}
-Offeree Email: ${data.employeeEmail}
+${employeeEmailSection}
 
 Maximum Salary: ${formatCurrency(data.maxSalary)}
 ${equityDetails}
@@ -745,6 +761,11 @@ function setupEmailSending() {
  * Send offer email to employee
  */
 function sendOfferEmail() {
+    // Skip if in employee view or if offerDetails is missing
+    if (AppState.isEmployeeView) {
+        return;
+    }
+    
     const details = AppState.offerDetails;
     if (!details) {
         showError('Error: Offer details not found.');
@@ -754,6 +775,13 @@ function sendOfferEmail() {
     if (!details.senderName) {
         showError('Please enter your name as the sender.');
         Elements['sender-name'].focus();
+        return;
+    }
+    
+    // Check if employee email exists
+    if (!details.employeeEmail) {
+        showError('Please enter offeree email address.');
+        if (Elements['employee-email']) Elements['employee-email'].focus();
         return;
     }
     
@@ -828,30 +856,41 @@ function displayManualEmailInstructions() {
     const subject = `Your Compensation Offer from ${details.companyName} for ${details.positionTitle} Position`;
     const body = createOfferEmailBody(details);
     
-    // Display the email address and subject
-    Elements['employee-email-display'].textContent = details.employeeEmail;
-    Elements['offer-subject-display'].textContent = subject;
+    // In employer view, display the employee email and subject
+    if (!AppState.isEmployeeView && details.employeeEmail && Elements['employee-email-display']) {
+        Elements['employee-email-display'].textContent = details.employeeEmail;
+    }
+    
+    if (Elements['offer-subject-display']) {
+        Elements['offer-subject-display'].textContent = subject;
+    }
     
     // Set the email content in the textarea
-    Elements['offer-email-content'].value = body;
+    if (Elements['offer-email-content']) {
+        Elements['offer-email-content'].value = body;
+    }
     
     // Setup copy button for email content
     const copyButton = Elements['copy-offer-content'];
-    const newCopyButton = copyButton.cloneNode(true);
-    copyButton.parentNode.replaceChild(newCopyButton, copyButton);
-    Elements['copy-offer-content'] = newCopyButton;
-    
-    Elements['copy-offer-content'].addEventListener('click', function() {
-        copyTextToClipboard(
-            Elements['offer-email-content'], 
-            this, 
-            'Copy Email Content', 
-            'Copied!'
-        );
-    });
+    if (copyButton) {
+        const newCopyButton = copyButton.cloneNode(true);
+        copyButton.parentNode.replaceChild(newCopyButton, copyButton);
+        Elements['copy-offer-content'] = newCopyButton;
+        
+        Elements['copy-offer-content'].addEventListener('click', function() {
+            copyTextToClipboard(
+                Elements['offer-email-content'], 
+                this, 
+                'Copy Email Content', 
+                'Copied!'
+            );
+        });
+    }
     
     // Show the link status message
-    Elements['link-status-message'].style.display = 'block';
+    if (Elements['link-status-message']) {
+        Elements['link-status-message'].style.display = 'block';
+    }
 }
 
 /**
