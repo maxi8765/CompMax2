@@ -36,6 +36,9 @@ function initializeApp() {
     
     // Initial calculation
     calculateCompensation();
+    
+    // Update the info text based on the view
+    updateInfoText();
 }
 
 /**
@@ -55,7 +58,7 @@ function cacheElements() {
         'send-email-button', 'email-status', 'sending-status', 'link-status-message',
         'employee-email-display', 'offer-subject-display', 'offer-email-content',
         'copy-offer-content', 'all-details', 'error-modal', 'error-message',
-        'close-error-modal', 'error-ok-button'
+        'close-error-modal', 'error-ok-button', 'employer-info-text', 'employee-info-text'
     ];
     
     ids.forEach(id => {
@@ -168,6 +171,22 @@ function setupEmployeeView(urlParams) {
     
     // Update page title
     document.title = `CompMax - ${employeeName}'s Compensation Package`;
+    
+    // Update the info text to show employee message
+    updateInfoText();
+}
+
+/**
+ * Update the info text based on whether in employee or employer view
+ */
+function updateInfoText() {
+    if (AppState.isEmployeeView) {
+        Elements['employer-info-text'].style.display = 'none';
+        Elements['employee-info-text'].style.display = 'block';
+    } else {
+        Elements['employer-info-text'].style.display = 'block';
+        Elements['employee-info-text'].style.display = 'none';
+    }
 }
 
 /**
@@ -424,7 +443,7 @@ Current Selection:
 
 Link to Share: ${shareUrl}
 ----------------------------------------
-© MXX1
+© MXX1 Holdings Pty Ltd 2025
 `;
     
     Elements['all-details'].value = allDetailsText;
