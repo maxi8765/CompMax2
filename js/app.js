@@ -48,15 +48,15 @@ function initializeApp() {
 function cacheElements() {
     const ids = [
         'company-name', 'sender-name', 'employer-email', 'offer-date', 
-        'position-title', 'employee-name', 'employee-email', 'max-salary', 'max-equity',
+        'position-title', 'employee-name', 'max-salary', 'max-equity',
         'max-shares', 'equity-percentage', 'equity-shares', 'max-equity-group', 'max-shares-group',
         'salary-slider', 'current-salary', 'current-equity', 'current-shares',
         'current-equity-container', 'current-shares-container',
         'generate-link', 'share-link', 'copy-link', 'employee-mode-banner', 'share-container', 
-        'sender-name-group', 'employer-email-group', 'employee-email-group', 'accept-offer-container',
+        'sender-name-group', 'employer-email-group', 'accept-offer-container',
         'accept-offer-button', 'acceptance-email-controls', 'offer-accepted-message',
         'employer-email-display', 'acceptance-subject-display', 'acceptance-email-content',
-        'copy-acceptance-content', 'employee-sender-name', 'send-acceptance-email-button',
+        'copy-acceptance-content', 'send-acceptance-email-button',
         'acceptance-email-status', 'acceptance-sending-status', 'email-sending-controls',
         'send-email-button', 'email-status', 'sending-status', 'link-status-message',
         'employee-email-display', 'offer-subject-display', 'offer-email-content',
@@ -195,10 +195,6 @@ function processUrlParams() {
  * Set up the view for an employee reviewing an offer
  * @param {URLSearchParams} urlParams - URL parameters containing offer details
  */
-/**
- * Set up the view for an employee reviewing an offer
- * @param {URLSearchParams} urlParams - URL parameters containing offer details
- */
 function setupEmployeeView(urlParams) {
     // Extract parameters with fallbacks
     const companyName = urlParams.get('company') || '';
@@ -285,11 +281,6 @@ function setupEmployeeView(urlParams) {
             inputGroupMap[input.id] = group;
         }
     });
-    
-    // Hide the employee email field in employee view
-    if (Elements['employee-email-group']) {
-        Elements['employee-email-group'].style.display = 'none';
-    }
     
     // Show the employer email input and sender name group
     Elements['employer-email-group'].style.display = 'block';
@@ -522,7 +513,7 @@ function calculateCompensation() {
         );
         
         // Calculate current shares
-        const currentShares = Math.round(maxShares * (1 - sliderValue));
+        const current avoids = Math.round(maxShares * (1 - sliderValue));
         Elements['current-shares'].textContent = formatNumber(currentShares);
     }
 }
@@ -576,7 +567,6 @@ function collectFormData() {
         offerDate: Elements['offer-date'].value,
         positionTitle: Elements['position-title'].value.trim(),
         employeeName: Elements['employee-name'].value.trim(),
-        employeeEmail: Elements['employee-email'].value.trim(),
         maxSalary: validateNumericInput(
             parseFormattedNumber(Elements['max-salary'].value),
             CONFIG.validation.salary.min,
@@ -611,8 +601,7 @@ function collectFormData() {
         { field: 'employerEmail', message: 'Please enter your email address for notifications.' },
         { field: 'offerDate', message: 'Please enter the offer date.' },
         { field: 'positionTitle', message: 'Please enter the position under offer.' },
-        { field: 'employeeName', message: 'Please enter an offeree name before generating a share link.' },
-        { field: 'employeeEmail', message: 'Please enter an offeree email address.' }
+        { field: 'employeeName', message: 'Please enter an offeree name before generating a share link.' }
     ];
     
     for (const check of validationChecks) {
@@ -624,13 +613,7 @@ function collectFormData() {
         }
     }
     
-    // Validate email formats
-    if (!isValidEmail(data.employeeEmail)) {
-        showError('Please enter a valid offeree email address.');
-        Elements['employee-email'].focus();
-        return null;
-    }
-    
+    // Validate email format
     if (!isValidEmail(data.employerEmail)) {
         showError('Please enter a valid email address for notifications.');
         Elements['employer-email'].focus();
@@ -702,7 +685,6 @@ Offer Date: ${data.offerDate}
 Position under Offer: ${data.positionTitle}
 
 Offeree: ${data.employeeName}
-Offeree Email: ${data.employeeEmail}
 
 Maximum Salary: ${formatCurrency(data.maxSalary)}
 ${equityDetails}
@@ -741,6 +723,7 @@ function setupEmailSending() {
     // Add a debug log to confirm setup
     console.log('Email sending functionality set up');
 }
+
 /**
  * Send offer email to employee
  */
@@ -769,7 +752,6 @@ function sendOfferEmail() {
     // Prepare template parameters for EmailJS
     const templateParams = {
         to_name: details.employeeName,
-        to_email: details.employeeEmail,
         subject: subject,
         message: body,
         from_name: details.senderName,
@@ -829,7 +811,7 @@ function displayManualEmailInstructions() {
     const body = createOfferEmailBody(details);
     
     // Display the email address and subject
-    Elements['employee-email-display'].textContent = details.employeeEmail;
+    Elements['employee-email-display'].textContent = details.employeeName; // Changed to employeeName
     Elements['offer-subject-display'].textContent = subject;
     
     // Set the email content in the textarea
@@ -937,11 +919,6 @@ function sendOfferToEmployer() {
             body
         };
         
-        // Pre-populate employee name
-        if (Elements['employee-sender-name']) {
-            Elements['employee-sender-name'].value = employeeName;
-        }
-        
         // Show direct email controls
         Elements['acceptance-email-controls'].style.display = 'block';
         
@@ -1021,13 +998,6 @@ function sendAcceptanceEmail() {
         return;
     }
     
-    const offereeNameSending = Elements['employee-sender-name'].value.trim();
-    if (!offereeNameSending) {
-        showError('Please enter your name.');
-        Elements['employee-sender-name'].focus();
-        return;
-    }
-    
     // Show sending status
     Elements['acceptance-email-status'].style.display = 'block';
     Elements['acceptance-sending-status'].textContent = 'Sending email...';
@@ -1040,7 +1010,7 @@ function sendAcceptanceEmail() {
         subject: details.subject,
         time: new Date().toLocaleString(),
         message: details.body,
-        from_name: offereeNameSending,
+        from_name: details.employeeName, // Use pre-populated employee name
         reply_to: '' // No reply-to for acceptance emails
     };
     
