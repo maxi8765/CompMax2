@@ -1,4 +1,4 @@
-```css
+
 /* Variables */
 :root {
     --primary: #4361ee;
@@ -480,13 +480,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
     margin-top: 1.5rem;
     font-size: 0.9rem;
     color: var(--gray-600);
-}
-
-/* Hide employee email field in employee view */
-.employee-mode-banner:not([style*="display: none"]) ~ form .employee-email-group,
-body.employee-view .employee-email-group,
-#employee-email-group.employee-view {
-    display: none !important;
 }
 
 /* Responsive Design */
