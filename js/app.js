@@ -339,6 +339,42 @@ function calculateCompensation() {
     // Calculate current salary
     const currentSalary = maxSalary * sliderValue;
     Elements['current-salary'].textContent = formatCurrency(currentSalary);
+
+
+        /**
+     * Format number input with commas as thousands separators
+     * @param {Event} event - Input event
+     */
+    function formatSharesInput(event) {
+        const input = event.target;
+        
+        // Save cursor position relative to the end
+        const cursorFromEnd = input.value.length - input.selectionStart;
+        
+        // Get value without commas and other non-digits
+        const rawValue = input.value.replace(/[^\d]/g, '');
+        
+        // Format with commas
+        if (rawValue) {
+            const formattedValue = parseInt(rawValue).toLocaleString('en-US');
+            input.value = formattedValue;
+            
+            // Restore cursor position relative to the end
+            const newCursorPos = Math.max(0, input.value.length - cursorFromEnd);
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        } else {
+            input.value = '';
+        }
+    }
+
+/**
+ * Parse a number with comma separators
+ * @param {string} value - Formatted number string (e.g. "1,234,567")
+ * @returns {number} Parsed number
+ */
+function parseFormattedNumber(value) {
+    return parseInt(value.replace(/,/g, ''), 10);
+}    
     
     // Calculate equity or shares based on selected type
     if (AppState.equityType === 'percentage') {
