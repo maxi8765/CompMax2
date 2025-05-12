@@ -1,3 +1,5 @@
+// First, update the CONFIG object in config.js:
+
 /**
  * Configuration file for CompMax application
  * This approach helps keep sensitive configuration separate from application logic
@@ -16,7 +18,7 @@ const CONFIG = {
     defaults: {
         maxSalary: 150000,
         maxEquity: 1.5,
-        maxShares: 10000,
+        maxShares: 100000, // Updated from 10000 to 100000
         sliderPosition: 50
     },
     
@@ -32,7 +34,7 @@ const CONFIG = {
         },
         shares: {
             min: 0,
-            max: 10000000
+            max: 100000000
         }
     }
 };
