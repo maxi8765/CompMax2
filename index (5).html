@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CompMax - Salary and Equity Compensation Calculator for job offers">
+    <title>CompMax - Salary & Equity Calculator</title>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+    <!-- Load EmailJS library -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Load app styles and script -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/config.js" defer></script>
+    <script src="js/app.js" defer></script>
+    <script src="js/format-salary.js"></script>
+    <script src="js/date-fix.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="logo.png" alt="CompMax Logo" class="logo">
+            </div>
+            <p class="subtitle">Salary & Equity Compensation Calculator</p>
+            <div class="privacy-statement">
+                <p>CompMax is a fully frontend-based tool. We do not collect, store, or transmit any user data to a backend server. All information entered into this site remains entirely on your device and is never shared with us or any third parties. We use no cookies, no analytics, and no tracking scripts. Your data stays yours — always.</p>
+            </div>
+        </header>
+        
+        <main class="calculator" aria-label="Compensation Calculator">
+            <div class="employee-mode-banner" id="employee-mode-banner" role="status">
+                Offeree View Mode - Make your selection below
+            </div>
+            
+            <!-- Form -->
+            <form id="compensation-form">
+                <!-- Company Information -->
+                <div class="input-group">
+                    <label for="company-name">Company Name</label>
+                    <input type="text" id="company-name" placeholder="Enter company name" 
+                           class="standard-input" aria-required="true">
+                </div>
+                
+                <div class="input-group" id="sender-name-group">
+                    <label for="sender-name">Your Name</label>
+                    <input type="text" id="sender-name" placeholder="Enter your name" 
+                           class="standard-input" aria-required="true">
+                </div>
+                
+                <div class="input-group" id="employer-email-group">
+                    <label for="employer-email">Your Email (for notifications)</label>
+                    <input type="email" id="employer-email" placeholder="Enter your email address" 
+                           class="standard-input" aria-required="true">
+                </div>
+                
+                <div class="input-group">
+                    <label for="offer-date">Offer Date</label>
+                    <input type="date" id="offer-date" class="standard-input" aria-required="true">
+                </div>
+                
+                <div class="input-group">
+                    <label for="position-title">Position under Offer</label>
+                    <input type="text" id="position-title" placeholder="Enter position title" 
+                           class="standard-input" aria-required="true">
+                </div>
+                
+                <div class="input-group">
+                    <label for="employee-name">Offeree Name</label>
+                    <input type="text" id="employee-name" placeholder="Enter offeree name" 
+                           class="standard-input" aria-required="true">
+                </div>
+                
+                <div class="input-group">
+                    <label for="employee-email">Offeree Email</label>
+                    <input type="email" id="employee-email" placeholder="Enter offeree email" 
+                           class="standard-input" aria-required="true">
+                </div>
+                
+                <div class="input-group">
+                    <label for="max-salary">Max Salary ($)</label>
+                    <input type="text" id="max-salary" inputmode="numeric" pattern="[0-9,]*" value="150,000" 
+                           aria-describedby="salary-desc">
+                    <div id="salary-desc" class="sr-only">Maximum salary amount in dollars</div>
+                </div>
+                
+                <!-- Equity Type Selection -->
+                <div class="input-group" id="equity-type-selection">
+                    <label>Equity Type</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="equity-type" id="equity-percentage" value="percentage" checked>
+                            Percentage (%)
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="equity-type" id="equity-shares" value="shares">
+                            Number of Shares
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Equity Inputs - only one shown at a time -->
+                <div class="input-group" id="max-equity-group">
+                    <label for="max-equity">Max Equity (%)</label>
+                    <input type="number" id="max-equity" min="0" max="100" step="0.1" value="1.5" 
+                           aria-describedby="equity-desc">
+                    <div id="equity-desc" class="sr-only">Maximum equity percentage</div>
+                </div>
+                
+                <div class="input-group" id="max-shares-group" style="display: none;">
+                    <label for="max-shares">Max No. of Shares</label>
+                    <input type="text" id="max-shares" value="100,000" 
+                           aria-describedby="shares-desc" inputmode="numeric" pattern="[0-9,]*">
+                    <div id="shares-desc" class="sr-only">Maximum number of shares</div>
+                </div>
+                
+                <div class="slider-container">
+                    <label for="salary-slider">Adjust Compensation Balance</label>
+                    <div class="slider-label">
+                        <span>More Equity</span>
+                        <span>More Salary</span>
+                    </div>
+                    <input type="range" id="salary-slider" min="0" max="100" value="50" 
+                           aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+                           aria-describedby="slider-desc">
+                    <div id="slider-desc" class="sr-only">
+                        Slide left for more equity and less salary, slide right for more salary and less equity
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Results Display -->
+            <div class="result" role="region" aria-live="polite" aria-label="Calculated compensation">
+                <div class="result-item">
+                    <div class="result-label">Selected Salary</div>
+                    <div class="result-value" id="current-salary">$75,000</div>
+                </div>
+                <div class="result-item" id="current-equity-container">
+                    <div class="result-label">Selected Equity</div>
+                    <div class="result-value equity-value" id="current-equity">0.75%</div>
+                </div>
+                <div class="result-item" id="current-shares-container" style="display: none;">
+                    <div class="result-label">Selected Shares</div>
+                    <div class="result-value equity-value" id="current-shares">7,500</div>
+                </div>
+            </div>
+            
+            <!-- Different messages for employers and employees -->
+            <p id="employer-info-text" class="info-text">
+                Your potential employee will adjust the slider to find their ideal balance between salary and equity. Once they have selected their compensation balance it will be emailed back to you so you can prepare formal contracts.
+            </p>
+            
+            <p id="employee-info-text" class="info-text" style="display: none;">
+                Adjust the slider to find your ideal balance between salary and equity. The higher the salary, the lower the equity percentage. Once we have received your response we will send you formal contracts accordingly.
+            </p>
+            
+            <!-- Accept Offer Section (Employee View) -->
+            <div id="accept-offer-container" style="display: none;" aria-live="polite">
+                <button id="accept-offer-button" class="accept-button" type="button">
+                    Accept This Offer
+                </button>
+                
+                <div id="acceptance-email-controls" style="display: none;" role="region" aria-label="Send acceptance email">
+                    <p class="form-heading">Send acceptance directly to employer:</p>
+                    <div class="input-group">
+                        <label for="employee-sender-name">Your Name (Offeree)</label>
+                        <input type="text" id="employee-sender-name" class="standard-input" aria-required="true">
+                    </div>
+                    <button id="send-acceptance-email-button" class="accept-button" type="button">
+                        Send Acceptance Email
+                    </button>
+                    <div id="acceptance-email-status" class="email-status">
+                        <p id="acceptance-sending-status"></p>
+                    </div>
+                </div>
+                
+                <div id="offer-accepted-message" class="status-message" style="display: none;">
+                    <p class="success-message">Your compensation choice is ready to be submitted!</p>
+                    <p><strong>To send your acceptance manually:</strong></p>
+                    <ol>
+                        <li>Copy the email content below</li>
+                        <li>Open your email program</li>
+                        <li>Create a new email to: <span id="employer-email-display" class="email-display"></span></li>
+                        <li>Use subject: <span id="acceptance-subject-display" class="subject-display"></span></li>
+                        <li>Paste the content and send</li>
+                    </ol>
+                    <div class="email-content-container">
+                        <p><strong>Email Content:</strong></p>
+                        <textarea id="acceptance-email-content" class="email-content"></textarea>
+                        <div class="copy-container">
+                            <button id="copy-acceptance-content" class="copy-button" type="button">
+                                Copy Email Content
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Generate Link Section (Employer View) -->
+            <div class="share-container" id="share-container" aria-live="polite">
+                <button id="generate-link" class="share-button" type="button">Generate Link</button>
+                
+                <div id="email-sending-controls" class="status-message" style="display: none;">
+                    <p class="form-heading">Send offer directly to offeree:</p>
+                    <button id="send-email-button" class="share-button success-button" type="button">
+                        Send Offer Email
+                    </button>
+                    <div id="email-status" class="email-status">
+                        <p id="sending-status"></p>
+                    </div>
+                </div>
+                
+                <div id="link-status-message" class="status-message" style="display: none;">
+                    <p class="success-message">Link has been generated successfully!</p>
+                    <p><strong>To send this offer to the offeree manually:</strong></p>
+                    <ol>
+                        <li>Copy the email content below</li>
+                        <li>Open your email program</li>
+                        <li>Create a new email to: <span id="employee-email-display" class="email-display"></span></li>
+                        <li>Use subject: <span id="offer-subject-display" class="subject-display"></span></li>
+                        <li>Paste the content and send</li>
+                    </ol>
+                    <div class="email-content-container">
+                        <p><strong>Email Content:</strong></p>
+                        <textarea id="offer-email-content" class="email-content"></textarea>
+                        <div class="copy-container">
+                            <button id="copy-offer-content" class="copy-button" type="button">
+                                Copy Email Content
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="share-link-container" style="display: none;">
+                    <div id="share-link" class="share-link" aria-label="Generated share link"></div>
+                    <button id="copy-link" class="copy-button" type="button">
+                        Copy Link to Clipboard
+                    </button>
+                </div>
+                
+                <div class="all-details-container">
+                    <textarea id="all-details" style="display: none;" aria-label="All offer details"></textarea>
+                </div>
+            </div>
+            
+            <footer class="copyright-footer">
+                <p>© MXX1 Holdings Pty Ltd</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="modal" role="dialog" aria-labelledby="error-title" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close-button" id="close-error-modal" aria-label="Close">&times;</span>
+            <h2 id="error-title">Error</h2>
+            <p id="error-message"></p>
+            <button id="error-ok-button" class="share-button">OK</button>
+        </div>
+    </div>
+</body>
+</html>
