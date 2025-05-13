@@ -2,8 +2,54 @@
  * Info Icons Manager
  * Manages the help tooltip icons throughout the application
  */
-
+/**
+ * Updated label formatting to prevent icon overlap
+ * Add this to the beginning of your info-icons.js file
+ */
 (function() {
+    // This function runs before the icon setup to adjust the labels
+    function setupLabelFormatting() {
+        // Find all labels
+        const labels = document.querySelectorAll('label');
+        
+        // Process each label
+        labels.forEach(label => {
+            // Skip labels that have already been processed
+            if (label.classList.contains('label-formatted')) return;
+            
+            // Add class to mark as processed
+            label.classList.add('label-formatted');
+            
+            // Create a span to wrap the label text
+            const labelText = label.textContent.trim();
+            
+            // Only if there is text to process
+            if (labelText) {
+                // Clear the current text
+                label.textContent = '';
+                
+                // Create text wrapper
+                const textSpan = document.createElement('span');
+                textSpan.className = 'label-text';
+                textSpan.textContent = labelText;
+                
+                // Add the text back in a span
+                label.appendChild(textSpan);
+            }
+        });
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setupLabelFormatting();
+        });
+    } else {
+        setupLabelFormatting();
+    }
+})();
+
+// Then include your original info-icons.js code below this(function() {
     // Define tooltip content for each field
     const tooltipContent = {
         'company-name': 'Enter your company or organization name as it should appear on the offer.',
