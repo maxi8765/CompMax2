@@ -1322,3 +1322,12 @@ function toKebabCase(str) {
 
 // Initialize the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApp);
+document.addEventListener("DOMContentLoaded", function () {
+  if (document.body.classList.contains("employee-mode")) {
+    const container = document.getElementById("accept-offer-container");
+    if (container) {
+      container.style.display = "block";
+      container.style.visibility = "visible";
+    }
+  }
+});
