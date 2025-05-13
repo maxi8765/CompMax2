@@ -585,7 +585,29 @@ input[type="range"]::-webkit-slider-thumb:hover {
     max-width: 500px;
     position: relative;
 }
+.accept-offer-container {
+  /* Ensure this is hidden by default */
+  display: none;
+}
 
+/* Overrides for employer mode */
+body:not(.employee-mode) .accept-offer-container {
+  display: none !important;
+}
+
+/* Only allow this to be visible in employee mode */
+.employee-mode .accept-offer-container {
+  display: block;
+}
+
+/* Extra protection for mobile */
+@media (max-width: 600px) {
+  body:not(.employee-mode) .accept-offer-container,
+  body:not(.employee-mode) #accept-offer-container {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
 .close-button {
     position: absolute;
     top: 1rem;
