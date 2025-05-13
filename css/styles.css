@@ -84,7 +84,7 @@ header {
 }
 
 .privacy-statement {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--gray-600);
     margin-top: 1rem;
     padding: 0.75rem;
@@ -107,8 +107,8 @@ h1 {
 }
 
 .info-text {
-    font-size: 0.9rem;
-    color: var(--gray-600);
+    font-size: 0.75rem;
+    color: ;
     text-align: center;
     margin-top: 1rem;
 }
