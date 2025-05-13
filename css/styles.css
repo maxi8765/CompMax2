@@ -64,93 +64,6 @@ header {
     border-bottom: 1px solid var(--gray-300);
 }
 
-/* Format labels to prevent icon overlap */
-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-/* Container for label text */
-.label-text {
-    flex: 1;
-    min-width: 0; /* Allow text to shrink if needed */
-    padding-right: 8px; /* Space between text and icon */
-}
-
-/* Proper alignment for info icons */
-.info-icon-container {
-    flex-shrink: 0; /* Prevent icon from shrinking */
-}
-
-/* Radio button label special case */
-.radio-label {
-    justify-content: flex-start; /* Align items to the left */
-}
-
-/* Center the form elements on the page */
-.input-group {
-    margin-bottom: 1.5rem;
-    max-width: 500px; /* Set a maximum width */
-    margin-left: auto;
-    margin-right: auto; /* Center the input groups */
-}
-
-/* Keep text left-aligned (default) in input fields */
-input[type="number"],
-input[type="text"],
-input[type="email"],
-input[type="date"] {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-    text-align: left; /* Explicitly set left alignment for text */
-    transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-ring);
-}
-
-input:disabled {
-    background-color: var(--gray-200);
-    cursor: not-allowed;
-}
-
-/* Center the slider container */
-.slider-container {
-    margin: 2.5rem auto;
-    max-width: 500px;
-    position: relative;
-}
-
-/* Center the result section */
-.result {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-300);
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Form heading centered */
-.form-heading {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-align: center;
-}
-
-/* Calculator styling */
 .calculator {
     background-color: white;
     border-radius: 8px;
@@ -171,7 +84,7 @@ input:disabled {
 }
 
 .privacy-statement {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--gray-600);
     margin-top: 1rem;
     padding: 0.75rem;
@@ -194,10 +107,51 @@ h1 {
 }
 
 .info-text {
-    font-size: 0.75rem;
-    color: var(--gray-700);
+    font-size: 0.9rem;
+    color: var(--gray-600);
     text-align: center;
     margin-top: 1rem;
+}
+
+/* Form Elements */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-heading {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+input[type="number"],
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--focus-ring);
+}
+
+input:disabled {
+    background-color: var(--gray-200);
+    cursor: not-allowed;
 }
 
 /* Radio Buttons for Equity Type */
@@ -223,6 +177,10 @@ h1 {
 }
 
 /* Slider */
+.slider-container {
+    margin: 2.5rem 0;
+}
+
 .slider-label {
     display: flex;
     justify-content: space-between;
@@ -249,21 +207,6 @@ input[type="range"]::-webkit-slider-thumb {
     transition: background var(--transition-speed) ease-in-out;
 }
 
-input[type="range"]::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    background: var(--primary);
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-}
-
-input[type="range"]::-moz-range-track {
-    background: var(--gray-300);
-    height: 8px;
-    border-radius: 5px;
-}
-
 input[type="range"]:focus {
     outline: none;
 }
@@ -277,6 +220,14 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 /* Results Display */
+.result {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-300);
+}
+
 .result-item {
     text-align: center;
     flex: 1;
@@ -297,93 +248,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .equity-value {
     color: var(--success);
-}
-
-/* Info Icon and Tooltip Styles */
-.info-icon-container {
-    display: inline-block;
-    position: relative;
-    margin-left: 8px;
-    vertical-align: middle;
-}
-
-.info-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background-color: var(--primary);
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: help;
-    transition: background-color var(--transition-speed);
-}
-
-.info-icon:hover, .info-icon:focus {
-    background-color: var(--primary-dark);
-}
-
-.tooltip {
-    visibility: hidden;
-    position: absolute;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 250px;
-    background-color: white;
-    color: var(--dark);
-    text-align: left;
-    border-radius: 6px;
-    padding: 10px;
-    font-size: 0.75rem;
-    line-height: 1.4;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    opacity: 0;
-    transition: opacity var(--transition-speed), visibility var(--transition-speed);
-    border: 1px solid var(--gray-300);
-}
-
-/* Arrow at the bottom of tooltip */
-.tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -8px;
-    border-width: 8px;
-    border-style: solid;
-    border-color: white transparent transparent transparent;
-}
-
-/* Show tooltip on hover/focus */
-.info-icon:hover + .tooltip,
-.info-icon:focus + .tooltip {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Alternative position for tooltips that might go off-screen */
-.tooltip.tooltip-left {
-    left: 0;
-    transform: translateX(-10%);
-}
-
-.tooltip.tooltip-left::after {
-    left: 15%;
-}
-
-.tooltip.tooltip-right {
-    left: auto;
-    right: 0;
-    transform: translateX(10%);
-}
-
-.tooltip.tooltip-right::after {
-    left: 85%;
 }
 
 /* Buttons */
@@ -585,29 +449,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
     max-width: 500px;
     position: relative;
 }
-.accept-offer-container {
-  /* Ensure this is hidden by default */
-  display: none;
-}
 
-/* Overrides for employer mode */
-body:not(.employee-mode) .accept-offer-container {
-  display: none !important;
-}
-
-/* Only allow this to be visible in employee mode */
-.employee-mode .accept-offer-container {
-  display: block;
-}
-
-/* Extra protection for mobile */
-@media (max-width: 600px) {
-  body:not(.employee-mode) .accept-offer-container,
-  body:not(.employee-mode) #accept-offer-container {
-    display: none !important;
-    visibility: hidden !important;
-  }
-}
 .close-button {
     position: absolute;
     top: 1rem;
@@ -635,51 +477,18 @@ body:not(.employee-mode) .accept-offer-container {
 .copyright-footer {
     text-align: center;
     margin-top: 1.5rem;
-    font-size: 0.6rem;
+    font-size: 0.9rem;
     color: var(--gray-600);
 }
 
-/* Desktop specific styles */
-@media (min-width: 601px) {
-    .input-group {
-        margin-bottom: 1.8rem;
-    }
-    
-    label {
-        margin-bottom: 0.7rem;
-    }
-    
-    /* Center the key form elements in the calculator */
-    .calculator {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    #compensation-form {
-        width: 100%;
-        max-width: 600px;
-    }
-    
-    /* Make sure share and accept containers are centered too */
-    .share-container, 
-    #accept-offer-container {
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-
-/* Mobile specific styles */
+/* Responsive Design */
 @media (max-width: 600px) {
     .container {
-        padding: 1rem;
+        padding: 0.5rem;
     }
     
     .calculator {
         padding: 1rem;
-        position: relative;
-        z-index: 1;
     }
     
     /* Add more whitespace above the logo on mobile */
@@ -689,10 +498,6 @@ body:not(.employee-mode) .accept-offer-container {
     
     .result {
         flex-direction: column;
-        background-color: var(--gray-100);
-        padding: 1rem;
-        border-radius: 8px;
-        margin-top: 2rem;
     }
     
     .result-item {
@@ -704,99 +509,9 @@ body:not(.employee-mode) .accept-offer-container {
         padding: 0.5rem;
     }
     
-    .radio-group {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .tooltip {
-        width: 200px;
-        font-size: 0.7rem;
-        position: fixed;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        padding: 12px;
-        z-index: 1010;
-    }
-    
-    .tooltip::after {
-        display: none;
-    }
-    
-    .tooltip.tooltip-left,
-    .tooltip.tooltip-right {
-        left: 50%;
-        right: auto;
-        transform: translate(-50%, -50%);
-    }
-    
-    .tooltip.tooltip-left::after,
-    .tooltip.tooltip-right::after {
-        display: none;
-    }
-    
-    .tooltip-close {
-        display: block;
-        padding: 6px;
-        font-size: 16px;
-        right: 6px;
-        top: 6px;
-    }
-    
-    /* Critical button fixes */
-    .share-button,
-    #generate-link,
-    #send-email-button,
-    #copy-link {
-        background-color: var(--primary) !important;
-        color: white !important;
-        border: none !important;
-        padding: 1rem !important;
-        margin-bottom: 1rem !important;
-        font-size: 1.1rem !important;
-        font-weight: 600 !important;
-        width: 100% !important;
-        border-radius: 4px !important;
-        text-align: center !important;
-        display: block !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        min-height: 50px !important;
-    }
-    
-    /* Accept button styling */
-    .accept-button,
-    #accept-offer-button,
-    #send-acceptance-email-button {
-        background-color: var(--success) !important;
-        color: white !important;
-        border: none !important;
-        padding: 1rem !important;
-        margin-bottom: 1rem !important;
-        font-size: 1.1rem !important;
-        font-weight: 600 !important;
-        width: 100% !important;
-        border-radius: 4px !important;
-        text-align: center !important;
-        display: block !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        min-height: 50px !important;
-    }
-    
-    .copy-button {
-        margin-top: 0.75rem;
+    .share-button, .accept-button {
         width: 100%;
-        padding: 0.75rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        min-height: 44px;
+        margin-bottom: 0.5rem;
     }
     
     .copy-container {
@@ -804,118 +519,13 @@ body:not(.employee-mode) .accept-offer-container {
         align-items: stretch;
     }
     
-    /* Critical slider fixes */
-    /* Make the track super obvious */
-    input[type="range"] {
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        width: 100% !important;
-        height: 20px !important; /* Make track taller */
-        background: #ced4da !important; /* Use a more visible color */
-        border-radius: 10px !important; /* Rounded corners */
-        outline: none !important;
-        margin: 1.5rem 0 !important;
-        position: relative !important;
-        z-index: 100 !important; /* Very high z-index */
-        border: 1px solid #adb5bd !important; /* Add border to make it more visible */
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; /* Inner shadow */
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
+    .copy-button {
+        margin-top: 0.5rem;
+        width: 100%;
     }
     
-    /* Make the thumb (handle) more visible */
-    input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none !important;
-        appearance: none !important;
-        width: 34px !important; /* Larger thumb */
-        height: 34px !important;
-        background: #4361ee !important; /* Match brand color */
-        border-radius: 50% !important;
-        border: 3px solid white !important;
-        cursor: pointer !important;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important; /* More visible shadow */
+    .radio-group {
+        flex-direction: column;
+        gap: 0.5rem;
     }
-    
-    /* Firefox specific */
-    input[type="range"]::-moz-range-track {
-        width: 100% !important;
-        height: 20px !important;
-        background: #ced4da !important;
-        border-radius: 10px !important;
-        border: 1px solid #adb5bd !important;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
-    }
-    
-    input[type="range"]::-moz-range-thumb {
-        width: 34px !important;
-        height: 34px !important;
-        background: #4361ee !important;
-        border-radius: 50% !important;
-        border: 3px solid white !important;
-        cursor: pointer !important;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
-    }
-    
-    /* Make sure the slider container doesn't get hidden */
-    .slider-container {
-        position: relative !important;
-        z-index: 10 !important;
-        padding: 1rem 0 !important;
-        margin: 2rem 0 !important;
-        border-top: 2px solid #dee2e6 !important;
-        border-bottom: 2px solid #dee2e6 !important;
-        background-color: white !important;
-        display: block !important;
-        visibility: visible !important;
-    }
-    
-    /* Ensure slider labels are visible */
-    .slider-label {
-        display: flex !important;
-        justify-content: space-between !important;
-        margin-bottom: 0.75rem !important;
-        font-weight: bold !important;
-        color: #495057 !important;
-    }
-    
-    /* Fix any share container issues */
-    .share-container, #accept-offer-container {
-        text-align: center !important;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        width: 100% !important;
-        margin-top: 2rem !important;
-        border-top: 1px solid #dee2e6 !important;
-        padding-top: 1rem !important;
-    }
-    
-    /* Force light background on HTML and body */
-    html, body {
-        background-color: white !important;
-        color: var(--dark) !important;
-        forced-color-adjust: none;
-        -webkit-font-smoothing: antialiased;
-    }
-    
-    /* If Brave or Android forces prefers-color-scheme, override it */
-    @media (prefers-color-scheme: dark) {
-        html, body {
-            background-color: white !important;
-            color: var(--dark) !important;
-        }
-        
-        * {
-            color: inherit !important;
-            background-color: inherit !important;
-        }
-        @media (max-width: 600px) {
-        body.employee-mode .accept-offer-container,
-        body.employee-mode #accept-offer-container {
-         display: block !important;
-         visibility: visible !important;
-  }
 }
-
-
