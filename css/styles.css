@@ -227,7 +227,100 @@ input[type="range"]::-webkit-slider-thumb:hover {
     padding-top: 1rem;
     border-top: 1px solid var(--gray-300);
 }
+/* Info Icon and Tooltip Styles */
+.info-icon-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 8px;
+    vertical-align: middle;
+}
 
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: help;
+    transition: background-color var(--transition-speed);
+}
+
+.info-icon:hover, .info-icon:focus {
+    background-color: var(--primary-dark);
+}
+
+.tooltip {
+    visibility: hidden;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    background-color: white;
+    color: var(--dark);
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity var(--transition-speed), visibility var(--transition-speed);
+    border: 1px solid var(--gray-300);
+}
+
+/* Arrow at the bottom of tooltip */
+.tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+/* Show tooltip on hover/focus */
+.info-icon:hover + .tooltip,
+.info-icon:focus + .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Alternative position for tooltips that might go off-screen */
+.tooltip.tooltip-left {
+    left: 0;
+    transform: translateX(-10%);
+}
+
+.tooltip.tooltip-left::after {
+    left: 15%;
+}
+
+.tooltip.tooltip-right {
+    left: auto;
+    right: 0;
+    transform: translateX(10%);
+}
+
+.tooltip.tooltip-right::after {
+    left: 85%;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .tooltip {
+        width: 200px;
+        font-size: 0.7rem;
+    }
+}
 .result-item {
     text-align: center;
     flex: 1;
