@@ -2,10 +2,8 @@
  * Info Icons Manager
  * Manages the help tooltip icons throughout the application
  */
-/**
- * Updated label formatting to prevent icon overlap
- * Add this to the beginning of your info-icons.js file
- */
+
+// First IIFE: Label formatting to prevent icon overlap
 (function() {
     // This function runs before the icon setup to adjust the labels
     function setupLabelFormatting() {
@@ -49,7 +47,8 @@
     }
 })();
 
-// Then include your original info-icons.js code below this(function() {
+// Second IIFE: Info icons functionality
+(function() {
     // Define tooltip content for each field
     const tooltipContent = {
         'company-name': 'Enter your company or organization name as it should appear on the offer.',
@@ -84,7 +83,8 @@
             document.body.appendChild(tooltipOverlay);
             
             // Close tooltip when clicking the overlay
-            tooltipOverlay.addEventListener('click', function() {
+            tooltipOverlay.addEventListener('click', function(e) {
+                if (e) e.preventDefault(); // Prevent default touch behavior
                 if (activeTooltip) {
                     closeTooltip(activeTooltip);
                 }
@@ -129,6 +129,7 @@
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
             tooltip.innerHTML = tooltipContent[elementId];
+            tooltip.setAttribute('aria-hidden', 'true');
             
             // Add a close button for mobile
             if (isMobile) {
@@ -141,8 +142,12 @@
                 // Close tooltip when clicking the close button
                 closeButton.addEventListener('click', function(e) {
                     e.stopPropagation();
+                    e.preventDefault();
                     closeTooltip(tooltip);
                 });
+                
+                // Make close button visible on mobile
+                closeButton.style.display = 'block';
             }
             
             // Check position to adjust tooltip placement
@@ -159,24 +164,28 @@
             
             // Handle tooltip visibility
             if (isMobile) {
-                // Mobile: toggle on click
-                infoIcon.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    
-                    // Close any other open tooltips
-                    if (activeTooltip && activeTooltip !== tooltip) {
-                        closeTooltip(activeTooltip);
-                    }
-                    
-                    // Toggle this tooltip
-                    if (tooltip.style.visibility === 'visible') {
-                        closeTooltip(tooltip);
-                    } else {
-                        openTooltip(tooltip);
-                    }
+                // Mobile: toggle on touch/click
+                // Add multiple event types for better mobile support
+                ['click', 'touchstart'].forEach(eventType => {
+                    infoIcon.addEventListener(eventType, function(e) {
+                        e.stopPropagation();
+                        e.preventDefault(); // Prevent default touch behavior
+                        
+                        // Close any other open tooltips
+                        if (activeTooltip && activeTooltip !== tooltip) {
+                            closeTooltip(activeTooltip);
+                        }
+                        
+                        // Toggle this tooltip
+                        if (tooltip.style.visibility === 'visible') {
+                            closeTooltip(tooltip);
+                        } else {
+                            openTooltip(tooltip);
+                        }
+                    });
                 });
                 
-                // Prevent clicks inside tooltip from closing it
+                // Prevent touch events inside tooltip from closing it
                 tooltip.addEventListener('click', function(e) {
                     e.stopPropagation();
                 });
@@ -185,22 +194,26 @@
                 infoIcon.addEventListener('mouseenter', function() {
                     tooltip.style.visibility = 'visible';
                     tooltip.style.opacity = '1';
+                    tooltip.setAttribute('aria-hidden', 'false');
                 });
                 
                 infoIcon.addEventListener('mouseleave', function() {
                     tooltip.style.visibility = 'hidden';
                     tooltip.style.opacity = '0';
+                    tooltip.setAttribute('aria-hidden', 'true');
                 });
                 
                 // Keep tooltip visible when hovering over it
                 tooltip.addEventListener('mouseenter', function() {
                     tooltip.style.visibility = 'visible';
                     tooltip.style.opacity = '1';
+                    tooltip.setAttribute('aria-hidden', 'false');
                 });
                 
                 tooltip.addEventListener('mouseleave', function() {
                     tooltip.style.visibility = 'hidden';
                     tooltip.style.opacity = '0';
+                    tooltip.setAttribute('aria-hidden', 'true');
                 });
             }
             
@@ -221,9 +234,11 @@
                         if (tooltip.style.visibility === 'visible') {
                             tooltip.style.visibility = 'hidden';
                             tooltip.style.opacity = '0';
+                            tooltip.setAttribute('aria-hidden', 'true');
                         } else {
                             tooltip.style.visibility = 'visible';
                             tooltip.style.opacity = '1';
+                            tooltip.setAttribute('aria-hidden', 'false');
                         }
                     }
                 } else if (e.key === 'Escape' && tooltip.style.visibility === 'visible') {
@@ -237,6 +252,7 @@
                     setTimeout(function() {
                         tooltip.style.visibility = 'hidden';
                         tooltip.style.opacity = '0';
+                        tooltip.setAttribute('aria-hidden', 'true');
                     }, 200);
                 }
             });
@@ -264,6 +280,7 @@
     function openTooltip(tooltip) {
         tooltip.style.visibility = 'visible';
         tooltip.style.opacity = '1';
+        tooltip.setAttribute('aria-hidden', 'false');
         
         if (tooltipOverlay) {
             tooltipOverlay.style.display = 'block';
@@ -276,6 +293,7 @@
     function closeTooltip(tooltip) {
         tooltip.style.visibility = 'hidden';
         tooltip.style.opacity = '0';
+        tooltip.setAttribute('aria-hidden', 'true');
         
         if (tooltipOverlay) {
             tooltipOverlay.style.display = 'none';
