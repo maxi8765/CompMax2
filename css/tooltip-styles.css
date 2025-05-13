@@ -1,7 +1,6 @@
 /* 
  * tooltip-styles.css 
  * Styles for info icons and tooltips with link support
- * With improved mobile touch targets
  */
 
 /* Info Icon and Tooltip Styles */
@@ -10,7 +9,6 @@
     position: relative;
     margin-left: 8px;
     vertical-align: middle;
-    z-index: 10; /* Ensure icons are above other elements */
 }
 
 .info-icon {
@@ -24,10 +22,10 @@
     color: white;
     font-size: 12px;
     font-weight: bold;
-    cursor: help;
+    cursor: pointer;
     transition: background-color var(--transition-speed);
-    user-select: none; /* Prevent text selection */
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .info-icon:hover, 
@@ -50,16 +48,10 @@
     font-size: 0.75rem;
     line-height: 1.4;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* High z-index to be above other elements */
+    z-index: 1000;
     opacity: 0;
-    transition: opacity var(--transition-speed), visibility var(--transition-speed);
+    transition: opacity 0.2s, visibility 0.2s;
     border: 1px solid var(--gray-300);
-    pointer-events: none; /* Initially don't capture pointer events */
-}
-
-/* When visible, allow pointer events */
-.tooltip.visible {
-    pointer-events: auto;
 }
 
 /* Arrow at the bottom of tooltip */
@@ -74,12 +66,12 @@
     border-color: white transparent transparent transparent;
 }
 
-/* Show tooltip on hover/focus of icon, or when hovering tooltip itself */
+/* Show tooltip on hover/focus of icon (desktop only) */
 .info-icon:hover + .tooltip,
-.info-icon:focus + .tooltip {
+.info-icon:focus + .tooltip,
+.tooltip:hover {
     visibility: visible;
     opacity: 1;
-    pointer-events: auto;
 }
 
 /* Alternative position for tooltips that might go off-screen */
@@ -128,39 +120,37 @@
     cursor: pointer;
     color: #666;
     padding: 5px;
-    width: 24px;
-    height: 24px;
-    display: none; /* Hidden by default, shown on mobile */
-    z-index: 10;
+    display: none;
 }
 
-/* Tooltip content wrapper */
-.tooltip-content {
-    width: 100%;
+/* Tooltip overlay (mobile) */
+.tooltip-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 900;
 }
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
-    /* Create a larger touch target without affecting layout */
     .info-icon-container {
         position: relative;
-        margin-left: 5px;
     }
     
     .info-icon {
-        width: 24px;  /* Larger icon size */
+        width: 24px;
         height: 24px;
         font-size: 14px;
-        z-index: 20; /* Even higher to ensure tappability */
-        position: relative; /* Enable z-index */
     }
     
-    /* Show close button on mobile */
     .tooltip-close {
         display: block;
     }
     
-    /* Full-width tooltip on mobile for better readability */
     .tooltip {
         width: 90%;
         max-width: 320px;
@@ -171,15 +161,12 @@
         bottom: auto;
         transform: translate(-50%, -50%);
         padding: 15px;
-        pointer-events: auto; /* Always allow interaction on mobile */
     }
     
-    /* Center the arrow at the bottom */
     .tooltip::after {
-        display: none; /* Hide the arrow on mobile modal style */
+        display: none;
     }
     
-    /* Reset alternative positions on mobile - all centered */
     .tooltip.tooltip-left,
     .tooltip.tooltip-right {
         left: 50%;
@@ -192,27 +179,9 @@
         display: none;
     }
     
-    /* Make links easier to tap */
     .tooltip a {
         padding: 10px 0;
         margin: 8px 0;
         display: inline-block;
-    }
-    
-    /* Add overlay behind tooltip */
-    .tooltip-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 900;
-    }
-    
-    /* When overlay is visible */
-    .tooltip-overlay.visible {
-        display: block;
     }
 }
