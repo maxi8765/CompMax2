@@ -315,7 +315,30 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .success-button:hover, .success-button:focus {
     background-color: #2d9900;
 }
+/* Resources link */
+.resources-link {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 0.85rem;
+    transition: color var(--transition-speed);
+}
 
+.resources-link:hover,
+.resources-link:focus {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.resources-icon {
+    font-style: normal;
+    font-size: 1rem;
+}
+
+/* Responsive Design */
 /* Share & Accept Containers */
 .share-container, #accept-offer-container {
     margin-top: 2rem;
