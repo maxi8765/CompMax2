@@ -910,5 +910,12 @@ body:not(.employee-mode) .accept-offer-container {
             color: inherit !important;
             background-color: inherit !important;
         }
-    }
+        @media (max-width: 600px) {
+        body.employee-mode .accept-offer-container,
+        body.employee-mode #accept-offer-container {
+         display: block !important;
+         visibility: visible !important;
+  }
 }
+
+
