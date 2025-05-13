@@ -17,133 +17,131 @@
     <script src="js/date-fix.js"></script>
     <meta name="color-scheme" content="only light">
     <!-- Embedded mobile-specific fixes -->
-    <style>
-        /* Critical mobile-specific fixes - These only apply on small screens */
-        @media (max-width: 600px) {
-            /* Make slider track clearly visible */
-            input[type="range"] {
-                -webkit-appearance: none !important;
-                appearance: none !important;
-                height: 20px !important;
-                background: #ced4da !important;
-                border-radius: 10px !important;
-                border: 1px solid #adb5bd !important;
-                box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                z-index: 100 !important;
-                position: relative !important;
-            }
-            
-            /* Make slider thumb (blue circle) more prominent */
-            input[type="range"]::-webkit-slider-thumb {
-                -webkit-appearance: none !important;
-                width: 34px !important;
-                height: 34px !important;
-                background: #4361ee !important;
-                border: 3px solid white !important;
-                border-radius: 50% !important;
-                box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
-            }
-            
-            /* Firefox support */
-            input[type="range"]::-moz-range-thumb {
-                width: 34px !important;
-                height: 34px !important;
-                background: #4361ee !important;
-                border: 3px solid white !important;
-                border-radius: 50% !important;
-                box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
-            }
-            
-            input[type="range"]::-moz-range-track {
-                height: 20px !important;
-                background: #ced4da !important;
-                border-radius: 10px !important;
-                border: 1px solid #adb5bd !important;
-            }
-            
-            /* Make slider container more visible */
-            .slider-container {
-                margin: 2rem 0 !important;
-                padding: 1rem 0 !important;
-                border-top: 2px solid #dee2e6 !important;
-                border-bottom: 2px solid #dee2e6 !important;
-                background-color: white !important;
-                z-index: 10 !important;
-                position: relative !important;
-            }
-            
-            /* Make slider labels clearly visible */
-            .slider-label {
-                display: flex !important;
-                justify-content: space-between !important;
-                margin-bottom: 0.75rem !important;
-                font-weight: bold !important;
-                color: #495057 !important;
-            }
-            
-            /* Style the "Generate Link" button (employer view) */
-            #generate-link {
-                background-color: #4361ee !important;
-                color: white !important;
-                width: 100% !important;
-                padding: 1rem !important;
-                font-size: 1.1rem !important;
-                border-radius: 4px !important;
-                border: none !important;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-                margin-bottom: 1rem !important;
-                margin-top: 1rem !important;
-                font-weight: 600 !important;
-                -webkit-appearance: none !important;
-                appearance: none !important;
-            }
-            
-            /* Fix other buttons in employer view */
-            #send-email-button, #copy-link {
-                background-color: #4361ee !important;
-                color: white !important;
-                width: 100% !important;
-                -webkit-appearance: none !important;
-                appearance: none !important;
-            }
-            
-            /* Note: NOT using !important on accept-offer-container display to preserve view logic */
-            
-            /* Only if the accept-offer-container is meant to be visible, style the buttons */
-            #accept-offer-container:not([style*="display: none"]) #accept-offer-button,
-            #accept-offer-container[style*="display: block"] #accept-offer-button {
-                background-color: #38b000 !important;
-                color: white !important;
-                width: 100% !important;
-                padding: 1rem !important;
-                font-size: 1.1rem !important;
-                border-radius: 4px !important;
-                border: none !important;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-                margin-bottom: 1rem !important;
-                margin-top: 1rem !important;
-                font-weight: 600 !important;
-                -webkit-appearance: none !important;
-                appearance: none !important;
-            }
-            
-            /* Fix general share and copy buttons */
-            .share-button, .copy-button {
-                -webkit-appearance: none !important;
-                appearance: none !important;
-            }
-            
-            /* Make share container visible */
-            #share-container {
-                display: block !important;
-                visibility: visible !important;
-                width: 100% !important;
-            }
+   <!-- Replace the problematic style block in your index.html with this corrected version -->
+<style>
+    /* Critical mobile-specific fixes - These only apply on small screens */
+    @media (max-width: 600px) {
+        /* Make slider track clearly visible */
+        input[type="range"] {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            height: 20px !important;
+            background: #ced4da !important;
+            border-radius: 10px !important;
+            border: 1px solid #adb5bd !important;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            z-index: 100 !important;
+            position: relative !important;
         }
-    </style>
+        
+        /* Make slider thumb (blue circle) more prominent */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            width: 34px !important;
+            height: 34px !important;
+            background: #4361ee !important;
+            border: 3px solid white !important;
+            border-radius: 50% !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
+        }
+        
+        /* Firefox support */
+        input[type="range"]::-moz-range-thumb {
+            width: 34px !important;
+            height: 34px !important;
+            background: #4361ee !important;
+            border: 3px solid white !important;
+            border-radius: 50% !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
+        }
+        
+        input[type="range"]::-moz-range-track {
+            height: 20px !important;
+            background: #ced4da !important;
+            border-radius: 10px !important;
+            border: 1px solid #adb5bd !important;
+        }
+        
+        /* Make slider container more visible */
+        .slider-container {
+            margin: 2rem 0 !important;
+            padding: 1rem 0 !important;
+            border-top: 2px solid #dee2e6 !important;
+            border-bottom: 2px solid #dee2e6 !important;
+            background-color: white !important;
+            z-index: 10 !important;
+            position: relative !important;
+        }
+        
+        /* Make slider labels clearly visible */
+        .slider-label {
+            display: flex !important;
+            justify-content: space-between !important;
+            margin-bottom: 0.75rem !important;
+            font-weight: bold !important;
+            color: #495057 !important;
+        }
+        
+        /* Style the "Generate Link" button (employer view) */
+        #generate-link {
+            background-color: #4361ee !important;
+            color: white !important;
+            width: 100% !important;
+            padding: 1rem !important;
+            font-size: 1.1rem !important;
+            border-radius: 4px !important;
+            border: none !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+            margin-bottom: 1rem !important;
+            margin-top: 1rem !important;
+            font-weight: 600 !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+        
+        /* Fix other buttons in employer view */
+        #send-email-button, #copy-link {
+            background-color: #4361ee !important;
+            color: white !important;
+            width: 100% !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+        
+        /* CRITICAL FIX: Only style the share container, leave accept-offer-container alone */
+        #share-container {
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 100% !important;
+        }
+        
+        /* Only style the accept button in employee view when it's already visible */
+        #accept-offer-container:not([style*="display: none"]) #accept-offer-button {
+            background-color: #38b000 !important;
+            color: white !important;
+            width: 100% !important;
+            padding: 1rem !important;
+            font-size: 1.1rem !important;
+            border-radius: 4px !important;
+            border: none !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+            margin-bottom: 1rem !important;
+            margin-top: 1rem !important;
+            font-weight: 600 !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+        
+        /* Fix general share and copy buttons */
+        .share-button, .copy-button {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+        }
+    }
+</style>
 </head>
 <body>
     <div class="container">
