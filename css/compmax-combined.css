@@ -1,5 +1,5 @@
-/* CompMax Combined Styles 
- * A complete replacement for all style files
+/* 
+ * Fixed CSS for CompMax - Maintains proper view switching
  */
 
 /* Variables */
@@ -74,9 +74,6 @@ header {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     margin-bottom: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 /* Logo & Privacy Statement */
@@ -121,23 +118,17 @@ h1 {
 }
 
 /* Form Elements */
-#compensation-form {
-    width: 100%;
-    max-width: 600px;
-}
-
 .input-group {
     margin-bottom: 1.5rem;
-    max-width: 500px;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* IMPORTANT: Label must be flex for info icons to work */
+/* Fix for info icons - use flex layout for labels */
 label {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: 0.5rem;
     font-weight: 600;
 }
@@ -204,9 +195,10 @@ input:disabled {
 
 /* Slider */
 .slider-container {
-    margin: 2.5rem auto;
-    max-width: 500px;
-    width: 100%;
+    margin: 2.5rem 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .slider-label {
@@ -247,17 +239,16 @@ input[type="range"]::-webkit-slider-thumb:hover {
     background: var(--primary-dark);
 }
 
-/* Results Display - FIXED ALIGNMENT */
+/* Results Display - Fixed Alignment */
 .result {
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid var(--gray-300);
-    max-width: 500px;
+    max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    width: 100%;
 }
 
 .result-item {
@@ -296,7 +287,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
     margin-left: 8px;
     vertical-align: middle;
     flex-shrink: 0;
-    z-index: 100;
 }
 
 .info-icon {
@@ -340,7 +330,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
     opacity: 0;
     transition: opacity 0.2s, visibility 0.2s;
     border: 1px solid var(--gray-300);
-    pointer-events: auto;
 }
 
 /* Arrow at the bottom of tooltip */
@@ -502,7 +491,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
-    width: 100%;
 }
 
 #accept-offer-container {
@@ -585,7 +573,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
     margin-bottom: 1rem;
     border-radius: 4px;
     font-weight: 600;
-    display: none;
 }
 
 /* Email sending controls - centered */
@@ -714,7 +701,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
         margin-left: 6px;
         touch-action: manipulation;
         vertical-align: middle;
-        display: inline-flex;
     }
     
     .info-icon {
@@ -723,9 +709,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
         font-size: 12px;
         position: relative;
         z-index: 106;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         box-sizing: border-box;
         padding: 0;
         margin: 0;
@@ -766,6 +749,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
         font-size: 16px;
         right: 6px;
         top: 6px;
+    }
+    
+    /* Ensure label text doesn't wrap awkwardly around icons */
+    label {
+        flex-wrap: wrap;
     }
     
     /* Give label text some space before the icon */
