@@ -74,8 +74,70 @@ label {
     margin-bottom: 0.5rem;
     font-weight: 600;
 }
+/* Updates for css/styles.css */
 
-/* Container for label text */
+/* Center the form elements on the page */
+.input-group {
+    margin-bottom: 1.5rem;
+    max-width: 500px; /* Set a maximum width */
+    margin-left: auto;
+    margin-right: auto; /* Center the input groups */
+}
+
+/* Keep text left-aligned (default) in input fields */
+input[type="number"],
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    text-align: left; /* Explicitly set left alignment for text */
+    transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
+}
+
+/* Center the slider container */
+.slider-container {
+    margin: 2.5rem auto;
+    max-width: 500px;
+}
+
+/* Center the result section */
+.result {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-300);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Form heading centered */
+.form-heading {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+/* Responsive adjustments remain the same but with centered form */
+@media (max-width: 600px) {
+    .container {
+        padding: 0.5rem;
+    }
+    
+    .calculator {
+        padding: 1rem;
+    }
+    
+    .input-group {
+        width: 100%; /* Full width on mobile */
+    }
+}/* Container for label text */
 .label-text {
     flex: 1;
     min-width: 0; /* Allow text to shrink if needed */
