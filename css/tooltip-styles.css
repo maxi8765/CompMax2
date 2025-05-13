@@ -137,16 +137,65 @@
 
 /* Mobile adjustments */
 @media (max-width: 600px) {
+    /* Fix for info icons */
     .info-icon-container {
         position: relative;
+        z-index: 5; /* Higher than surrounding elements */
+        margin-left: 8px;
+        touch-action: manipulation;
     }
     
     .info-icon {
         width: 24px;
         height: 24px;
         font-size: 14px;
+        position: relative;
+        z-index: 6;
+        /* Create a larger but invisible touch target */
+        box-sizing: content-box;
+        border: 8px solid transparent;
+        margin: -8px;
+        touch-action: manipulation;
     }
     
+    /* Fix for input field buffers interfering with touch */
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="date"] {
+        /* Limit the touch target to the visible boundaries */
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        margin: 0;
+    }
+    
+    /* Ensure form labels don't have extra touch area */
+    label {
+        display: inline-block;
+        position: relative;
+        margin-bottom: 0.5rem;
+        /* Prevent touch events from being captured beyond visible boundaries */
+        overflow: visible;
+        touch-action: manipulation;
+    }
+    
+    /* Fix for radio button layout - reduce buffer area */
+    .radio-label {
+        display: flex;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        /* Create a more precise touch area */
+        touch-action: manipulation;
+    }
+    
+    /* Ensure input groups don't have extra padding */
+    .input-group {
+        position: relative;
+        touch-action: manipulation;
+    }
+    
+    /* Tooltip styles for mobile */
     .tooltip-close {
         display: block;
     }
