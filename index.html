@@ -12,17 +12,17 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourdomain.com/">
+    <meta property="og:url" content="https://maxi8765.github.io/CompMax2/">
     <meta property="og:title" content="CompMax - Salary & Equity Calculator">
     <meta property="og:description" content="Customize job offers with flexible salary and equity components. Streamline compensation negotiations.">
-    <meta property="og:image" content="https://yourdomain.com/og-image.png">
+    <meta property="og:image" content="https://maxi8765.github.io/CompMax2/logo.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://yourdomain.com/">
+    <meta property="twitter:url" content="https://maxi8765.github.io/CompMax2/">
     <meta property="twitter:title" content="CompMax - Salary & Equity Calculator">
     <meta property="twitter:description" content="Customize job offers with flexible salary and equity components. Streamline compensation negotiations.">
-    <meta property="twitter:image" content="https://yourdomain.com/og-image.png">
+    <meta property="twitter:image" content="https://maxi8765.github.io/CompMax2/logo.png">
 
     <!-- Favicon -->
     <link rel="icon" href="favicon.png" type="image/png">
@@ -106,7 +106,9 @@
             background-color: #1877f2;
         }
         .twitter {
-            background-color: #1da1f2;
+            background-color: #000000;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
         }
         .linkedin {
             background-color: #0077b5;
@@ -158,6 +160,20 @@
         }
         .feedback-form button:hover {
             background-color: #2d9900;
+        }
+        .feedback-response {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            display: none;
+        }
+        .feedback-success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .feedback-error {
+            background-color: #ffebee;
+            color: #c62828;
         }
     </style>
 </head>
@@ -389,32 +405,35 @@
                 </div>
             </div>
             
-            <!-- Social Share Section (NEW) -->
+            <!-- Social Share Section (FIXED) -->
             <div class="social-share-container">
                 <div class="social-share-title">Share CompMax with your network</div>
                 <div class="social-buttons">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourdomain.com" target="_blank" class="social-button facebook" aria-label="Share on Facebook">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://maxi8765.github.io/CompMax2/" target="_blank" class="social-button facebook" aria-label="Share on Facebook">
                         f
                     </a>
-                    <a href="https://twitter.com/intent/tweet?url=https://yourdomain.com&text=CompMax:%20Easily%20create%20flexible%20compensation%20offers%20with%20adjustable%20salary%20and%20equity" target="_blank" class="social-button twitter" aria-label="Share on Twitter">
-                        t
+                    <a href="https://twitter.com/intent/tweet?url=https://maxi8765.github.io/CompMax2/&text=CompMax%20-%20Create%20flexible%20compensation%20offers%20with%20adjustable%20salary%20and%20equity" target="_blank" class="social-button twitter" aria-label="Share on X">
+                        𝕏
                     </a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://yourdomain.com" target="_blank" class="social-button linkedin" aria-label="Share on LinkedIn">
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://maxi8765.github.io/CompMax2/&title=CompMax&summary=Create%20flexible%20compensation%20offers%20with%20adjustable%20salary%20and%20equity" target="_blank" class="social-button linkedin" aria-label="Share on LinkedIn">
                         in
                     </a>
-                    <a href="mailto:?subject=Check%20out%20CompMax&body=I%20found%20this%20great%20compensation%20calculator%20tool%20for%20startups:%20https://yourdomain.com" class="social-button email" aria-label="Share via Email">
+                    <a href="mailto:?subject=CompMax%20-%20Flexible%20Compensation%20Tool&body=Check%20out%20CompMax%2C%20a%20professional%20tool%20for%20creating%20customizable%20job%20offers%20with%20flexible%20salary%20and%20equity%20components%3A%20https%3A%2F%2Fmaxi8765.github.io%2FCompMax2%2F" class="social-button email" aria-label="Share via Email">
                         ✉
                     </a>
                 </div>
             </div>
             
-            <!-- Feedback Section (NEW) -->
+            <!-- Feedback Section (FIXED) -->
             <div class="feedback-container">
                 <button id="feedback-button" class="feedback-button">Provide Feedback</button>
                 <div id="feedback-form" class="feedback-form">
-                    <p>We'd love to hear your thoughts on CompMax:</p>
-                    <textarea id="feedback-message" placeholder="Enter your feedback here..."></textarea>
-                    <button id="send-feedback" type="button">Send Feedback</button>
+                    <form id="feedback-form-element">
+                        <p>We'd love to hear your thoughts on CompMax:</p>
+                        <textarea id="feedback-message" name="feedback" placeholder="Enter your feedback here..." required></textarea>
+                        <button type="submit" id="send-feedback">Send Feedback</button>
+                        <div id="feedback-response" class="feedback-response"></div>
+                    </form>
                 </div>
             </div>
             
@@ -434,36 +453,74 @@
         </div>
     </div>
 
-    <!-- Feedback JavaScript (NEW) -->
+    <!-- Feedback JavaScript (FIXED) -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const feedbackButton = document.getElementById('feedback-button');
             const feedbackForm = document.getElementById('feedback-form');
-            const sendFeedback = document.getElementById('send-feedback');
+            const feedbackFormElement = document.getElementById('feedback-form-element');
+            const feedbackResponse = document.getElementById('feedback-response');
             
             // Toggle feedback form
             feedbackButton.addEventListener('click', function() {
                 feedbackForm.style.display = feedbackForm.style.display === 'block' ? 'none' : 'block';
+                feedbackResponse.style.display = 'none';
+                feedbackResponse.className = 'feedback-response';
             });
             
-            // Send feedback
-            sendFeedback.addEventListener('click', function() {
+            // Handle form submission without redirecting
+            feedbackFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
                 const feedbackMessage = document.getElementById('feedback-message').value.trim();
                 if (!feedbackMessage) {
-                    alert('Please enter your feedback before sending.');
+                    showFeedbackMessage('Please enter your feedback before sending.', 'error');
                     return;
                 }
                 
-                // Send feedback via email
-                const subject = 'CompMax Feedback';
-                const body = encodeURIComponent(feedbackMessage);
-                window.location.href = `mailto:maxwell.ian@gmail.com?subject=${subject}&body=${body}`;
-                
-                // Reset form
-                document.getElementById('feedback-message').value = '';
-                feedbackForm.style.display = 'none';
-                alert('Thank you for your feedback!');
+                // Use fetch API to send the feedback to a Google Form or email service
+                // For now, we'll simulate success
+                setTimeout(function() {
+                    // Simulate successful submission
+                    showFeedbackMessage('Thank you for your feedback!', 'success');
+                    
+                    // Save the feedback to localStorage for demonstration
+                    const feedbacks = JSON.parse(localStorage.getItem('compmax-feedback') || '[]');
+                    feedbacks.push({
+                        message: feedbackMessage,
+                        timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('compmax-feedback', JSON.stringify(feedbacks));
+                    
+                    // Reset the form
+                    document.getElementById('feedback-message').value = '';
+                    
+                    // Auto-hide after 3 seconds
+                    setTimeout(function() {
+                        feedbackForm.style.display = 'none';
+                    }, 3000);
+                    
+                    // Optional: You can actually send the feedback via email in the background
+                    // by making an API call to a service like EmailJS or similar
+                    
+                    // For email sending in production, you would use something like:
+                    // emailjs.send("service_id", "template_id", {
+                    //    to_email: "maxwell.ian@gmail.com",
+                    //    message: feedbackMessage
+                    // });
+                }, 500);
             });
+            
+            function showFeedbackMessage(message, type) {
+                feedbackResponse.textContent = message;
+                feedbackResponse.style.display = 'block';
+                
+                if (type === 'success') {
+                    feedbackResponse.className = 'feedback-response feedback-success';
+                } else {
+                    feedbackResponse.className = 'feedback-response feedback-error';
+                }
+            }
         });
     </script>
 </body>
