@@ -1,0 +1,175 @@
+/* 
+ * tooltip-styles.css 
+ * Styles for info icons and tooltips with link support
+ */
+
+/* Info Icon and Tooltip Styles */
+.info-icon-container {
+    display: inline-block;
+    position: relative;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: help;
+    transition: background-color var(--transition-speed);
+}
+
+.info-icon:hover, 
+.info-icon:focus {
+    background-color: var(--primary-dark);
+}
+
+.tooltip {
+    visibility: hidden;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    background-color: white;
+    color: var(--dark);
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    opacity: 0;
+    transition: opacity var(--transition-speed), visibility var(--transition-speed);
+    border: 1px solid var(--gray-300);
+}
+
+/* Arrow at the bottom of tooltip */
+.tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+/* Show tooltip on hover/focus of icon, or when hovering tooltip itself */
+.info-icon:hover + .tooltip,
+.info-icon:focus + .tooltip,
+.tooltip:hover,
+.tooltip:focus-within {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Alternative position for tooltips that might go off-screen */
+.tooltip.tooltip-left {
+    left: 0;
+    transform: translateX(-10%);
+}
+
+.tooltip.tooltip-left::after {
+    left: 15%;
+}
+
+.tooltip.tooltip-right {
+    left: auto;
+    right: 0;
+    transform: translateX(10%);
+}
+
+.tooltip.tooltip-right::after {
+    left: 85%;
+}
+
+/* Link styling within tooltips */
+.tooltip a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.tooltip a:hover, 
+.tooltip a:focus {
+    text-decoration: underline;
+    color: var(--primary-dark);
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    /* Larger touch target for mobile */
+    .info-icon-container {
+        padding: 8px;
+        margin-left: 2px;
+    }
+    
+    .info-icon {
+        width: 24px;  /* Larger icon size */
+        height: 24px;
+        font-size: 14px;
+    }
+    
+    /* Full-width tooltip on mobile for better readability */
+    .tooltip {
+        width: calc(100vw - 40px);
+        max-width: 320px;
+        font-size: 0.8rem;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        padding: 15px;
+    }
+    
+    /* Center the arrow at the bottom */
+    .tooltip::after {
+        left: 50%;
+    }
+    
+    /* Reset alternative positions on mobile - all centered */
+    .tooltip.tooltip-left,
+    .tooltip.tooltip-right {
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+    }
+    
+    .tooltip.tooltip-left::after,
+    .tooltip.tooltip-right::after {
+        left: 50%;
+    }
+    
+    /* Make links easier to tap */
+    .tooltip a {
+        padding: 8px 0;
+        margin-top: 8px;
+        display: inline-block;
+    }
+    
+    /* Add overlay behind tooltip */
+    .tooltip::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+}
