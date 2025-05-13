@@ -416,5 +416,46 @@
             }
         });
     </script>
+    <script>
+  // This script ensures correct view mode display
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get view mode from URL parameters
+    function isEmployeeViewMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      // Check if we're in employee view mode based on URL parameters
+      return urlParams.has('name') && urlParams.has('maxSalary') && 
+             (urlParams.has('maxEquity') || urlParams.has('maxShares'));
+    }
+    
+    // Force the correct display based on view mode
+    const isEmployee = isEmployeeViewMode();
+    const acceptOfferContainer = document.getElementById('accept-offer-container');
+    const shareContainer = document.getElementById('share-container');
+    
+    if (isEmployee) {
+      // Employee view mode
+      if (acceptOfferContainer) {
+        // Make sure accept container is visible
+        acceptOfferContainer.style.display = 'block';
+      }
+      if (shareContainer) {
+        // Make sure share container is hidden
+        shareContainer.style.display = 'none';
+      }
+      console.log("Employee view mode enabled");
+    } else {
+      // Employer view mode
+      if (acceptOfferContainer) {
+        // Make sure accept container is hidden
+        acceptOfferContainer.style.display = 'none';
+      }
+      if (shareContainer) {
+        // Make sure share container is visible
+        shareContainer.style.display = 'block';
+      }
+      console.log("Employer view mode enabled");
+    }
+  });
+</script>
 </body>
 </html>
