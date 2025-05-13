@@ -30,20 +30,20 @@
         
         <main class="calculator" aria-label="Compensation Calculator">
             <div class="employee-mode-banner" id="employee-mode-banner" role="status">
-                Offeree View Mode - Make your selection below
+                Offeree View Mode - Review your compensation offer below
             </div>
             
             <!-- Form -->
             <form id="compensation-form">
                 <!-- Company Information -->
                 <div class="input-group">
-                    <label for="company-name">Company Name</label>
+                    <label for="company-name">Company Name (making the offer)</label>
                     <input type="text" id="company-name" placeholder="Enter company name" 
                            class="standard-input" aria-required="true">
                 </div>
                 
                 <div class="input-group" id="sender-name-group">
-                    <label for="sender-name">Your Name</label>
+                    <label for="sender-name">Your Name (responsible person making the offer)</label>
                     <input type="text" id="sender-name" placeholder="Enter your name" 
                            class="standard-input" aria-required="true">
                 </div>
@@ -94,7 +94,7 @@
                         </label>
                         <label class="radio-label">
                             <input type="radio" name="equity-type" id="equity-shares" value="shares">
-                            Number of Shares
+                            Number of Shares/Options
                         </label>
                     </div>
                 </div>
@@ -108,10 +108,10 @@
                 </div>
                 
                 <div class="input-group" id="max-shares-group" style="display: none;">
-                    <label for="max-shares">Max No. of Shares</label>
+                    <label for="max-shares">Max No. of Shares/Options</label>
                     <input type="text" id="max-shares" value="100,000" 
                            aria-describedby="shares-desc" inputmode="numeric" pattern="[0-9,]*">
-                    <div id="shares-desc" class="sr-only">Maximum number of shares</div>
+                    <div id="shares-desc" class="sr-only">Maximum number of Shares/Options</div>
                 </div>
                 
                 <div class="slider-container">
@@ -140,7 +140,7 @@
                     <div class="result-value equity-value" id="current-equity">0.75%</div>
                 </div>
                 <div class="result-item" id="current-shares-container" style="display: none;">
-                    <div class="result-label">Selected Shares</div>
+                    <div class="result-label">Selected Shares/Options</div>
                     <div class="result-value equity-value" id="current-shares">7,500</div>
                 </div>
             </div>
