@@ -13,9 +13,7 @@
         'position-title': 'The specific role or job title you are offering.',
         'employee-name': "The candidate's full name as it should appear on the formal offer.",
         'employee-email': "The candidate's email address where this offer will be sent.",
-        // Modified tooltipContent object in info-icons.js
-        // Replace the 'max-salary' entry with this:
-        'max-salary': 'The maximum salary amount you are willing to offer. The candidate can choose a lower amount in exchange for more equity. <a href="compensation-resources.html" target="_blank">View startup compensation resources</a>'
+        'max-salary': 'The maximum salary amount you are willing to offer. The candidate can choose a lower amount in exchange for more equity. <a href="compensation-resources.html" target="_blank">View startup compensation resources</a>',
         'max-equity': 'The maximum equity percentage you are willing to offer. This will be available to the candidate if they choose a lower salary.',
         'max-shares': 'The maximum number of shares you are willing to offer. This will be available to the candidate if they choose a lower salary.',
         'equity-type-selection': 'Choose whether to offer equity as a percentage of the company or as a specific number of shares.',
@@ -60,7 +58,7 @@
             // Create the tooltip
             const tooltip = document.createElement('span');
             tooltip.className = 'tooltip';
-            tooltip.textContent = tooltipContent[elementId];
+            tooltip.innerHTML = tooltipContent[elementId]; // Using innerHTML instead of textContent
             
             // Check if we need special positioning for the tooltip
             // For elements in the right half of the form
