@@ -73,6 +73,23 @@ label {
     font-weight: 600;
 }
 
+/* Container for label text */
+.label-text {
+    flex: 1;
+    min-width: 0; /* Allow text to shrink if needed */
+    padding-right: 8px; /* Space between text and icon */
+}
+
+/* Proper alignment for info icons */
+.info-icon-container {
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Radio button label special case */
+.radio-label {
+    justify-content: flex-start; /* Align items to the left */
+}
+
 /* Center the form elements on the page */
 .input-group {
     margin-bottom: 1.5rem;
@@ -96,10 +113,22 @@ input[type="date"] {
     transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
 }
 
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: var(--focus-ring);
+}
+
+input:disabled {
+    background-color: var(--gray-200);
+    cursor: not-allowed;
+}
+
 /* Center the slider container */
 .slider-container {
     margin: 2.5rem auto;
     max-width: 500px;
+    position: relative;
 }
 
 /* Center the result section */
@@ -119,23 +148,6 @@ input[type="date"] {
     font-weight: 600;
     margin-bottom: 0.5rem;
     text-align: center;
-}
-
-/* Container for label text */
-.label-text {
-    flex: 1;
-    min-width: 0; /* Allow text to shrink if needed */
-    padding-right: 8px; /* Space between text and icon */
-}
-
-/* Proper alignment for info icons */
-.info-icon-container {
-    flex-shrink: 0; /* Prevent icon from shrinking */
-}
-
-/* Radio button label special case */
-.radio-label {
-    justify-content: flex-start; /* Align items to the left */
 }
 
 /* Calculator styling */
@@ -188,22 +200,6 @@ h1 {
     margin-top: 1rem;
 }
 
-/* Form Elements */
-.input-group {
-    margin-bottom: 1.5rem;
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-ring);
-}
-
-input:disabled {
-    background-color: var(--gray-200);
-    cursor: not-allowed;
-}
-
 /* Radio Buttons for Equity Type */
 .radio-group {
     display: flex;
@@ -227,11 +223,6 @@ input:disabled {
 }
 
 /* Slider */
-.slider-container {
-    margin: 2.5rem 0;
-    position: relative;
-}
-
 .slider-label {
     display: flex;
     justify-content: space-between;
@@ -246,7 +237,6 @@ input[type="range"] {
     border-radius: 5px;
     outline: none;
     margin: 1rem 0;
-    position: relative;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -257,6 +247,21 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50%;
     cursor: pointer;
     transition: background var(--transition-speed) ease-in-out;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: var(--primary);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-track {
+    background: var(--gray-300);
+    height: 8px;
+    border-radius: 5px;
 }
 
 input[type="range"]:focus {
@@ -677,32 +682,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
         padding: 0.5rem;
     }
     
-    .share-button, .accept-button {
-        width: 100%;
-        margin-bottom: 1rem;
-        padding: 1rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        min-height: 50px;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    
-    .copy-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .copy-button {
-        margin-top: 0.75rem;
-        width: 100%;
-        padding: 0.75rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        min-height: 44px;
-    }
-    
     .radio-group {
         flex-direction: column;
         gap: 0.5rem;
@@ -743,91 +722,151 @@ input[type="range"]::-webkit-slider-thumb:hover {
         top: 6px;
     }
     
-    /* Make slider more visible */
-    input[type="range"] {
-        height: 16px;
-        background: var(--gray-400);
-        margin: 1.5rem 0;
-        z-index: 5;
-        position: relative;
-        -webkit-appearance: none;
-        appearance: none;
-        border: none;
-        outline: none;
-        opacity: 1;
+    /* Critical button fixes */
+    .share-button,
+    #generate-link,
+    #send-email-button,
+    #copy-link {
+        background-color: var(--primary) !important;
+        color: white !important;
+        border: none !important;
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        width: 100% !important;
+        border-radius: 4px !important;
+        text-align: center !important;
         display: block !important;
-        visibility: visible !important;
-        border-radius: 8px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        min-height: 50px !important;
     }
     
-    input[type="range"]::-webkit-slider-thumb {
-        width: 28px;
-        height: 28px;
-        border: 2px solid white;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    /* Accept button styling */
+    .accept-button,
+    #accept-offer-button,
+    #send-acceptance-email-button {
+        background-color: var(--success) !important;
+        color: white !important;
+        border: none !important;
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
+        width: 100% !important;
+        border-radius: 4px !important;
+        text-align: center !important;
+        display: block !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        min-height: 50px !important;
     }
     
-    /* Firefox specific styles */
-    input[type="range"]::-moz-range-thumb {
-        width: 28px;
-        height: 28px;
-        border: 2px solid white;
-        border-radius: 50%;
-        background: var(--primary);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-    }
-    
-    input[type="range"]::-moz-range-track {
-        height: 16px;
-        background: var(--gray-400);
-        border-radius: 5px;
-    }
-    
-    /* Safari/Edge specific styles */
-    input[type="range"]::-ms-thumb {
-        width: 28px;
-        height: 28px;
-        background: var(--primary);
-        border: 2px solid white;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-    }
-    
-    /* Improve slider container spacing */
-    .slider-container {
-        margin: 2rem 0;
-        padding: 1rem 0;
-        border-top: 1px solid var(--gray-300);
-        border-bottom: 1px solid var(--gray-300);
-        position: relative;
-        z-index: 10;
-    }
-    
-    /* Ensure buttons have a minimum touchable height */
-    button {
+    .copy-button {
+        margin-top: 0.75rem;
+        width: 100%;
+        padding: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         min-height: 44px;
     }
     
-    /* Add specific fix for buttons in mobile view */
-    #generate-link, #accept-offer-button, #send-email-button, 
-    #send-acceptance-email-button, #copy-link, #copy-offer-content, 
-    #copy-acceptance-content {
+    .copy-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    /* Critical slider fixes */
+    /* Make the track super obvious */
+    input[type="range"] {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        width: 100% !important;
+        height: 20px !important; /* Make track taller */
+        background: #ced4da !important; /* Use a more visible color */
+        border-radius: 10px !important; /* Rounded corners */
+        outline: none !important;
+        margin: 1.5rem 0 !important;
+        position: relative !important;
+        z-index: 100 !important; /* Very high z-index */
+        border: 1px solid #adb5bd !important; /* Add border to make it more visible */
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important; /* Inner shadow */
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* Make the thumb (handle) more visible */
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+        width: 34px !important; /* Larger thumb */
+        height: 34px !important;
+        background: #4361ee !important; /* Match brand color */
+        border-radius: 50% !important;
+        border: 3px solid white !important;
+        cursor: pointer !important;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important; /* More visible shadow */
+    }
+    
+    /* Firefox specific */
+    input[type="range"]::-moz-range-track {
+        width: 100% !important;
+        height: 20px !important;
+        background: #ced4da !important;
+        border-radius: 10px !important;
+        border: 1px solid #adb5bd !important;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+        width: 34px !important;
+        height: 34px !important;
+        background: #4361ee !important;
+        border-radius: 50% !important;
+        border: 3px solid white !important;
+        cursor: pointer !important;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
+    }
+    
+    /* Make sure the slider container doesn't get hidden */
+    .slider-container {
+        position: relative !important;
+        z-index: 10 !important;
+        padding: 1rem 0 !important;
+        margin: 2rem 0 !important;
+        border-top: 2px solid #dee2e6 !important;
+        border-bottom: 2px solid #dee2e6 !important;
+        background-color: white !important;
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    /* Ensure slider labels are visible */
+    .slider-label {
+        display: flex !important;
+        justify-content: space-between !important;
+        margin-bottom: 0.75rem !important;
+        font-weight: bold !important;
+        color: #495057 !important;
+    }
+    
+    /* Fix any share container issues */
+    .share-container, #accept-offer-container {
+        text-align: center !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
-        min-height: 50px;
-        touch-action: manipulation;
-        -webkit-appearance: none;
-        appearance: none;
-    }
-    
-    /* Make share-container visible */
-    #share-container, #accept-offer-container {
-        width: 100%;
-        visibility: visible !important;
-        opacity: 1 !important;
+        width: 100% !important;
+        margin-top: 2rem !important;
+        border-top: 1px solid #dee2e6 !important;
+        padding-top: 1rem !important;
     }
     
     /* Force light background on HTML and body */
