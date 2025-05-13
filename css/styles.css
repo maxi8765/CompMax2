@@ -63,8 +63,65 @@ header {
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--gray-300);
 }
+/* Additional CSS for label formatting
+   Add this to css/styles.css */
 
-.calculator {
+/* Format labels to prevent icon overlap */
+label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+/* Container for label text */
+.label-text {
+    flex: 1;
+    min-width: 0; /* Allow text to shrink if needed */
+    padding-right: 8px; /* Space between text and icon */
+}
+
+/* Proper alignment for info icons */
+.info-icon-container {
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Radio button label special case */
+.radio-label {
+    justify-content: flex-start; /* Align items to the left */
+}
+
+/* On desktop, we can make the form nicer with proper spacing */
+@media (min-width: 601px) {
+    .input-group {
+        margin-bottom: 1.8rem;
+    }
+    
+    label {
+        margin-bottom: 0.7rem;
+    }
+    
+    /* Center the key form elements in the calculator */
+    .calculator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #compensation-form {
+        width: 100%;
+        max-width: 600px;
+    }
+    
+    /* Make sure share and accept containers are centered too */
+    .share-container, 
+    #accept-offer-container {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}.calculator {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
