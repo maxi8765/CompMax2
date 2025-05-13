@@ -63,8 +63,6 @@ header {
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--gray-300);
 }
-/* Additional CSS for label formatting
-   Add this to css/styles.css */
 
 /* Format labels to prevent icon overlap */
 label {
@@ -74,7 +72,6 @@ label {
     margin-bottom: 0.5rem;
     font-weight: 600;
 }
-/* Updates for css/styles.css */
 
 /* Center the form elements on the page */
 .input-group {
@@ -124,20 +121,7 @@ input[type="date"] {
     text-align: center;
 }
 
-/* Responsive adjustments remain the same but with centered form */
-@media (max-width: 600px) {
-    .container {
-        padding: 0.5rem;
-    }
-    
-    .calculator {
-        padding: 1rem;
-    }
-    
-    .input-group {
-        width: 100%; /* Full width on mobile */
-    }
-}/* Container for label text */
+/* Container for label text */
 .label-text {
     flex: 1;
     min-width: 0; /* Allow text to shrink if needed */
@@ -154,36 +138,8 @@ input[type="date"] {
     justify-content: flex-start; /* Align items to the left */
 }
 
-/* On desktop, we can make the form nicer with proper spacing */
-@media (min-width: 601px) {
-    .input-group {
-        margin-bottom: 1.8rem;
-    }
-    
-    label {
-        margin-bottom: 0.7rem;
-    }
-    
-    /* Center the key form elements in the calculator */
-    .calculator {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    #compensation-form {
-        width: 100%;
-        max-width: 600px;
-    }
-    
-    /* Make sure share and accept containers are centered too */
-    .share-container, 
-    #accept-offer-container {
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}.calculator {
+/* Calculator styling */
+.calculator {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -227,7 +183,7 @@ h1 {
 
 .info-text {
     font-size: 0.75rem;
-    color: ;
+    color: var(--gray-700);
     text-align: center;
     margin-top: 1rem;
 }
@@ -235,31 +191,6 @@ h1 {
 /* Form Elements */
 .input-group {
     margin-bottom: 1.5rem;
-}
-
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-.form-heading {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-align: center;
-}
-
-input[type="number"],
-input[type="text"],
-input[type="email"],
-input[type="date"] {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-    transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
 }
 
 input:focus {
@@ -298,6 +229,7 @@ input:disabled {
 /* Slider */
 .slider-container {
     margin: 2.5rem 0;
+    position: relative;
 }
 
 .slider-label {
@@ -314,6 +246,7 @@ input[type="range"] {
     border-radius: 5px;
     outline: none;
     margin: 1rem 0;
+    position: relative;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -339,13 +272,28 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 /* Results Display */
-.result {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-300);
+.result-item {
+    text-align: center;
+    flex: 1;
+    padding: 1rem;
 }
+
+.result-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin-bottom: 0.5rem;
+}
+
+.result-value {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.equity-value {
+    color: var(--success);
+}
+
 /* Info Icon and Tooltip Styles */
 .info-icon-container {
     display: inline-block;
@@ -431,35 +379,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .tooltip.tooltip-right::after {
     left: 85%;
-}
-
-/* Mobile adjustments */
-@media (max-width: 600px) {
-    .tooltip {
-        width: 200px;
-        font-size: 0.7rem;
-    }
-}
-.result-item {
-    text-align: center;
-    flex: 1;
-    padding: 1rem;
-}
-
-.result-label {
-    font-size: 0.9rem;
-    color: var(--gray-600);
-    margin-bottom: 0.5rem;
-}
-
-.result-value {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--primary);
-}
-
-.equity-value {
-    color: var(--success);
 }
 
 /* Buttons */
@@ -693,14 +612,47 @@ input[type="range"]::-webkit-slider-thumb:hover {
     color: var(--gray-600);
 }
 
-/* Responsive Design */
+/* Desktop specific styles */
+@media (min-width: 601px) {
+    .input-group {
+        margin-bottom: 1.8rem;
+    }
+    
+    label {
+        margin-bottom: 0.7rem;
+    }
+    
+    /* Center the key form elements in the calculator */
+    .calculator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #compensation-form {
+        width: 100%;
+        max-width: 600px;
+    }
+    
+    /* Make sure share and accept containers are centered too */
+    .share-container, 
+    #accept-offer-container {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Mobile specific styles */
 @media (max-width: 600px) {
     .container {
-        padding: 0.5rem;
+        padding: 1rem;
     }
     
     .calculator {
         padding: 1rem;
+        position: relative;
+        z-index: 1;
     }
     
     /* Add more whitespace above the logo on mobile */
@@ -710,6 +662,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
     
     .result {
         flex-direction: column;
+        background-color: var(--gray-100);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 2rem;
     }
     
     .result-item {
@@ -723,7 +679,15 @@ input[type="range"]::-webkit-slider-thumb:hover {
     
     .share-button, .accept-button {
         width: 100%;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        min-height: 50px;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     .copy-container {
@@ -732,109 +696,158 @@ input[type="range"]::-webkit-slider-thumb:hover {
     }
     
     .copy-button {
-        margin-top: 0.5rem;
+        margin-top: 0.75rem;
         width: 100%;
+        padding: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        min-height: 44px;
     }
     
     .radio-group {
         flex-direction: column;
         gap: 0.5rem;
     }
+    
+    .tooltip {
+        width: 200px;
+        font-size: 0.7rem;
+        position: fixed;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 12px;
+        z-index: 1010;
+    }
+    
+    .tooltip::after {
+        display: none;
+    }
+    
+    .tooltip.tooltip-left,
+    .tooltip.tooltip-right {
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+    }
+    
+    .tooltip.tooltip-left::after,
+    .tooltip.tooltip-right::after {
+        display: none;
+    }
+    
+    .tooltip-close {
+        display: block;
+        padding: 6px;
+        font-size: 16px;
+        right: 6px;
+        top: 6px;
+    }
+    
+    /* Make slider more visible */
+    input[type="range"] {
+        height: 16px;
+        background: var(--gray-400);
+        margin: 1.5rem 0;
+        z-index: 5;
+        position: relative;
+        -webkit-appearance: none;
+        appearance: none;
+        border: none;
+        outline: none;
+        opacity: 1;
+        display: block !important;
+        visibility: visible !important;
+        border-radius: 8px;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+        width: 28px;
+        height: 28px;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Firefox specific styles */
+    input[type="range"]::-moz-range-thumb {
+        width: 28px;
+        height: 28px;
+        border: 2px solid white;
+        border-radius: 50%;
+        background: var(--primary);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+    
+    input[type="range"]::-moz-range-track {
+        height: 16px;
+        background: var(--gray-400);
+        border-radius: 5px;
+    }
+    
+    /* Safari/Edge specific styles */
+    input[type="range"]::-ms-thumb {
+        width: 28px;
+        height: 28px;
+        background: var(--primary);
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+    
+    /* Improve slider container spacing */
+    .slider-container {
+        margin: 2rem 0;
+        padding: 1rem 0;
+        border-top: 1px solid var(--gray-300);
+        border-bottom: 1px solid var(--gray-300);
+        position: relative;
+        z-index: 10;
+    }
+    
+    /* Ensure buttons have a minimum touchable height */
+    button {
+        min-height: 44px;
+    }
+    
+    /* Add specific fix for buttons in mobile view */
+    #generate-link, #accept-offer-button, #send-email-button, 
+    #send-acceptance-email-button, #copy-link, #copy-offer-content, 
+    #copy-acceptance-content {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        min-height: 50px;
+        touch-action: manipulation;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    /* Make share-container visible */
+    #share-container, #accept-offer-container {
+        width: 100%;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Force light background on HTML and body */
     html, body {
-    background-color: white !important;
-    color: black !important;
-    forced-color-adjust: none;
-    -webkit-font-smoothing: antialiased;
-}
-
+        background-color: white !important;
+        color: var(--dark) !important;
+        forced-color-adjust: none;
+        -webkit-font-smoothing: antialiased;
+    }
+    
     /* If Brave or Android forces prefers-color-scheme, override it */
     @media (prefers-color-scheme: dark) {
         html, body {
             background-color: white !important;
-            color: black !important;
+            color: var(--dark) !important;
         }
-    
+        
         * {
             color: inherit !important;
             background-color: inherit !important;
         }
     }
-    /* Add these styles to the end of your css/styles.css file */
-
-/* Mobile-specific fixes */
-@media (max-width: 600px) {
-  /* Make slider more visible */
-  input[type="range"] {
-    height: 16px;
-    background: var(--gray-400);
-    margin: 1.5rem 0;
-    z-index: 5;
-    position: relative;
-  }
-  
-  input[type="range"]::-webkit-slider-thumb {
-    width: 28px;
-    height: 28px;
-    border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Improve slider container spacing */
-  .slider-container {
-    margin: 2rem 0;
-    padding: 1rem 0;
-    border-top: 1px solid var(--gray-300);
-    border-bottom: 1px solid var(--gray-300);
-  }
-  
-  /* Make buttons more visible and prominent */
-  .share-button, 
-  .accept-button {
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .copy-button {
-    width: 100%;
-    margin-top: 0.75rem;
-    padding: 0.75rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Ensure buttons have a minimum touchable height */
-  button {
-    min-height: 44px;
-  }
-  
-  /* Make sure the result section is clearly visible */
-  .result {
-    background-color: var(--gray-100);
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 2rem;
-  }
-  
-  /* Force light background on HTML and body */
-  html, body {
-    background-color: white !important;
-    color: var(--dark) !important;
-  }
-  
-  /* Fix z-index issues that might be affecting visibility */
-  .calculator {
-    position: relative;
-    z-index: 1;
-  }
-  
-  /* Provide more padding in the main container */
-  .container {
-    padding: 1rem;
-  }
-}
-}
-
 }
