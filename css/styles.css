@@ -740,23 +740,25 @@ input[type="range"]::-webkit-slider-thumb:hover {
         flex-direction: column;
         gap: 0.5rem;
     }
-    /* Force light mode background and text color across all browsers */
-html, body {
+    html, body {
     background-color: white !important;
     color: black !important;
-    }
-    
-    /* Prevent auto-dark-mode override in modern browsers */
+    forced-color-adjust: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+    /* If Brave or Android forces prefers-color-scheme, override it */
     @media (prefers-color-scheme: dark) {
         html, body {
             background-color: white !important;
             color: black !important;
         }
-}
-
-}
-
-    .tooltip {
-        width: 90%;
+    
+        * {
+            color: inherit !important;
+            background-color: inherit !important;
+        }
     }
+}
+
 }
