@@ -1,27 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="ONx8UDKK1lVbgSfBQSmfZCeX2kjpHaBga7MAcc2ng6k" />
+    <meta name="description" content="CompMax - Customize and optimize your job offer's salary and equity balance. A specialized tool for startups and tech companies to create flexible compensation packages.">
+    <meta name="keywords" content="compensation calculator, salary negotiation, equity compensation, startup offer, job offer tool">
+    <meta name="author" content="MXX1 Holdings Pty Ltd">
+    <link rel="canonical" href="https://yourdomain.com/" />
+    <title>CompMax - Salary & Equity Calculator</title>
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://yourdomain.com/">
     <meta property="og:title" content="CompMax - Salary & Equity Calculator">
     <meta property="og:description" content="Customize job offers with flexible salary and equity components. Streamline compensation negotiations.">
     <meta property="og:image" content="https://yourdomain.com/og-image.png">
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://yourdomain.com/">
     <meta property="twitter:title" content="CompMax - Salary & Equity Calculator">
     <meta property="twitter:description" content="Customize job offers with flexible salary and equity components. Streamline compensation negotiations.">
-    <meta property="twitter:image" content="https://yourdomain.com/og-image.png">    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CompMax - Customize and optimize your job offer's salary and equity balance. A specialized tool for startups and tech companies to create flexible compensation packages.">
-    <meta name="keywords" content="compensation calculator, salary negotiation, equity compensation, startup offer, job offer tool">
-    <meta name="author" content="MXX1 Holdings Pty Ltd">
-    <link rel="canonical" href="https://yourdomain.com/" />
-    <title>CompMax - Salary & Equity Calculator</title>
+    <meta property="twitter:image" content="https://yourdomain.com/og-image.png">
+
     <!-- Favicon -->
     <link rel="icon" href="favicon.png" type="image/png">
+
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
     {
@@ -42,36 +47,119 @@
       }
     }
     </script>
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V3M451DF0Q"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
+      gtag('config', 'G-V3M451DF0Q');
     </script>
+
     <!-- Load EmailJS library -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
     <!-- Load app styles and script -->
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/config.js" defer></script>
     <script src="js/app.js" defer></script>
     <script src="js/format-salary.js"></script>
     <script src="js/date-fix.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CompMax - Salary and Equity Compensation Calculator for job offers">
-    <title>CompMax - Salary & Equity Calculator</title>
-    <!-- Favicon -->
-    <link rel="icon" href="favicon.png" type="image/png">
-    <!-- Load EmailJS library -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <!-- Load app styles and script -->
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/config.js" defer></script>
-    <script src="js/app.js" defer></script>
-    <script src="js/format-salary.js"></script>
-    <script src="js/date-fix.js"></script>
+    
+    <!-- Social sharing styles -->
+    <style>
+        .social-share-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--gray-100);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .social-share-title {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .social-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            text-decoration: none;
+        }
+        .social-button:hover {
+            transform: translateY(-3px);
+        }
+        .facebook {
+            background-color: #1877f2;
+        }
+        .twitter {
+            background-color: #1da1f2;
+        }
+        .linkedin {
+            background-color: #0077b5;
+        }
+        .email {
+            background-color: #ff9800;
+        }
+        .feedback-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .feedback-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        .feedback-button:hover {
+            background-color: var(--primary-dark);
+        }
+        .feedback-form {
+            display: none;
+            margin-top: 15px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        .feedback-form textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+        }
+        .feedback-form button {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .feedback-form button:hover {
+            background-color: #2d9900;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -301,6 +389,35 @@
                 </div>
             </div>
             
+            <!-- Social Share Section (NEW) -->
+            <div class="social-share-container">
+                <div class="social-share-title">Share CompMax with your network</div>
+                <div class="social-buttons">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://yourdomain.com" target="_blank" class="social-button facebook" aria-label="Share on Facebook">
+                        f
+                    </a>
+                    <a href="https://twitter.com/intent/tweet?url=https://yourdomain.com&text=CompMax:%20Easily%20create%20flexible%20compensation%20offers%20with%20adjustable%20salary%20and%20equity" target="_blank" class="social-button twitter" aria-label="Share on Twitter">
+                        t
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://yourdomain.com" target="_blank" class="social-button linkedin" aria-label="Share on LinkedIn">
+                        in
+                    </a>
+                    <a href="mailto:?subject=Check%20out%20CompMax&body=I%20found%20this%20great%20compensation%20calculator%20tool%20for%20startups:%20https://yourdomain.com" class="social-button email" aria-label="Share via Email">
+                        ✉
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Feedback Section (NEW) -->
+            <div class="feedback-container">
+                <button id="feedback-button" class="feedback-button">Provide Feedback</button>
+                <div id="feedback-form" class="feedback-form">
+                    <p>We'd love to hear your thoughts on CompMax:</p>
+                    <textarea id="feedback-message" placeholder="Enter your feedback here..."></textarea>
+                    <button id="send-feedback" type="button">Send Feedback</button>
+                </div>
+            </div>
+            
             <footer class="copyright-footer">
                 <p>© MXX1 Holdings Pty Ltd</p>
             </footer>
@@ -316,5 +433,38 @@
             <button id="error-ok-button" class="share-button">OK</button>
         </div>
     </div>
+
+    <!-- Feedback JavaScript (NEW) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const feedbackButton = document.getElementById('feedback-button');
+            const feedbackForm = document.getElementById('feedback-form');
+            const sendFeedback = document.getElementById('send-feedback');
+            
+            // Toggle feedback form
+            feedbackButton.addEventListener('click', function() {
+                feedbackForm.style.display = feedbackForm.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // Send feedback
+            sendFeedback.addEventListener('click', function() {
+                const feedbackMessage = document.getElementById('feedback-message').value.trim();
+                if (!feedbackMessage) {
+                    alert('Please enter your feedback before sending.');
+                    return;
+                }
+                
+                // Send feedback via email
+                const subject = 'CompMax Feedback';
+                const body = encodeURIComponent(feedbackMessage);
+                window.location.href = `mailto:maxwell.ian@gmail.com?subject=${subject}&body=${body}`;
+                
+                // Reset form
+                document.getElementById('feedback-message').value = '';
+                feedbackForm.style.display = 'none';
+                alert('Thank you for your feedback!');
+            });
+        });
+    </script>
 </body>
 </html>
