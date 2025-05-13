@@ -1,357 +1,75 @@
-/* Variables */
-:root {
-    --primary: #4361ee;
-    --primary-dark: #3a56d4;
-    --secondary: #7209b7;
-    --light: #f8f9fa;
-    --dark: #212529;
-    --success: #38b000;
-    --warning: #ff9e00;
-    --danger: #e63946;
-    --gray-100: #f8f9fa;
-    --gray-200: #e9ecef;
-    --gray-300: #dee2e6;
-    --gray-400: #ced4da;
-    --gray-500: #adb5bd;
-    --gray-600: #6c757d;
-    --gray-700: #495057;
-    --gray-800: #343a40;
-    --gray-900: #212529;
-    --focus-ring: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
-    --transition-speed: 0.2s;
-}
-
-/* Base Styles */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: var(--dark);
-    background-color: var(--light);
+    font-family: system-ui, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #fff;
+    color: #111;
 }
 
-/* Screen reader only utility */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-}
-
-/* Layout */
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--gray-300);
-}
-/* Additional CSS for label formatting
-   Add this to css/styles.css */
-
-/* Format labels to prevent icon overlap */
-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-/* Updates for css/styles.css */
-
-/* Center the form elements on the page */
-.input-group {
-    margin-bottom: 1.5rem;
-    max-width: 500px; /* Set a maximum width */
-    margin-left: auto;
-    margin-right: auto; /* Center the input groups */
-}
-
-/* Keep text left-aligned (default) in input fields */
-input[type="number"],
-input[type="text"],
-input[type="email"],
-input[type="date"] {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: inherit;
-    text-align: left; /* Explicitly set left alignment for text */
-    transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
-}
-
-/* Center the slider container */
-.slider-container {
-    margin: 2.5rem auto;
-    max-width: 500px;
-}
-
-/* Center the result section */
-.result {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-300);
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Form heading centered */
-.form-heading {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-align: center;
-}
-
-/* Responsive adjustments remain the same but with centered form */
-@media (max-width: 600px) {
-    .container {
-        padding: 0.5rem;
-    }
-    
-    .calculator {
-        padding: 1rem;
-    }
-    
-    .input-group {
-        width: 100%; /* Full width on mobile */
-    }
-}/* Container for label text */
-.label-text {
-    flex: 1;
-    min-width: 0; /* Allow text to shrink if needed */
-    padding-right: 8px; /* Space between text and icon */
-}
-
-/* Proper alignment for info icons */
-.info-icon-container {
-    flex-shrink: 0; /* Prevent icon from shrinking */
-}
-
-/* Radio button label special case */
-.radio-label {
-    justify-content: flex-start; /* Align items to the left */
-}
-
-/* On desktop, we can make the form nicer with proper spacing */
-@media (min-width: 601px) {
-    .input-group {
-        margin-bottom: 1.8rem;
-    }
-    
-    label {
-        margin-bottom: 0.7rem;
-    }
-    
-    /* Center the key form elements in the calculator */
-    .calculator {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    #compensation-form {
-        width: 100%;
-        max-width: 600px;
-    }
-    
-    /* Make sure share and accept containers are centered too */
-    .share-container, 
-    #accept-offer-container {
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}.calculator {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    margin-bottom: 2rem;
-}
-
-/* Logo & Privacy Statement */
-.logo-container {
-    text-align: center;
+h1, h2, h3 {
+    font-weight: bold;
     margin-bottom: 1rem;
-}
-
-.logo {
-    max-width: 200px;
-    height: auto;
-}
-
-.privacy-statement {
-    font-size: 0.75rem;
-    color: var(--gray-600);
-    margin-top: 1rem;
-    padding: 0.75rem;
-    background-color: var(--gray-100);
-    border-radius: 4px;
-    text-align: left;
-    line-height: 1.4;
-}
-
-/* Typography */
-h1 {
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-}
-
-.subtitle {
-    color: var(--secondary);
-    font-weight: 300;
-    margin-bottom: 0.5rem;
-}
-
-.info-text {
-    font-size: 0.75rem;
-    color: ;
-    text-align: center;
-    margin-top: 1rem;
-}
-
-/* Form Elements */
-.input-group {
-    margin-bottom: 1.5rem;
 }
 
 label {
     display: block;
-    margin-bottom: 0.5rem;
     font-weight: 600;
+    margin: 1rem 0 0.25rem;
 }
 
-.form-heading {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    text-align: center;
-}
-
-input[type="number"],
-input[type="text"],
-input[type="email"],
-input[type="date"] {
+input,
+select,
+textarea {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--gray-300);
-    border-radius: 4px;
+    padding: 0.5rem;
     font-size: 1rem;
-    font-family: inherit;
-    transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
 }
 
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: var(--focus-ring);
-}
-
-input:disabled {
-    background-color: var(--gray-200);
-    cursor: not-allowed;
-}
-
-/* Radio Buttons for Equity Type */
-.radio-group {
-    display: flex;
-    gap: 1.5rem;
+input[type=range] {
+    width: 100%;
     margin-top: 0.5rem;
 }
 
-.radio-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+/* Buttons */
+button,
+.share-button,
+.accept-button,
+.copy-button {
+    display: inline-block;
+    background-color: #4361ee;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
     cursor: pointer;
-    font-weight: normal;
+    margin-top: 1rem;
+    text-align: center;
 }
 
-.radio-label input[type="radio"] {
-    margin: 0;
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
+button:hover {
+    background-color: #354bbf;
 }
 
-/* Slider */
-.slider-container {
-    margin: 2.5rem 0;
-}
-
-.slider-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-}
-
-input[type="range"] {
-    width: 100%;
-    height: 8px;
-    -webkit-appearance: none;
-    background: var(--gray-300);
-    border-radius: 5px;
-    outline: none;
-    margin: 1rem 0;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 22px;
-    height: 22px;
-    background: var(--primary);
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background var(--transition-speed) ease-in-out;
-}
-
-input[type="range"]:focus {
-    outline: none;
-}
-
-input[type="range"]:focus::-webkit-slider-thumb {
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-    background: var(--primary-dark);
-}
-
-/* Results Display */
-.result {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-300);
-}
-/* Info Icon and Tooltip Styles */
+/* Info icon and tooltip */
 .info-icon-container {
     display: inline-block;
     position: relative;
-    margin-left: 8px;
     vertical-align: middle;
+    margin-left: 0.5rem;
 }
 
 .info-icon {
@@ -361,404 +79,50 @@ input[type="range"]::-webkit-slider-thumb:hover {
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background-color: var(--primary);
+    background-color: #4361ee;
     color: white;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
     cursor: help;
-    transition: background-color var(--transition-speed);
-}
-
-.info-icon:hover, .info-icon:focus {
-    background-color: var(--primary-dark);
 }
 
 .tooltip {
     visibility: hidden;
+    opacity: 0;
     position: absolute;
     bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
-    width: 250px;
     background-color: white;
-    color: var(--dark);
-    text-align: left;
-    border-radius: 6px;
+    color: black;
     padding: 10px;
+    border-radius: 4px;
     font-size: 0.75rem;
-    line-height: 1.4;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    opacity: 0;
-    transition: opacity var(--transition-speed), visibility var(--transition-speed);
-    border: 1px solid var(--gray-300);
+    width: 220px;
+    border: 1px solid #ccc;
+    z-index: 999;
+    transition: opacity 0.2s ease-in-out;
 }
 
-/* Arrow at the bottom of tooltip */
-.tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -8px;
-    border-width: 8px;
-    border-style: solid;
-    border-color: white transparent transparent transparent;
-}
-
-/* Show tooltip on hover/focus */
-.info-icon:hover + .tooltip,
-.info-icon:focus + .tooltip {
+.info-icon:hover .tooltip,
+.info-icon:focus .tooltip {
     visibility: visible;
     opacity: 1;
 }
 
-/* Alternative position for tooltips that might go off-screen */
-.tooltip.tooltip-left {
-    left: 0;
-    transform: translateX(-10%);
-}
-
-.tooltip.tooltip-left::after {
-    left: 15%;
-}
-
-.tooltip.tooltip-right {
-    left: auto;
-    right: 0;
-    transform: translateX(10%);
-}
-
-.tooltip.tooltip-right::after {
-    left: 85%;
-}
-
-/* Mobile adjustments */
-@media (max-width: 600px) {
-    .tooltip {
-        width: 200px;
-        font-size: 0.7rem;
-    }
-}
-.result-item {
-    text-align: center;
-    flex: 1;
-    padding: 1rem;
-}
-
-.result-label {
-    font-size: 0.9rem;
-    color: var(--gray-600);
-    margin-bottom: 0.5rem;
-}
-
-.result-value {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--primary);
-}
-
-.equity-value {
-    color: var(--success);
-}
-
-/* Buttons */
-.share-button,
-.accept-button,
-.copy-button {
-    border: none;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color var(--transition-speed), transform var(--transition-speed);
-    font-family: inherit;
-}
-
-.share-button {
-    background-color: var(--primary);
-    color: white;
-    padding: 0.75rem 1.5rem;
-}
-
-.share-button:hover, .share-button:focus {
-    background-color: var(--primary-dark);
-    transform: translateY(-1px);
-}
-
-.share-button:focus, .accept-button:focus, .copy-button:focus {
-    outline: none;
-    box-shadow: var(--focus-ring);
-}
-
-.share-button:disabled, .accept-button:disabled, .copy-button:disabled {
-    background-color: var(--gray-500);
-    cursor: not-allowed;
-    transform: none;
-}
-
-.accept-button {
-    background-color: var(--success);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-}
-
-.accept-button:hover, .accept-button:focus {
-    background-color: #2d9900;
-    transform: translateY(-1px);
-}
-
-.copy-button {
-    background-color: var(--warning);
-    color: white;
-    padding: 0.4rem 0.75rem;
-    font-size: 0.85rem;
-    display: inline-block;
-}
-
-.copy-button:hover, .copy-button:focus {
-    background-color: #e08e00;
-}
-
-.success-button {
-    background-color: var(--success);
-}
-
-.success-button:hover, .success-button:focus {
-    background-color: #2d9900;
-}
-
-/* Share & Accept Containers */
-.share-container, #accept-offer-container {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--gray-300);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#accept-offer-container {
-    text-align: center;
-}
-
-.status-message {
-    margin-top: 1rem;
-    text-align: left;
-    background-color: var(--gray-100);
-    padding: 1rem;
-    border-radius: 4px;
-}
-
-.share-link {
-    margin-top: 1rem;
-    padding: 1rem;
-    background-color: var(--gray-100);
-    border-radius: 4px;
-    font-family: monospace;
-    word-break: break-all;
-}
-
-.share-link-container {
-    position: relative;
-    margin-top: 1rem;
-}
-
-.email-status {
-    margin-top: 0.5rem;
-    text-align: center;
-    display: none;
-}
-
-.success-message {
-    color: var(--success);
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.error-message {
-    color: var(--danger);
-    font-weight: 600;
-}
-
-.email-display, .subject-display {
-    font-weight: bold;
-}
-
-.email-content-container {
-    margin-top: 1rem;
-    border: 1px solid var(--gray-300);
-    padding: 1rem;
-    background-color: white;
-}
-
-.email-content {
-    width: 100%;
-    height: 150px;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border: 1px solid var(--gray-300);
-    font-family: inherit;
-    resize: vertical;
-}
-
-.copy-container {
-    display: flex;
-    align-items: center;
-    margin-top: 0.5rem;
-}
-
-/* Employee mode banner */
-.employee-mode-banner {
-    background-color: var(--warning);
-    color: white;
-    text-align: center;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    font-weight: 600;
-    display: none;
-}
-
-/* Email sending controls - centered */
-#email-sending-controls {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 500px;
-}
-
-#send-email-button {
-    width: auto;
-    min-width: 200px;
-    margin: 0 auto;
-}
-
-/* Error Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background-color: white;
-    margin: auto;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    position: relative;
-}
-
-.close-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    color: var(--gray-600);
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close-button:hover, .close-button:focus {
-    color: var(--dark);
-}
-
-#error-modal h2 {
-    color: var(--danger);
-    margin-bottom: 1rem;
-}
-
-#error-modal button {
-    margin-top: 1rem;
-}
-
-/* Copyright */
-.copyright-footer {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: 0.6rem;
-    color: var(--gray-600);
-}
-
-/* Responsive Design */
+/* Mobile tweaks */
 @media (max-width: 600px) {
     .container {
-        padding: 0.5rem;
+        padding: 0.75rem;
     }
-    
-    .calculator {
-        padding: 1rem;
-    }
-    
-    /* Add more whitespace above the logo on mobile */
-    .logo-container {
-        margin-top: 1.5rem;
-    }
-    
-    .result {
-        flex-direction: column;
-    }
-    
-    .result-item {
-        margin-bottom: 1rem;
-    }
-    
-    input[type="number"], input[type="text"], input[type="email"], input[type="date"] {
-        font-size: 16px; /* Prevents zoom on iOS */
-        padding: 0.5rem;
-    }
-    
-    .share-button, .accept-button {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-    
-    .copy-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .copy-button {
-        margin-top: 0.5rem;
-        width: 100%;
-    }
-    
-    .radio-group {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    html, body {
-    background-color: white !important;
-    color: black !important;
-    forced-color-adjust: none;
-    -webkit-font-smoothing: antialiased;
-}
 
-    /* If Brave or Android forces prefers-color-scheme, override it */
-    @media (prefers-color-scheme: dark) {
-        html, body {
-            background-color: white !important;
-            color: black !important;
-        }
-    
-        * {
-            color: inherit !important;
-            background-color: inherit !important;
-        }
+    button,
+    .share-button {
+        width: 100%;
+        font-size: 1rem;
     }
-}
 
+    .tooltip {
+        width: 90%;
+    }
 }
