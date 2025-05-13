@@ -190,45 +190,6 @@ function processUrlParams() {
         setupEmployeeView(urlParams);
     }
 }
-// Add this to app.js right after processUrlParams() function
-function updateViewModeClass() {
-  // Add appropriate class to body based on view mode
-  const body = document.body;
-  
-  if (AppState.isEmployeeView) {
-    body.classList.add('employee-mode');
-    body.classList.remove('employer-mode');
-
-    if (AppState.isEmployeeView && Elements['accept-offer-container']) {
-        Elements['accept-offer-container'].style.display = 'block';
-        Elements['accept-offer-container'].style.visibility = 'visible';
-    }
-
-    
-    // Explicitly show/hide containers
-    if (Elements['accept-offer-container']) {
-      Elements['accept-offer-container'].style.display = 'block';
-    }
-    if (Elements['share-container']) {
-      Elements['share-container'].style.display = 'none';
-    }
-  } else {
-    body.classList.add('employer-mode');
-    body.classList.remove('employee-mode');
-    
-    // Explicitly show/hide containers
-    if (Elements['accept-offer-container']) {
-      Elements['accept-offer-container'].style.display = 'none';
-    }
-    if (Elements['share-container']) {
-      Elements['share-container'].style.display = 'block';
-    }
-  }
-}
-
-// Then call this function in initializeApp after processUrlParams:
-// processUrlParams();
-// updateViewModeClass();  <-- Add this line
 
 /**
  * Set up the view for an employee reviewing an offer
@@ -243,10 +204,6 @@ function setupEmployeeView(urlParams) {
     const maxSalary = safeParseFloat(urlParams.get('maxSalary'), CONFIG.defaults.maxSalary);
     const sliderPosition = safeParseInt(urlParams.get('sliderpos'), CONFIG.defaults.sliderPosition);
     AppState.employerEmail = urlParams.get('email') || '';
-AppState.employeeEmail = urlParams.get('employeeEmail') || '';
-if (Elements['employee-email']) {
-    Elements['employee-email'].value = AppState.employeeEmail;
-}
     AppState.senderName = urlParams.get('sender') || '';
     
     // Get equity type and value
@@ -1332,4 +1289,3 @@ function toKebabCase(str) {
 
 // Initialize the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApp);
-
