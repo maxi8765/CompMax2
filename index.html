@@ -10,13 +10,11 @@
     <!-- Load EmailJS library -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <!-- Load app styles and script -->
-    <link rel="stylesheet" href="css/compmax-combined.css">
+    <link rel="stylesheet" href="css/styles.css">
     <script src="js/config.js" defer></script>
     <script src="js/app.js" defer></script>
     <script src="js/format-salary.js"></script>
     <script src="js/date-fix.js"></script>
-    <!-- Add this line after the other script imports -->
-    <script src="js/info-icons.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -26,10 +24,7 @@
             </div>
             <p class="subtitle">Salary & Equity Compensation Calculator</p>
             <div class="privacy-statement">
-                <p>CompMax is a specialized compensation negotiation tool that enables employers to craft customizable job offers with flexible salary and equity components. It allows hiring managers to set maximum compensation parameters, then share a secure link with candidates who can interactively adjust the salary-equity balance to suit their personal preferences. This streamlined approach eliminates back-and-forth negotiations, empowers candidates with personalized choice, and helps employers finalize compensation packages efficiently while respecting each candidate's unique financial priorities. </p>
-                <div style="height: 2rem;"></div>
                 <p>CompMax is a fully frontend-based tool. We do not collect, store, or transmit any user data to a backend server. All information entered into this site remains entirely on your device and is never shared with us or any third parties. We use no cookies, no analytics, and no tracking scripts. Your data stays yours — always.</p>
-            </div>
             </div>
         </header>
         
@@ -83,7 +78,7 @@
                 </div>
                 
                 <div class="input-group">
-                    <label for="max-salary">Max Annual Salary ($)</label>
+                    <label for="max-salary">Max Salary ($)</label>
                     <input type="text" id="max-salary" inputmode="numeric" pattern="[0-9,]*" value="150,000" 
                            aria-describedby="salary-desc">
                     <div id="salary-desc" class="sr-only">Maximum salary amount in dollars</div>
@@ -137,7 +132,7 @@
             <!-- Results Display -->
             <div class="result" role="region" aria-live="polite" aria-label="Calculated compensation">
                 <div class="result-item">
-                    <div class="result-label">Selected Annual Salary</div>
+                    <div class="result-label">Selected Salary</div>
                     <div class="result-value" id="current-salary">$75,000</div>
                 </div>
                 <div class="result-item" id="current-equity-container">
