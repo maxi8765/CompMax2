@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CompMax - Salary and Equity Compensation Calculator for job offers">
     <title>CompMax - Salary & Equity Calculator</title>
-    <!-- Favicon -->
+    <!-- Favicon - ->
     <link rel="icon" href="favicon.png" type="image/png">
     <!-- Load EmailJS library -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -15,133 +15,6 @@
     <script src="js/app.js" defer></script>
     <script src="js/format-salary.js"></script>
     <script src="js/date-fix.js"></script>
-    <meta name="color-scheme" content="only light">
-    <!-- Embedded mobile-specific fixes -->
-   <!-- Replace the problematic style block in your index.html with this corrected version -->
-<style>
-    /* Critical mobile-specific fixes - These only apply on small screens */
-    @media (max-width: 600px) {
-        /* Make slider track clearly visible */
-        input[type="range"] {
-            -webkit-appearance: none !important;
-            appearance: none !important;
-            height: 20px !important;
-            background: #ced4da !important;
-            border-radius: 10px !important;
-            border: 1px solid #adb5bd !important;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2) !important;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            z-index: 100 !important;
-            position: relative !important;
-        }
-        
-        /* Make slider thumb (blue circle) more prominent */
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none !important;
-            width: 34px !important;
-            height: 34px !important;
-            background: #4361ee !important;
-            border: 3px solid white !important;
-            border-radius: 50% !important;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
-        }
-        
-        /* Firefox support */
-        input[type="range"]::-moz-range-thumb {
-            width: 34px !important;
-            height: 34px !important;
-            background: #4361ee !important;
-            border: 3px solid white !important;
-            border-radius: 50% !important;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.3) !important;
-        }
-        
-        input[type="range"]::-moz-range-track {
-            height: 20px !important;
-            background: #ced4da !important;
-            border-radius: 10px !important;
-            border: 1px solid #adb5bd !important;
-        }
-        
-        /* Make slider container more visible */
-        .slider-container {
-            margin: 2rem 0 !important;
-            padding: 1rem 0 !important;
-            border-top: 2px solid #dee2e6 !important;
-            border-bottom: 2px solid #dee2e6 !important;
-            background-color: white !important;
-            z-index: 10 !important;
-            position: relative !important;
-        }
-        
-        /* Make slider labels clearly visible */
-        .slider-label {
-            display: flex !important;
-            justify-content: space-between !important;
-            margin-bottom: 0.75rem !important;
-            font-weight: bold !important;
-            color: #495057 !important;
-        }
-        
-        /* Style the "Generate Link" button (employer view) */
-        #generate-link {
-            background-color: #4361ee !important;
-            color: white !important;
-            width: 100% !important;
-            padding: 1rem !important;
-            font-size: 1.1rem !important;
-            border-radius: 4px !important;
-            border: none !important;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-            margin-bottom: 1rem !important;
-            margin-top: 1rem !important;
-            font-weight: 600 !important;
-            -webkit-appearance: none !important;
-            appearance: none !important;
-        }
-        
-        /* Fix other buttons in employer view */
-        #send-email-button, #copy-link {
-            background-color: #4361ee !important;
-            color: white !important;
-            width: 100% !important;
-            -webkit-appearance: none !important;
-            appearance: none !important;
-        }
-        
-        /* CRITICAL FIX: Only style the share container, leave accept-offer-container alone */
-        #share-container {
-            visibility: visible !important;
-            opacity: 1 !important;
-            width: 100% !important;
-        }
-        
-        /* Only style the accept button in employee view when it's already visible */
-        #accept-offer-container:not([style*="display: none"]) #accept-offer-button {
-            background-color: #38b000 !important;
-            color: white !important;
-            width: 100% !important;
-            padding: 1rem !important;
-            font-size: 1.1rem !important;
-            border-radius: 4px !important;
-            border: none !important;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-            margin-bottom: 1rem !important;
-            margin-top: 1rem !important;
-            font-weight: 600 !important;
-            -webkit-appearance: none !important;
-            appearance: none !important;
-        }
-        
-        /* Fix general share and copy buttons */
-        .share-button, .copy-button {
-            -webkit-appearance: none !important;
-            appearance: none !important;
-        }
-    }
-</style>
 </head>
 <body>
     <div class="container">
@@ -151,8 +24,6 @@
             </div>
             <p class="subtitle">Salary & Equity Compensation Calculator</p>
             <div class="privacy-statement">
-                <p>CompMax is a specialized compensation negotiation tool that enables employers to craft customizable job offers with flexible salary and equity components. It allows hiring managers to set maximum compensation parameters, then share a secure link with candidates who can interactively adjust the salary-equity balance to suit their personal preferences. This streamlined approach eliminates back-and-forth negotiations, empowers candidates with personalized choice, and helps employers finalize compensation packages efficiently while respecting each candidate's unique financial priorities. <p>
-                <p style="margin-bottom: 2em;">First paragraph.</p>    
                 <p>CompMax is a fully frontend-based tool. We do not collect, store, or transmit any user data to a backend server. All information entered into this site remains entirely on your device and is never shared with us or any third parties. We use no cookies, no analytics, and no tracking scripts. Your data stays yours — always.</p>
             </div>
         </header>
@@ -223,7 +94,7 @@
                         </label>
                         <label class="radio-label">
                             <input type="radio" name="equity-type" id="equity-shares" value="shares">
-                            Number of Shares/Options
+                            Number of Shares
                         </label>
                     </div>
                 </div>
@@ -237,10 +108,10 @@
                 </div>
                 
                 <div class="input-group" id="max-shares-group" style="display: none;">
-                    <label for="max-shares">Max No. of Shares/Options</label>
+                    <label for="max-shares">Max No. of Shares</label>
                     <input type="text" id="max-shares" value="100,000" 
                            aria-describedby="shares-desc" inputmode="numeric" pattern="[0-9,]*">
-                    <div id="shares-desc" class="sr-only">Maximum number of shares/options</div>
+                    <div id="shares-desc" class="sr-only">Maximum number of shares</div>
                 </div>
                 
                 <div class="slider-container">
@@ -327,9 +198,7 @@
             
             <!-- Generate Link Section (Employer View) -->
             <div class="share-container" id="share-container" aria-live="polite">
-                <button id="generate-link" class="share-button" type="button">
-                    Generate Link
-                </button>
+                <button id="generate-link" class="share-button" type="button">Generate Link</button>
                 
                 <div id="email-sending-controls" class="status-message" style="display: none;">
                     <p class="form-heading">Send offer directly to offeree:</p>
@@ -389,79 +258,5 @@
             <button id="error-ok-button" class="share-button">OK</button>
         </div>
     </div>
-    
-    <!-- This script ensures the slider and buttons are visible on mobile -->
-    <script>
-        // Script to ensure mobile elements are styled correctly
-        document.addEventListener('DOMContentLoaded', function() {
-            // Fix slider and button styling on mobile
-            if (window.matchMedia("(max-width: 600px)").matches) {
-                var slider = document.getElementById('salary-slider');
-                var generateButton = document.getElementById('generate-link');
-                
-                // Make sure the slider is visible
-                if (slider) {
-                    console.log("Fixing slider...");
-                    // The embedded CSS should handle this, but just to be sure
-                    slider.style.display = 'block';
-                }
-                
-                // Make sure the Generate Link button is visible and blue
-                if (generateButton) {
-                    console.log("Fixing Generate Link button...");
-                    // The embedded CSS should handle this, but just to be sure
-                    generateButton.style.backgroundColor = '#4361ee';
-                    generateButton.style.color = 'white';
-                }
-            }
-        });
-    </script>
-    <script>
-// Improved view mode script
-document.addEventListener('DOMContentLoaded', function() {
-  // Run after a brief delay to ensure the DOM is fully processed
-  // and app.js has had a chance to initialize
-  setTimeout(function() {
-    // Get view mode from URL parameters
-    function isEmployeeViewMode() {
-      const urlParams = new URLSearchParams(window.location.search);
-      // Check if we're in employee view mode based on URL parameters
-      return urlParams.has('name') && urlParams.has('maxSalary') && 
-             (urlParams.has('maxEquity') || urlParams.has('maxShares'));
-    }
-    
-    // Force the correct display based on view mode
-    const isEmployee = isEmployeeViewMode();
-    const acceptOfferContainer = document.getElementById('accept-offer-container');
-    const shareContainer = document.getElementById('share-container');
-    
-    if (isEmployee) {
-      // Employee view mode
-      if (acceptOfferContainer) {
-        // Make sure accept container is visible
-        acceptOfferContainer.style.display = 'block';
-        console.log("Employee view mode enabled - showing accept container");
-      }
-      if (shareContainer) {
-        // Make sure share container is hidden
-        shareContainer.style.display = 'none';
-        console.log("Employee view mode enabled - hiding share container");
-      }
-    } else {
-      // Employer view mode
-      if (acceptOfferContainer) {
-        // Make sure accept container is hidden - use !important to override any styles
-        acceptOfferContainer.style.cssText = 'display: none !important';
-        console.log("Employer view mode enabled - hiding accept container");
-      }
-      if (shareContainer) {
-        // Make sure share container is visible
-        shareContainer.style.display = 'block';
-        console.log("Employer view mode enabled - showing share container");
-      }
-    }
-  }, 100); // Small delay to ensure app.js has run
-});
-</script>
 </body>
 </html>
