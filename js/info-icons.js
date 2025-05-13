@@ -1,11 +1,11 @@
 /**
- * Info Icons Manager - Fixed Mobile Version
+ * Info Icons Manager
  * Manages the help tooltip icons throughout the application
  */
 
 (function() {
     // Define tooltip content for each field
-    const tooltipData = {
+    const tooltipContent = {
         'company-name': 'Enter your company or organization name as it should appear on the offer.',
         'sender-name': 'Your name as the representative making this offer.',
         'employer-email': 'Your email address for receiving notifications when the offer is accepted.',
@@ -20,30 +20,35 @@
         'salary-slider': 'Move the slider to adjust the balance between salary and equity. Moving left increases equity and decreases salary. Moving right increases salary and decreases equity.'
     };
     
-    // Check if we're on a mobile device
-    const isMobile = window.innerWidth <= 600;
+    // Create overlay for mobile tooltips (once)
+    let tooltipOverlay;
     
-    // Global variable to track active tooltip
+    // Keep track of active tooltip for mobile
     let activeTooltip = null;
-    let activeIcon = null;
-    let tooltipOverlay = null;
     
-    // Create and add info icons to all fields
+    // Function to add info icons to all elements
     function addInfoIcons() {
-        // Create overlay for mobile (once)
-        if (isMobile) {
+        // Detect if we're on a mobile device
+        const isMobile = window.matchMedia("(max-width: 600px)").matches;
+        
+        // Create a modal backdrop for mobile tooltips
+        if (isMobile && !tooltipOverlay) {
             tooltipOverlay = document.createElement('div');
             tooltipOverlay.className = 'tooltip-overlay';
             document.body.appendChild(tooltipOverlay);
             
-            // Close active tooltip when overlay is clicked
-            tooltipOverlay.addEventListener('click', closeActiveTooltip);
+            // Close tooltip when clicking the overlay
+            tooltipOverlay.addEventListener('click', function() {
+                if (activeTooltip) {
+                    closeTooltip(activeTooltip);
+                }
+            });
         }
         
-        // For each tooltip in our content object
-        Object.keys(tooltipData).forEach(elementId => {
+        // Loop through all elements that need icons
+        Object.keys(tooltipContent).forEach(function(elementId) {
             const element = document.getElementById(elementId);
-            if (!element) return; // Skip if element not found
+            if (!element) return; // Skip if element doesn't exist
             
             // Find the label for this element
             let labelElement;
@@ -59,209 +64,186 @@
                 labelElement = document.querySelector(`label[for="${elementId}"]`);
             }
             
-            if (!labelElement) return; // Skip if label not found
+            if (!labelElement) return; // Skip if no label found
             
-            // Create the icon and tooltip
-            createInfoIcon(elementId, labelElement);
-        });
-    }
-    
-    // Create an individual info icon and tooltip
-    function createInfoIcon(elementId, labelElement) {
-        // Create icon container
-        const iconContainer = document.createElement('span');
-        iconContainer.className = 'info-icon-container';
-        
-        // Create info icon
-        const infoIcon = document.createElement('span');
-        infoIcon.className = 'info-icon';
-        infoIcon.setAttribute('tabindex', '0');
-        infoIcon.setAttribute('role', 'button');
-        infoIcon.setAttribute('aria-label', `Help for ${labelElement.textContent.trim()}`);
-        infoIcon.textContent = 'i';
-        
-        // Create tooltip
-        const tooltip = document.createElement('div');
-        tooltip.className = 'tooltip';
-        tooltip.id = `tooltip-${elementId}`;
-        
-        // Create tooltip content
-        const contentWrapper = document.createElement('div');
-        contentWrapper.className = 'tooltip-content';
-        contentWrapper.innerHTML = tooltipData[elementId];
-        tooltip.appendChild(contentWrapper);
-        
-        // Add close button for mobile
-        if (isMobile) {
-            const closeButton = document.createElement('button');
-            closeButton.className = 'tooltip-close';
-            closeButton.textContent = '✕';
-            closeButton.setAttribute('aria-label', 'Close tooltip');
-            closeButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                closeActiveTooltip();
-            });
-            tooltip.appendChild(closeButton);
-        }
-        
-        // Add event listeners
-        setupEventListeners(infoIcon, tooltip);
-        
-        // Check if we need special positioning for the tooltip
-        positionTooltip(tooltip, element);
-        
-        // Assemble elements
-        iconContainer.appendChild(infoIcon);
-        iconContainer.appendChild(tooltip);
-        
-        // Add to DOM
-        labelElement.appendChild(iconContainer);
-    }
-    
-    // Set up event listeners based on device type
-    function setupEventListeners(icon, tooltip) {
-        if (isMobile) {
-            // Mobile - use click/tap
-            icon.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleTooltip(tooltip, icon);
-            });
+            // Create the icon container
+            const iconContainer = document.createElement('span');
+            iconContainer.className = 'info-icon-container';
+            iconContainer.setAttribute('data-for', elementId);
             
-            // Make sure links in tooltips work on mobile
-            tooltip.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        } else {
-            // Desktop - use hover and focus
-            icon.addEventListener('mouseenter', function() {
-                showTooltip(tooltip);
-            });
+            // Create the info icon
+            const infoIcon = document.createElement('span');
+            infoIcon.className = 'info-icon';
+            infoIcon.setAttribute('tabindex', '0');
+            infoIcon.setAttribute('role', 'button');
+            infoIcon.setAttribute('aria-label', `Help for ${labelElement.textContent.trim()}`);
+            infoIcon.innerHTML = 'i';
             
-            icon.addEventListener('mouseleave', function() {
-                hideTooltip(tooltip);
-            });
+            // Create the tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip';
+            tooltip.innerHTML = tooltipContent[elementId];
             
-            tooltip.addEventListener('mouseenter', function() {
-                showTooltip(tooltip);
-            });
+            // Add a close button for mobile
+            if (isMobile) {
+                const closeButton = document.createElement('button');
+                closeButton.textContent = '✕';
+                closeButton.className = 'tooltip-close';
+                closeButton.setAttribute('aria-label', 'Close tooltip');
+                tooltip.appendChild(closeButton);
+                
+                // Close tooltip when clicking the close button
+                closeButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeTooltip(tooltip);
+                });
+            }
             
-            tooltip.addEventListener('mouseleave', function() {
-                hideTooltip(tooltip);
-            });
-        }
-        
-        // Keyboard support for all devices
-        icon.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                if (isMobile) {
-                    toggleTooltip(tooltip, icon);
-                } else {
+            // Check position to adjust tooltip placement
+            const rect = element.getBoundingClientRect();
+            const windowWidth = window.innerWidth;
+            
+            if (!isMobile) {
+                if (rect.right > windowWidth * 0.75) {
+                    tooltip.classList.add('tooltip-left');
+                } else if (rect.left < windowWidth * 0.25) {
+                    tooltip.classList.add('tooltip-right');
+                }
+            }
+            
+            // Handle tooltip visibility
+            if (isMobile) {
+                // Mobile: toggle on click
+                infoIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    // Close any other open tooltips
+                    if (activeTooltip && activeTooltip !== tooltip) {
+                        closeTooltip(activeTooltip);
+                    }
+                    
+                    // Toggle this tooltip
                     if (tooltip.style.visibility === 'visible') {
-                        hideTooltip(tooltip);
+                        closeTooltip(tooltip);
                     } else {
-                        showTooltip(tooltip);
+                        openTooltip(tooltip);
+                    }
+                });
+                
+                // Prevent clicks inside tooltip from closing it
+                tooltip.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            } else {
+                // Desktop: show on hover
+                infoIcon.addEventListener('mouseenter', function() {
+                    tooltip.style.visibility = 'visible';
+                    tooltip.style.opacity = '1';
+                });
+                
+                infoIcon.addEventListener('mouseleave', function() {
+                    tooltip.style.visibility = 'hidden';
+                    tooltip.style.opacity = '0';
+                });
+                
+                // Keep tooltip visible when hovering over it
+                tooltip.addEventListener('mouseenter', function() {
+                    tooltip.style.visibility = 'visible';
+                    tooltip.style.opacity = '1';
+                });
+                
+                tooltip.addEventListener('mouseleave', function() {
+                    tooltip.style.visibility = 'hidden';
+                    tooltip.style.opacity = '0';
+                });
+            }
+            
+            // Keyboard support
+            infoIcon.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    
+                    if (isMobile) {
+                        // Mobile behavior (toggle)
+                        if (tooltip.style.visibility === 'visible') {
+                            closeTooltip(tooltip);
+                        } else {
+                            openTooltip(tooltip);
+                        }
+                    } else {
+                        // Desktop behavior (toggle)
+                        if (tooltip.style.visibility === 'visible') {
+                            tooltip.style.visibility = 'hidden';
+                            tooltip.style.opacity = '0';
+                        } else {
+                            tooltip.style.visibility = 'visible';
+                            tooltip.style.opacity = '1';
+                        }
+                    }
+                } else if (e.key === 'Escape' && tooltip.style.visibility === 'visible') {
+                    closeTooltip(tooltip);
+                }
+            });
+            
+            // Lose focus closes tooltip
+            infoIcon.addEventListener('blur', function() {
+                if (!isMobile) {
+                    setTimeout(function() {
+                        tooltip.style.visibility = 'hidden';
+                        tooltip.style.opacity = '0';
+                    }, 200);
+                }
+            });
+            
+            // Assemble and attach to DOM
+            iconContainer.appendChild(infoIcon);
+            iconContainer.appendChild(tooltip);
+            labelElement.appendChild(iconContainer);
+        });
+        
+        // Close tooltips when clicking anywhere else
+        if (isMobile) {
+            document.addEventListener('click', function(e) {
+                if (activeTooltip) {
+                    const container = e.target.closest('.info-icon-container');
+                    if (!container) {
+                        closeTooltip(activeTooltip);
                     }
                 }
-            } else if (e.key === 'Escape' && tooltip.style.visibility === 'visible') {
-                hideTooltip(tooltip);
-            }
-        });
-        
-        // Add blur handler for desktop
-        if (!isMobile) {
-            icon.addEventListener('blur', function() {
-                setTimeout(() => {
-                    if (!tooltip.contains(document.activeElement)) {
-                        hideTooltip(tooltip);
-                    }
-                }, 10);
             });
         }
     }
     
-    // Calculate tooltip position
-    function positionTooltip(tooltip, element) {
-        if (!element || isMobile) return; // Skip for mobile
-        
-        const rect = element.getBoundingClientRect();
-        const windowWidth = window.innerWidth;
-        
-        if (rect.right > windowWidth * 0.75) {
-            tooltip.classList.add('tooltip-left');
-        } else if (rect.left < windowWidth * 0.25) {
-            tooltip.classList.add('tooltip-right');
-        }
-    }
-    
-    // Toggle tooltip visibility on mobile
-    function toggleTooltip(tooltip, icon) {
-        if (activeTooltip === tooltip) {
-            // If clicking the same icon, close the tooltip
-            closeActiveTooltip();
-        } else {
-            // Close any active tooltip
-            closeActiveTooltip();
-            
-            // Show this tooltip
-            showTooltip(tooltip);
-            activeTooltip = tooltip;
-            activeIcon = icon;
-            
-            // Show overlay
-            if (isMobile && tooltipOverlay) {
-                tooltipOverlay.classList.add('visible');
-            }
-        }
-    }
-    
-    // Show tooltip
-    function showTooltip(tooltip) {
+    // Helper function to open tooltip (mobile)
+    function openTooltip(tooltip) {
         tooltip.style.visibility = 'visible';
         tooltip.style.opacity = '1';
-        tooltip.classList.add('visible');
+        
+        if (tooltipOverlay) {
+            tooltipOverlay.style.display = 'block';
+        }
+        
+        activeTooltip = tooltip;
     }
     
-    // Hide tooltip
-    function hideTooltip(tooltip) {
+    // Helper function to close tooltip (mobile)
+    function closeTooltip(tooltip) {
         tooltip.style.visibility = 'hidden';
         tooltip.style.opacity = '0';
-        tooltip.classList.remove('visible');
-    }
-    
-    // Close the active tooltip
-    function closeActiveTooltip() {
-        if (activeTooltip) {
-            hideTooltip(activeTooltip);
-            activeTooltip = null;
-            activeIcon = null;
-            
-            // Hide overlay
-            if (isMobile && tooltipOverlay) {
-                tooltipOverlay.classList.remove('visible');
-            }
+        
+        if (tooltipOverlay) {
+            tooltipOverlay.style.display = 'none';
         }
+        
+        activeTooltip = null;
     }
     
-    // Close tooltips when clicking outside (mobile)
-    if (isMobile) {
-        document.addEventListener('click', function(e) {
-            if (activeTooltip && !activeTooltip.contains(e.target) && activeIcon !== e.target) {
-                closeActiveTooltip();
-            }
-        });
-    }
-    
-    // Run when DOM is fully loaded
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", function() {
-            // Short delay to ensure all other scripts have run
-            setTimeout(addInfoIcons, 200);
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(addInfoIcons, 300); // Slight delay to ensure all elements are ready
         });
     } else {
-        // DOM already loaded
-        setTimeout(addInfoIcons, 200);
+        setTimeout(addInfoIcons, 300);
     }
 })();
