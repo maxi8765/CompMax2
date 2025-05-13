@@ -198,6 +198,12 @@ function updateViewModeClass() {
   if (AppState.isEmployeeView) {
     body.classList.add('employee-mode');
     body.classList.remove('employer-mode');
+
+    if (AppState.isEmployeeView && Elements['accept-offer-container']) {
+        Elements['accept-offer-container'].style.display = 'block';
+        Elements['accept-offer-container'].style.visibility = 'visible';
+    }
+
     
     // Explicitly show/hide containers
     if (Elements['accept-offer-container']) {
@@ -212,7 +218,7 @@ function updateViewModeClass() {
     
     // Explicitly show/hide containers
     if (Elements['accept-offer-container']) {
-      Elements['accept-offer-container'].style.cssText = 'display: none !important';
+      Elements['accept-offer-container'].style.display = 'none';
     }
     if (Elements['share-container']) {
       Elements['share-container'].style.display = 'block';
@@ -1322,12 +1328,4 @@ function toKebabCase(str) {
 
 // Initialize the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApp);
-document.addEventListener("DOMContentLoaded", function () {
-  if (document.body.classList.contains("employee-mode")) {
-    const container = document.getElementById("accept-offer-container");
-    if (container) {
-      container.style.display = "block";
-      container.style.visibility = "visible";
-    }
-  }
-});
+
