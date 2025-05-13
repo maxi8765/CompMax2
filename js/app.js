@@ -243,6 +243,10 @@ function setupEmployeeView(urlParams) {
     const maxSalary = safeParseFloat(urlParams.get('maxSalary'), CONFIG.defaults.maxSalary);
     const sliderPosition = safeParseInt(urlParams.get('sliderpos'), CONFIG.defaults.sliderPosition);
     AppState.employerEmail = urlParams.get('email') || '';
+AppState.employeeEmail = urlParams.get('employeeEmail') || '';
+if (Elements['employee-email']) {
+    Elements['employee-email'].value = AppState.employeeEmail;
+}
     AppState.senderName = urlParams.get('sender') || '';
     
     // Get equity type and value
