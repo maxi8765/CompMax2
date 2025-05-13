@@ -759,6 +759,82 @@ input[type="range"]::-webkit-slider-thumb:hover {
             background-color: inherit !important;
         }
     }
+    /* Add these styles to the end of your css/styles.css file */
+
+/* Mobile-specific fixes */
+@media (max-width: 600px) {
+  /* Make slider more visible */
+  input[type="range"] {
+    height: 16px;
+    background: var(--gray-400);
+    margin: 1.5rem 0;
+    z-index: 5;
+    position: relative;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Improve slider container spacing */
+  .slider-container {
+    margin: 2rem 0;
+    padding: 1rem 0;
+    border-top: 1px solid var(--gray-300);
+    border-bottom: 1px solid var(--gray-300);
+  }
+  
+  /* Make buttons more visible and prominent */
+  .share-button, 
+  .accept-button {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .copy-button {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Ensure buttons have a minimum touchable height */
+  button {
+    min-height: 44px;
+  }
+  
+  /* Make sure the result section is clearly visible */
+  .result {
+    background-color: var(--gray-100);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+  }
+  
+  /* Force light background on HTML and body */
+  html, body {
+    background-color: white !important;
+    color: var(--dark) !important;
+  }
+  
+  /* Fix z-index issues that might be affecting visibility */
+  .calculator {
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Provide more padding in the main container */
+  .container {
+    padding: 1rem;
+  }
+}
 }
 
 }
