@@ -135,8 +135,8 @@ function formatSalaryInput(event) {
         input.value = '';
     }
     
-    // Schedule immediate calculation update
-    scheduleCalculation(0);
+    // Schedule calculation with a slight delay while typing
+    scheduleCalculation(300);
 }
 
 /**
@@ -164,8 +164,8 @@ function formatSharesInput(event) {
         input.value = '';
     }
     
-    // Schedule immediate calculation update
-    scheduleCalculation(0);
+    // Schedule calculation with a slight delay while typing
+    scheduleCalculation(300);
 }
 
 /**
@@ -379,40 +379,43 @@ function scheduleCalculation(delay = 100) {
  * Set up all event listeners
  */
 function setupEventListeners() {
-    // Input change events for max-salary with immediate calculation
+    // Input change events for max-salary with improved calculation timing
     if (Elements['max-salary']) {
         Elements['max-salary'].addEventListener('input', formatSalaryInput);
-        // No need for blur event for calculation since it's triggered on input now
         Elements['max-salary'].addEventListener('blur', function() {
             // On blur, make sure formatting is complete
             if (Elements['max-salary'].value === '') {
                 Elements['max-salary'].value = CONFIG.defaults.maxSalary.toLocaleString('en-US');
-                scheduleCalculation(0); // Recalculate immediately
             }
+            // Always calculate on blur with no delay
+            scheduleCalculation(0);
         });
     }
     
-    // Input change events for max-equity with immediate calculation
+    // Input change events for max-equity with improved calculation timing
     if (Elements['max-equity']) {
         Elements['max-equity'].addEventListener('input', function() {
-            scheduleCalculation(0); // Recalculate immediately
+            scheduleCalculation(300); // Add delay during typing
+        });
+        Elements['max-equity'].addEventListener('blur', function() {
+            scheduleCalculation(0); // Immediate calculation on blur
         });
     }
     
-    // Input change events for max-shares with immediate calculation
+    // Input change events for max-shares with improved calculation timing
     if (Elements['max-shares']) {
         Elements['max-shares'].addEventListener('input', formatSharesInput);
-        // No need for blur event for calculation since it's triggered on input now
         Elements['max-shares'].addEventListener('blur', function() {
             // On blur, make sure formatting is complete
             if (Elements['max-shares'].value === '') {
                 Elements['max-shares'].value = CONFIG.defaults.maxShares.toLocaleString('en-US');
-                scheduleCalculation(0); // Recalculate immediately
             }
+            // Always calculate on blur with no delay
+            scheduleCalculation(0);
         });
     }
     
-    // Slider events
+    // Slider events - always calculate immediately
     if (Elements['salary-slider']) {
         Elements['salary-slider'].addEventListener('input', onSliderChange);
         // Keyboard accessibility for slider
@@ -488,7 +491,7 @@ function onSliderChange() {
     // Update the ARIA values for screen readers
     Elements['salary-slider'].setAttribute('aria-valuenow', Elements['salary-slider'].value);
     
-    // Calculate the new compensation values immediately
+    // Calculate the new compensation values immediately (no delay)
     scheduleCalculation(0);
 }
 
@@ -1315,10 +1318,18 @@ function safeParseInt(value, defaultValue) {
  * @returns {number} Validated number
  */
 function validateNumericInput(value, min, max, defaultValue) {
-    const parsed = parseFloat(value);
-    if (isNaN(parsed) || parsed < min || parsed > max) {
+    // When a value string is passed, make sure we properly parse it
+    const parsed = typeof value === 'string' ? parseFloat(value) : value;
+    
+    // Only apply default if the value is truly invalid - not just being typed
+    if (isNaN(parsed)) {
         return defaultValue;
     }
+    
+    // Apply min/max constraints
+    if (parsed < min) return min;
+    if (parsed > max) return max;
+    
     return parsed;
 }
 
