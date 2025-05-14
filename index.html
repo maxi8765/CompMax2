@@ -175,6 +175,59 @@
             background-color: #ffebee;
             color: #c62828;
         }
+        /* Email options modal styles */
+        #email-options-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .email-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 90%;
+        }
+        .email-option {
+            display: block;
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            text-align: center;
+            color: white;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+        .email-option:hover {
+            transform: translateY(-2px);
+        }
+        .default-email {
+            background-color: var(--primary);
+        }
+        .gmail-email {
+            background-color: #DB4437;
+        }
+        .outlook-email {
+            background-color: #0072C6;
+        }
+        .yahoo-email {
+            background-color: #6001D2;
+        }
+        .cancel-email {
+            background-color: var(--gray-300);
+            color: var(--gray-700);
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -418,9 +471,35 @@
                     <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://maxi8765.github.io/CompMax2/&title=CompMax&summary=Create%20flexible%20compensation%20offers%20with%20adjustable%20salary%20and%20equity" target="_blank" class="social-button linkedin" aria-label="Share on LinkedIn">
                         in
                     </a>
-                    <a href="mailto:?subject=CompMax%20-%20Flexible%20Compensation%20Tool&body=Check%20out%20CompMax%2C%20a%20professional%20tool%20for%20creating%20customizable%20job%20offers%20with%20flexible%20salary%20and%20equity%20components%3A%20https%3A%2F%2Fmaxi8765.github.io%2FCompMax2%2F" class="social-button email" aria-label="Share via Email">
+                    <!-- New Email Share Button -->
+                    <a href="#" class="social-button email" id="email-share-button" aria-label="Share via Email">
                         ✉
                     </a>
+                </div>
+            </div>
+            
+            <!-- Email Options Modal -->
+            <div id="email-options-modal">
+                <div class="email-modal-content">
+                    <h3 style="margin-top: 0;">Share via Email</h3>
+                    <p>Choose how you'd like to share:</p>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <a href="mailto:?subject=CompMax%20-%20Flexible%20Compensation%20Tool&body=Check%20out%20CompMax%2C%20a%20professional%20tool%20for%20creating%20customizable%20job%20offers%20with%20flexible%20salary%20and%20equity%20components%3A%20https%3A%2F%2Fmaxi8765.github.io%2FCompMax2%2F" class="email-option default-email" target="_blank">
+                            Open in Email Client
+                        </a>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&su=CompMax%20-%20Flexible%20Compensation%20Tool&body=Check%20out%20CompMax%2C%20a%20professional%20tool%20for%20creating%20customizable%20job%20offers%20with%20flexible%20salary%20and%20equity%20components%3A%20https%3A%2F%2Fmaxi8765.github.io%2FCompMax2%2F" target="_blank" class="email-option gmail-email">
+                            Gmail
+                        </a>
+                        <a href="https://outlook.live.com/mail/0/deeplink/compose?subject=CompMax%20-%20Flexible%20Compensation%20Tool&body=Check%20out%20CompMax%2C%20a%20professional%20tool%20for%20creating%20customizable%20job%20offers%20with%20flexible%20salary%20and%20equity%20components%3A%20https%3A%2F%2Fmaxi8765.github.io%2FCompMax2%2F" target="_blank" class="email-option outlook-email">
+                            Outlook Web
+                        </a>
+                        <a href="https://compose.mail.yahoo.com/?subject=CompMax%20-%20Flexible%20Compensation%20Tool&body=Check%20out%20CompMax%2C%20a%20professional%20tool%20for%20creating%20customizable%20job%20offers%20with%20flexible%20salary%20and%20equity%20components%3A%20https%3A%2F%2Fmaxi8765.github.io%2FCompMax2%2F" target="_blank" class="email-option yahoo-email">
+                            Yahoo Mail
+                        </a>
+                        <button id="close-email-options" class="email-option cancel-email">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -521,6 +600,29 @@
                     feedbackResponse.className = 'feedback-response feedback-error';
                 }
             }
+            
+            // Email Share Button Functionality
+            const emailButton = document.getElementById('email-share-button');
+            const emailModal = document.getElementById('email-options-modal');
+            const closeEmailModal = document.getElementById('close-email-options');
+            
+            // Toggle email options modal
+            emailButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                emailModal.style.display = 'flex';
+            });
+            
+            // Close email options modal
+            closeEmailModal.addEventListener('click', function() {
+                emailModal.style.display = 'none';
+            });
+            
+            // Close email modal when clicking outside the content
+            emailModal.addEventListener('click', function(e) {
+                if (e.target === emailModal) {
+                    emailModal.style.display = 'none';
+                }
+            });
         });
     </script>
 </body>
