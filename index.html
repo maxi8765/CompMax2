@@ -578,15 +578,12 @@
                     setTimeout(function() {
                         feedbackForm.style.display = 'none';
                     }, 3000);
-                    
-                    // Optional: You can actually send the feedback via email in the background
-                    // by making an API call to a service like EmailJS or similar
-                    
-                    // For email sending in production, you would use something like:
-                    // emailjs.send("service_id", "template_id", {
-                    //    to_email: "maxwell.ian@gmail.com",
-                    //    message: feedbackMessage
-                    // });
+                               
+                    // For feedback email sending
+                    emailjs.send("service_id", "template_id", {
+                    to_email: "maxwell.ian@gmail.com",
+                    message: feedbackMessage
+                    });
                 }, 500);
             });
             
