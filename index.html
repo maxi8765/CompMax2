@@ -229,6 +229,61 @@
             width: 100%;
         }
     </style>
+    <!-- Browser compatibility fixes -->
+    <style>
+    html, 
+    body {
+        background-color: #ffffff !important;
+    }
+    
+    .container {
+        background-color: #ffffff !important;
+    }
+    
+    .calculator {
+        background-color: #ffffff !important;
+    }
+    
+    /* Force white background on all input fields */
+    input[type="number"],
+    input[type="text"],
+    input[type="email"],
+    input[type="date"],
+    input[type="range"],
+    textarea {
+        background-color: #ffffff !important;
+    }
+    
+    /* Force white background on results display */
+    .result {
+        background-color: #ffffff !important;
+    }
+    
+    .result-item {
+        background-color: #ffffff !important;
+    }
+    
+    /* Force white background on modal content */
+    .modal-content {
+        background-color: #ffffff !important;
+    }
+    
+    /* Force white background on feedback form */
+    .feedback-form {
+        background-color: #ffffff !important;
+    }
+    
+    /* Email content areas */
+    .email-content-container,
+    .email-content {
+        background-color: #ffffff !important;
+    }
+    
+    /* Make sure disabled inputs have correct background */
+    input:disabled {
+        background-color: var(--gray-200) !important;
+    }
+</style>
 </head>
 <body>
     <div class="container">
