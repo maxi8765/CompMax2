@@ -116,6 +116,7 @@
             margin-top: 1rem;
             color: var(--primary);
             text-decoration: none;
+            cursor: pointer;
         }
         
         .back-link:hover {
@@ -201,12 +202,37 @@
                 </li>
             </ol>
             
-            <a href="index.html" class="back-link">← Return to Compensation Calculator</a>
+            <!-- Changed this from a regular link to a JavaScript close tab function -->
+            <a href="javascript:void(0);" onclick="window.close(); return false;" class="back-link">← Return to Compensation Calculator</a>
         </main>
         
         <footer class="copyright-footer">
             <p>© MXX1 Holdings Pty Ltd</p>
         </footer>
     </div>
+    
+    <!-- Add a fallback script if window.close() doesn't work -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backLink = document.querySelector('.back-link');
+            
+            backLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Try to close the window/tab
+                const closeSuccess = window.close();
+                
+                // If closing fails (which can happen due to browser policies), redirect to index
+                if (!closeSuccess) {
+                    // Set a small timeout to allow the close attempt to complete
+                    setTimeout(function() {
+                        if (!window.closed) {
+                            window.location.href = 'index.html';
+                        }
+                    }, 300);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
