@@ -625,5 +625,115 @@
             });
         });
     </script>
+
+    <!-- Form Data Persistence Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Define the form fields to save
+            const formFields = [
+                'company-name', 'sender-name', 'employer-email', 'offer-date', 
+                'position-title', 'employee-name', 'employee-email', 'max-salary',
+                'max-equity', 'max-shares', 'salary-slider'
+            ];
+            
+            // Also save radio button state
+            const radioButtons = ['equity-percentage', 'equity-shares'];
+            
+            // Save form data when inputs change
+            formFields.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    element.addEventListener('change', saveFormData);
+                    element.addEventListener('input', saveFormData);
+                    element.addEventListener('blur', saveFormData);
+                }
+            });
+            
+            // Save radio button states
+            radioButtons.forEach(radioId => {
+                const element = document.getElementById(radioId);
+                if (element) {
+                    element.addEventListener('change', saveFormData);
+                }
+            });
+            
+            // Function to save all form data to localStorage
+            function saveFormData() {
+                // Don't save if in employee view (URL has parameters)
+                if (window.location.search) return;
+                
+                const formData = {};
+                
+                // Save input values
+                formFields.forEach(fieldId => {
+                    const element = document.getElementById(fieldId);
+                    if (element) {
+                        formData[fieldId] = element.value;
+                    }
+                });
+                
+                // Save radio button states
+                radioButtons.forEach(radioId => {
+                    const element = document.getElementById(radioId);
+                    if (element) {
+                        formData[radioId] = element.checked;
+                    }
+                });
+                
+                // Save to localStorage
+                localStorage.setItem('compmax-form-data', JSON.stringify(formData));
+            }
+            
+            // Load saved form data when the page loads
+            function loadFormData() {
+                // Don't restore data if in employee view (URL has parameters)
+                if (window.location.search) return;
+                
+                const savedData = localStorage.getItem('compmax-form-data');
+                if (!savedData) return;
+                
+                try {
+                    const formData = JSON.parse(savedData);
+                    
+                    // Restore input values
+                    formFields.forEach(fieldId => {
+                        const element = document.getElementById(fieldId);
+                        if (element && formData[fieldId]) {
+                            element.value = formData[fieldId];
+                        }
+                    });
+                    
+                    // Restore radio button states
+                    radioButtons.forEach(radioId => {
+                        const element = document.getElementById(radioId);
+                        if (element && formData[radioId] !== undefined) {
+                            element.checked = formData[radioId];
+                        }
+                    });
+                    
+                    // Trigger calculation update after restoring data
+                    const event = new Event('input');
+                    const sliderElement = document.getElementById('salary-slider');
+                    if (sliderElement) {
+                        sliderElement.dispatchEvent(event);
+                    }
+                    
+                    // Handle equity type display
+                    const equityTypeEvent = new Event('change');
+                    if (formData['equity-shares'] === true) {
+                        const sharesRadio = document.getElementById('equity-shares');
+                        if (sharesRadio) {
+                            sharesRadio.dispatchEvent(equityTypeEvent);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error restoring form data:', error);
+                }
+            }
+            
+            // Load saved data when page loads
+            loadFormData();
+        });
+    </script>
 </body>
 </html>
