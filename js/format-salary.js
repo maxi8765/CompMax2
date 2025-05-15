@@ -22,6 +22,10 @@
         // Format on page load if the field is not empty and not already formatted
         if (salaryField.value && !salaryField.disabled && !salaryField.value.includes(',')) {
             salaryField.value = formatWithCommas(salaryField.value);
+            // Trigger calculation after initial formatting
+            if (typeof window.calculateCompensation === 'function') {
+                window.calculateCompensation();
+            }
         }
         
         // Format as user types
@@ -58,12 +62,21 @@
                 // Set the cursor position
                 salaryField.setSelectionRange(newPos, newPos);
             }
+            
+            // Trigger calculation after formatting
+            if (typeof window.calculateCompensation === 'function') {
+                window.calculateCompensation();
+            }
         });
         
         // Ensure value is formatted when field loses focus
         salaryField.addEventListener('blur', function() {
             if (!salaryField.disabled && salaryField.value && !salaryField.value.includes(',')) {
                 salaryField.value = formatWithCommas(salaryField.value);
+                // Trigger calculation after blur formatting
+                if (typeof window.calculateCompensation === 'function') {
+                    window.calculateCompensation();
+                }
             }
         });
         
@@ -71,6 +84,10 @@
         setTimeout(function() {
             if (!salaryField.disabled && (!salaryField.value || !salaryField.value.includes(','))) {
                 salaryField.value = formatWithCommas(salaryField.value || '150000');
+                // Trigger calculation after delayed formatting
+                if (typeof window.calculateCompensation === 'function') {
+                    window.calculateCompensation();
+                }
             }
         }, 200);
     }
