@@ -5,12 +5,13 @@
 
 // Application state
 const AppState = {
-    isEmployeeView: false,
+    isEmployeeView: false,https://github.com/maxi8765/CompMax2/blob/main/js/app.js
     employerEmail: '',
     senderName: '',
     equityType: 'percentage', // Default to percentage
     offerDetails: null,
-    acceptanceDetails: null
+    acceptanceDetails: null,
+    calculationTimeoutId: null // For debouncing calculations
 };
 
 // DOM Elements
@@ -133,6 +134,9 @@ function formatSalaryInput(event) {
     } else {
         input.value = '';
     }
+    
+    // Schedule calculation with a slight delay while typing
+    scheduleCalculation(300);
 }
 
 /**
@@ -159,6 +163,9 @@ function formatSharesInput(event) {
     } else {
         input.value = '';
     }
+    
+    // Schedule calculation with a slight delay while typing
+    scheduleCalculation(300);
 }
 
 /**
@@ -352,24 +359,86 @@ function updateInfoText() {
 }
 
 /**
+ * Schedule a compensation calculation with debouncing
+ * @param {number} delay - Milliseconds to delay the calculation (0 for immediate)
+ */
+function scheduleCalculation(delay = 100) {
+    // Clear any existing timeout
+    if (AppState.calculationTimeoutId) {
+        clearTimeout(AppState.calculationTimeoutId);
+    }
+    
+    // Set up new timeout
+    AppState.calculationTimeoutId = setTimeout(() => {
+        calculateCompensation();
+        AppState.calculationTimeoutId = null;
+    }, delay);
+}
+
+/**
  * Set up all event listeners
  */
 function setupEventListeners() {
-    // Input change events
+    Elements['max-salary'].addEventListener('input', (event) => {
+        formatSalaryInput(event);
+        calculateCompensation();
+    });
+    
+    document.getElementById('max-salary').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+    document.getElementById('max-equity').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+    document.querySelectorAll('input[name="equity-type"]').forEach(el => {
+        el.addEventListener('change', () => {
+            calculateCompensation();
+        });
+    });
+
+    document.getElementById('salary-slider').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+// Input change events for max-salary with improved calculation timing
     if (Elements['max-salary']) {
         Elements['max-salary'].addEventListener('input', formatSalaryInput);
-        Elements['max-salary'].addEventListener('blur', calculateCompensation);
+        Elements['max-salary'].addEventListener('blur', function() {
+            // On blur, make sure formatting is complete
+            if (Elements['max-salary'].value === '') {
+                Elements['max-salary'].value = CONFIG.defaults.maxSalary.toLocaleString('en-US');
+            }
+            // Always calculate on blur with no delay
+            scheduleCalculation(0);
+        });
     }
     
+    // Input change events for max-equity with improved calculation timing
     if (Elements['max-equity']) {
-        Elements['max-equity'].addEventListener('input', calculateCompensation);
+        Elements['max-equity'].addEventListener('input', function() {
+            scheduleCalculation(300); // Add delay during typing
+        });
+        Elements['max-equity'].addEventListener('blur', function() {
+            scheduleCalculation(0); // Immediate calculation on blur
+        });
     }
     
+    // Input change events for max-shares with improved calculation timing
     if (Elements['max-shares']) {
         Elements['max-shares'].addEventListener('input', formatSharesInput);
-        Elements['max-shares'].addEventListener('blur', calculateCompensation);
+        Elements['max-shares'].addEventListener('blur', function() {
+            // On blur, make sure formatting is complete
+            if (Elements['max-shares'].value === '') {
+                Elements['max-shares'].value = CONFIG.defaults.maxShares.toLocaleString('en-US');
+            }
+            // Always calculate on blur with no delay
+            scheduleCalculation(0);
+        });
     }
     
+    // Slider events - always calculate immediately
     if (Elements['salary-slider']) {
         Elements['salary-slider'].addEventListener('input', onSliderChange);
         // Keyboard accessibility for slider
@@ -413,7 +482,16 @@ function setupEventListeners() {
  * Handle equity type change
  */
 function handleEquityTypeChange(event) {
+    console.log("Equity type change triggered");
+    console.log("New equity type: " + event.target.value);
+    
     AppState.equityType = event.target.value;
+    
+    // Log DOM elements to verify they exist
+    console.log("max-equity-group:", Elements['max-equity-group']);
+    console.log("max-shares-group:", Elements['max-shares-group']);
+    console.log("current-equity-container:", Elements['current-equity-container']);
+    console.log("current-shares-container:", Elements['current-shares-container']);
     
     // Toggle visibility of input fields and results
     if (AppState.equityType === 'percentage') {
@@ -427,15 +505,18 @@ function handleEquityTypeChange(event) {
         Elements['max-shares-group'].style.display = 'block';
         Elements['current-equity-container'].style.display = 'none';
         Elements['current-shares-container'].style.display = 'block';
-        
-        // Make sure the default shares value is set if empty
-        if (!Elements['max-shares'].value) {
-            Elements['max-shares'].value = CONFIG.defaults.maxShares.toLocaleString('en-US');
-        }
     }
     
-    // Recalculate compensation
-    calculateCompensation();
+    // Force a direct DOM update as a backup
+    if (AppState.equityType !== 'percentage') {
+        document.getElementById('max-equity-group').style.display = 'none';
+        document.getElementById('max-shares-group').style.display = 'block';
+        document.getElementById('current-equity-container').style.display = 'none';
+        document.getElementById('current-shares-container').style.display = 'block';
+    }
+    
+    // Recalculate compensation immediately
+    scheduleCalculation(0);
 }
 
 /**
@@ -445,8 +526,8 @@ function onSliderChange() {
     // Update the ARIA values for screen readers
     Elements['salary-slider'].setAttribute('aria-valuenow', Elements['salary-slider'].value);
     
-    // Calculate the new compensation values
-    calculateCompensation();
+    // Calculate the new compensation values immediately (no delay)
+    scheduleCalculation(0);
 }
 
 /**
@@ -455,7 +536,7 @@ function onSliderChange() {
  */
 function handleSliderKeydown(event) {
     let newValue = parseInt(Elements['salary-slider'].value);
-    const step = 5; // Change value by 5% on arrow key press
+    const step = 1; // Change value by 1% on arrow key press (changed from 5%)
     
     switch (event.key) {
         case 'ArrowLeft':
@@ -482,7 +563,7 @@ function handleSliderKeydown(event) {
     
     Elements['salary-slider'].value = newValue;
     Elements['salary-slider'].setAttribute('aria-valuenow', newValue);
-    calculateCompensation();
+    scheduleCalculation(0); // Calculate immediately
 }
 
 /**
@@ -746,6 +827,7 @@ function setupEmailSending() {
     // Add a debug log to confirm setup
     console.log('Email sending functionality set up');
 }
+
 /**
  * Send offer email to employee
  */
@@ -1038,7 +1120,7 @@ function sendAcceptanceEmail() {
     Elements['acceptance-sending-status'].textContent = 'Sending email...';
     Elements['acceptance-sending-status'].style.color = '#666';
     
-    // Hide the employee sender name field after validation - ADDED THIS
+    // Hide the employee sender name field after validation
     const employeeSenderNameField = document.getElementById('employee-sender-name');
     if (employeeSenderNameField) {
         let parent = employeeSenderNameField.closest('.input-group');
@@ -1271,10 +1353,18 @@ function safeParseInt(value, defaultValue) {
  * @returns {number} Validated number
  */
 function validateNumericInput(value, min, max, defaultValue) {
-    const parsed = parseFloat(value);
-    if (isNaN(parsed) || parsed < min || parsed > max) {
+    // When a value string is passed, make sure we properly parse it
+    const parsed = typeof value === 'string' ? parseFloat(value) : value;
+    
+    // Only apply default if the value is truly invalid - not just being typed
+    if (isNaN(parsed)) {
         return defaultValue;
     }
+    
+    // Apply min/max constraints
+    if (parsed < min) return min;
+    if (parsed > max) return max;
+    
     return parsed;
 }
 
