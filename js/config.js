@@ -10,8 +10,8 @@ const CONFIG = {
     emailjs: {
         // Public key for EmailJS - should be replaced during build process
         publicKey: "aC33MyvXhim_7HkU6", 
-        serviceId: "service_0zbtwjq", 
-        templateId: "template_vd3qwz8"
+        serviceId: "IDservice_0zbtwjq", 
+        templateId: "IDtemplate_vd3qwz8"
     },
     
     // Application defaults
