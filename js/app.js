@@ -1060,6 +1060,7 @@ function sendAcceptanceEmail() {
         message: details.body,
         from_name: offereeNameSending,
         reply_to: '' // No reply-to for acceptance emails
+        cc_email: details.employerEmail
     };
     
     sendEmail(
