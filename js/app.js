@@ -136,6 +136,7 @@ function formatSalaryInput(event) {
 }
 
 /**
+/**
  * Format number input with commas as thousands separators
  * @param {Event} event - Input event
  */
@@ -158,6 +159,11 @@ function formatSharesInput(event) {
         input.setSelectionRange(newCursorPos, newCursorPos);
     } else {
         input.value = '';
+    }
+    
+    // Trigger calculation after formatting
+    if (typeof window.calculateCompensation === 'function') {
+        window.calculateCompensation();
     }
 }
 
