@@ -229,6 +229,41 @@
             width: 100%;
         }
     </style>
+    <!-- Force white background on all browsers -->
+<meta name="theme-color" content="#ffffff">
+<style>
+  /* Force white background everywhere */
+  html, body, * {
+    background-color: #ffffff !important;
+  }
+  
+  /* Only excluded elements should have their specified backgrounds */
+  input:disabled, 
+  .employee-mode-banner,
+  .social-button,
+  .feedback-button,
+  .share-button,
+  .accept-button,
+  .copy-button,
+  .email-option {
+    background-color: var(--gray-200) !important;
+  }
+  
+  /* Restore specific button colors */
+  .share-button { background-color: var(--primary) !important; }
+  .accept-button { background-color: var(--success) !important; }
+  .success-button { background-color: var(--success) !important; }
+  .copy-button { background-color: var(--warning) !important; }
+  .facebook { background-color: #1877f2 !important; }
+  .twitter { background-color: #000000 !important; }
+  .linkedin { background-color: #0077b5 !important; }
+  .email { background-color: #ff9800 !important; }
+  
+  /* Apply at document root for extra force */
+  :root {
+    color-scheme: light only;
+  }
+</style>
 </head>
 <body>
     <div class="container">
