@@ -22,10 +22,10 @@ jobs:
           
       - name: Replace API Keys and Service IDs
         run: |
-          # More explicit replacements including quotes
-          sed -i 's/"EMAILJS_PUBLIC_KEY"/"${{ secrets.EMAILJS_PUBLIC_KEY }}"/g' js/config.js
-          sed -i 's/"EMAILJS_SERVICE_ID"/"${{ secrets.EMAILJS_SERVICE_ID }}"/g' js/config.js
-          sed -i 's/"EMAILJS_TEMPLATE_ID"/"${{ secrets.EMAILJS_TEMPLATE_ID }}"/g' js/config.js
+          # Fix: Use double quotes to allow variable expansion
+          sed -i "s/\"EMAILJS_PUBLIC_KEY\"/\"${{ secrets.EMAILJS_PUBLIC_KEY }}\"/g" js/config.js
+          sed -i "s/\"EMAILJS_SERVICE_ID\"/\"${{ secrets.EMAILJS_SERVICE_ID }}\"/g" js/config.js
+          sed -i "s/\"EMAILJS_TEMPLATE_ID\"/\"${{ secrets.EMAILJS_TEMPLATE_ID }}\"/g" js/config.js
           
           # Show the result (masked)
           echo "After replacement:"
