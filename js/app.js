@@ -782,6 +782,7 @@ function sendOfferEmail() {
         message: body,
         from_name: details.senderName,
         reply_to: details.employerEmail,
+        cc_email: details.employerEmail,
         time: new Date().toLocaleString()
     };
     
