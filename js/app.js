@@ -357,21 +357,19 @@ function updateInfoText() {
 function setupEventListeners() {
     // Input change events
     if (Elements['max-salary']) {
-        // Split format and calculate functionality
         Elements['max-salary'].addEventListener('input', formatSalaryInput);
-        Elements['max-salary'].addEventListener('input', calculateCompensation);
+        Elements['max-salary'].addEventListener('input', calculateCompensation); // Added for real-time updates
         Elements['max-salary'].addEventListener('blur', calculateCompensation);
     }
     
     if (Elements['max-equity']) {
-        // Add real-time calculation for equity
         Elements['max-equity'].addEventListener('input', calculateCompensation);
         Elements['max-equity'].addEventListener('blur', calculateCompensation);
     }
     
     if (Elements['max-shares']) {
         Elements['max-shares'].addEventListener('input', formatSharesInput);
-        Elements['max-shares'].addEventListener('input', calculateCompensation);
+        Elements['max-shares'].addEventListener('input', calculateCompensation); // Added for real-time updates
         Elements['max-shares'].addEventListener('blur', calculateCompensation);
     }
     
@@ -751,7 +749,6 @@ function setupEmailSending() {
     // Add a debug log to confirm setup
     console.log('Email sending functionality set up');
 }
-
 /**
  * Send offer email to employee
  */
