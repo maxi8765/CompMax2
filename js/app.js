@@ -374,6 +374,12 @@ function setupEventListeners() {
         // Keyboard accessibility for slider
         Elements['salary-slider'].addEventListener('keydown', handleSliderKeydown);
     }
+    if (Elements['max-equity']) {
+    Elements['max-equity'].addEventListener('input', function(event) {
+        calculateCompensation();
+    });
+    Elements['max-equity'].addEventListener('blur', calculateCompensation);
+    }
     
     // Equity type radio buttons
     if (Elements['equity-percentage']) {
