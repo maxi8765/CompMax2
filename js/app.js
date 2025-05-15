@@ -357,12 +357,11 @@ function updateInfoText() {
 function setupEventListeners() {
     // Input change events
     if (Elements['max-salary']) {
-        Elements['max-salary'].addEventListener('input', formatSalaryInput);
+        Elements['max-salary'].addEventListener('input', function(event) {
+            formatSalaryInput(event);
+            calculateCompensation();
+        });
         Elements['max-salary'].addEventListener('blur', calculateCompensation);
-    }
-    
-    if (Elements['max-equity']) {
-        Elements['max-equity'].addEventListener('input', calculateCompensation);
     }
     
     if (Elements['max-shares']) {
