@@ -501,7 +501,7 @@ function calculateCompensation() {
         CONFIG.validation.salary.max,
         CONFIG.defaults.maxSalary
     );
-    
+    window.calculateCompensation = calculateCompensation;
     // Get slider value (0-1 range)
     const sliderValue = parseInt(Elements['salary-slider'].value) / 100; // Convert to 0-1 range
     
