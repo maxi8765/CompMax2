@@ -1,24 +1,21 @@
-// First, update the CONFIG object in config.js:
-
 /**
  * Configuration file for CompMax application
- * This approach helps keep sensitive configuration separate from application logic
- * In a production environment, these values should be injected during build
+ * EmailJS credentials directly included
  */
 const CONFIG = {
-    // EmailJS configuration
+    // EmailJS configuration - Add your actual credentials here
     emailjs: {
-        // Public key for EmailJS - should be replaced during build process
-        publicKey: "aC33MyvXhim_7HkU6", 
-        serviceId: "IDservice_0zbtwjq", 
-        templateId: "IDtemplate_vd3qwz8"
+        // You can get these from your EmailJS dashboard
+        publicKey: "aC33MyvXhim_7HkU6", // e.g., "user_a1b2c3d4e5f6g7"
+        serviceId: "service_0zbtwjq", // e.g., "service_abc123"
+        templateId: "template_vd3qwz8" // e.g., "template_xyz789"
     },
     
     // Application defaults
     defaults: {
         maxSalary: 150000,
         maxEquity: 1.5,
-        maxShares: 100000, // Updated from 10000 to 100000
+        maxShares: 100000,
         sliderPosition: 50
     },
     
