@@ -5,7 +5,7 @@
 
 // Application state
 const AppState = {
-    isEmployeeView: false,
+    isEmployeeView: false,https://github.com/maxi8765/CompMax2/blob/main/js/app.js
     employerEmail: '',
     senderName: '',
     equityType: 'percentage', // Default to percentage
@@ -459,7 +459,16 @@ function setupEventListeners() {
  * Handle equity type change
  */
 function handleEquityTypeChange(event) {
+    console.log("Equity type change triggered");
+    console.log("New equity type: " + event.target.value);
+    
     AppState.equityType = event.target.value;
+    
+    // Log DOM elements to verify they exist
+    console.log("max-equity-group:", Elements['max-equity-group']);
+    console.log("max-shares-group:", Elements['max-shares-group']);
+    console.log("current-equity-container:", Elements['current-equity-container']);
+    console.log("current-shares-container:", Elements['current-shares-container']);
     
     // Toggle visibility of input fields and results
     if (AppState.equityType === 'percentage') {
@@ -473,11 +482,14 @@ function handleEquityTypeChange(event) {
         Elements['max-shares-group'].style.display = 'block';
         Elements['current-equity-container'].style.display = 'none';
         Elements['current-shares-container'].style.display = 'block';
-        
-        // Make sure the default shares value is set if empty
-        if (!Elements['max-shares'].value) {
-            Elements['max-shares'].value = CONFIG.defaults.maxShares.toLocaleString('en-US');
-        }
+    }
+    
+    // Force a direct DOM update as a backup
+    if (AppState.equityType !== 'percentage') {
+        document.getElementById('max-equity-group').style.display = 'none';
+        document.getElementById('max-shares-group').style.display = 'block';
+        document.getElementById('current-equity-container').style.display = 'none';
+        document.getElementById('current-shares-container').style.display = 'block';
     }
     
     // Recalculate compensation immediately
