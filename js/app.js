@@ -379,6 +379,24 @@ function scheduleCalculation(delay = 100) {
  * Set up all event listeners
  */
 function setupEventListeners() {
+    document.getElementById('max-salary').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+    document.getElementById('max-equity').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+    document.querySelectorAll('input[name="equity-type"]').forEach(el => {
+        el.addEventListener('change', () => {
+            calculateCompensation();
+        });
+    });
+
+    document.getElementById('salary-slider').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
     
     document.getElementById('max-salary').addEventListener('input', () => {
         calculateCompensation();
