@@ -229,12 +229,36 @@
             width: 100%;
         }
     </style>
-    <!-- Force white background on all browsers -->
+<!-- Force white background on all browsers, with slider fix -->
 <meta name="theme-color" content="#ffffff">
 <style>
   /* Force white background everywhere */
   html, body, * {
     background-color: #ffffff !important;
+  }
+  
+  /* Fix for slider (range input) visibility */
+  input[type="range"] {
+    background-color: var(--gray-300) !important; /* Restore track color */
+  }
+  
+  /* Fix slider thumb appearance across browsers */
+  input[type="range"]::-webkit-slider-thumb {
+    background-color: var(--primary) !important; /* Restore thumb color for WebKit */
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    background-color: var(--primary) !important; /* Restore thumb color for Firefox */
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  input[type="range"]::-ms-thumb {
+    background-color: var(--primary) !important; /* Restore thumb color for IE/Edge */
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   
   /* Only excluded elements should have their specified backgrounds */
@@ -263,6 +287,7 @@
   :root {
     color-scheme: light only;
   }
+</style>
 </style>
 </head>
 <body>
