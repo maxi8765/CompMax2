@@ -378,29 +378,29 @@ function scheduleCalculation(delay = 100) {
 /**
  * Set up all event listeners
  */
-function setupEventListeners() {
-    document.getElementById('max-salary').addEventListener('input', () => {
-        calculateCompensation();
-    });
 
-    document.getElementById('max-equity').addEventListener('input', () => {
-        calculateCompensation();
-    });
+function setupEventListeners() {
+    // Input formatting + compensation recalculation on blur
+    if (Elements['max-salary']) {
+        Elements['max-salary'].addEventListener('input', formatSalaryInput);
+        Elements['max-salary'].addEventListener('blur', calculateCompensation);
+    }
+
+    if (Elements['max-equity']) {
+        Elements['max-equity'].addEventListener('input', calculateCompensation);
+    }
+
+    if (Elements['salary-slider']) {
+        Elements['salary-slider'].addEventListener('input', calculateCompensation);
+    }
 
     document.querySelectorAll('input[name="equity-type"]').forEach(el => {
         el.addEventListener('change', () => {
             calculateCompensation();
         });
     });
-
-    document.getElementById('salary-slider').addEventListener('input', () => {
-        calculateCompensation();
-    });
-
-    
-    document.getElementById('max-salary').addEventListener('input', () => {
-        calculateCompensation();
-    });
+}
+);
 
     document.getElementById('max-equity').addEventListener('input', () => {
         calculateCompensation();
