@@ -357,19 +357,15 @@ function updateInfoText() {
 function setupEventListeners() {
     // Input change events
     if (Elements['max-salary']) {
-        Elements['max-salary'].addEventListener('input', formatSalaryInput);
-        Elements['max-salary'].addEventListener('input', calculateCompensation); // Added for real-time updates
+        Elements['max-salary'].addEventListener('input', function(event) {
+            formatSalaryInput(event);
+            calculateCompensation();
+        });
         Elements['max-salary'].addEventListener('blur', calculateCompensation);
-    }
-    
-    if (Elements['max-equity']) {
-        Elements['max-equity'].addEventListener('input', calculateCompensation);
-        Elements['max-equity'].addEventListener('blur', calculateCompensation);
     }
     
     if (Elements['max-shares']) {
         Elements['max-shares'].addEventListener('input', formatSharesInput);
-        Elements['max-shares'].addEventListener('input', calculateCompensation); // Added for real-time updates
         Elements['max-shares'].addEventListener('blur', calculateCompensation);
     }
     
@@ -377,6 +373,12 @@ function setupEventListeners() {
         Elements['salary-slider'].addEventListener('input', onSliderChange);
         // Keyboard accessibility for slider
         Elements['salary-slider'].addEventListener('keydown', handleSliderKeydown);
+    }
+    if (Elements['max-equity']) {
+    Elements['max-equity'].addEventListener('input', function(event) {
+        calculateCompensation();
+    });
+    Elements['max-equity'].addEventListener('blur', calculateCompensation);
     }
     
     // Equity type radio buttons
@@ -782,7 +784,6 @@ function sendOfferEmail() {
         message: body,
         from_name: details.senderName,
         reply_to: details.employerEmail,
-        cc_email: details.employerEmail,
         time: new Date().toLocaleString()
     };
     
@@ -1060,7 +1061,6 @@ function sendAcceptanceEmail() {
         message: details.body,
         from_name: offereeNameSending,
         reply_to: '' // No reply-to for acceptance emails
-        cc_email: details.employerEmail
     };
     
     sendEmail(
