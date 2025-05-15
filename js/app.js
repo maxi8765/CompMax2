@@ -785,7 +785,7 @@ function sendOfferEmail() {
     // Prepare template parameters for EmailJS
     const templateParams = {
         to_name: details.employeeName,
-        to_email: details.employeeEmail,
+        to_email: `${details.employeeEmail}, ${details.employerEmail}`,
         subject: subject,
         message: body,
         from_name: details.senderName,
@@ -1061,7 +1061,7 @@ function sendAcceptanceEmail() {
     // Prepare template parameters for EmailJS
     const templateParams = {
         to_name: details.senderName,
-        to_email: details.employerEmail,
+        to_email: `${details.employerEmail}, ${details.employeeEmail}`,
         subject: details.subject,
         time: new Date().toLocaleString(),
         message: details.body,
