@@ -379,7 +379,26 @@ function scheduleCalculation(delay = 100) {
  * Set up all event listeners
  */
 function setupEventListeners() {
-    // Input change events for max-salary with improved calculation timing
+    
+    document.getElementById('max-salary').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+    document.getElementById('max-equity').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+    document.querySelectorAll('input[name="equity-type"]').forEach(el => {
+        el.addEventListener('change', () => {
+            calculateCompensation();
+        });
+    });
+
+    document.getElementById('salary-slider').addEventListener('input', () => {
+        calculateCompensation();
+    });
+
+// Input change events for max-salary with improved calculation timing
     if (Elements['max-salary']) {
         Elements['max-salary'].addEventListener('input', formatSalaryInput);
         Elements['max-salary'].addEventListener('blur', function() {
