@@ -357,15 +357,21 @@ function updateInfoText() {
 function setupEventListeners() {
     // Input change events
     if (Elements['max-salary']) {
-        Elements['max-salary'].addEventListener('input', function(event) {
-            formatSalaryInput(event);
-            calculateCompensation();
-        });
+        // Split format and calculate functionality
+        Elements['max-salary'].addEventListener('input', formatSalaryInput);
+        Elements['max-salary'].addEventListener('input', calculateCompensation);
         Elements['max-salary'].addEventListener('blur', calculateCompensation);
+    }
+    
+    if (Elements['max-equity']) {
+        // Add real-time calculation for equity
+        Elements['max-equity'].addEventListener('input', calculateCompensation);
+        Elements['max-equity'].addEventListener('blur', calculateCompensation);
     }
     
     if (Elements['max-shares']) {
         Elements['max-shares'].addEventListener('input', formatSharesInput);
+        Elements['max-shares'].addEventListener('input', calculateCompensation);
         Elements['max-shares'].addEventListener('blur', calculateCompensation);
     }
     
@@ -373,12 +379,6 @@ function setupEventListeners() {
         Elements['salary-slider'].addEventListener('input', onSliderChange);
         // Keyboard accessibility for slider
         Elements['salary-slider'].addEventListener('keydown', handleSliderKeydown);
-    }
-    if (Elements['max-equity']) {
-    Elements['max-equity'].addEventListener('input', function(event) {
-        calculateCompensation();
-    });
-    Elements['max-equity'].addEventListener('blur', calculateCompensation);
     }
     
     // Equity type radio buttons
@@ -751,6 +751,7 @@ function setupEmailSending() {
     // Add a debug log to confirm setup
     console.log('Email sending functionality set up');
 }
+
 /**
  * Send offer email to employee
  */
