@@ -1297,6 +1297,68 @@ function validateNumericInput(value, min, max, defaultValue) {
 function toKebabCase(str) {
     return str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 }
+// Make sure the calculation function is available globally
+window.calculateCompensation = calculateCompensation;
 
+// Fix the formatSharesInput function to properly call calculation after formatting
+function fixedFormatSharesInput(event) {
+    const input = event.target;
+    
+    // Save cursor position relative to the end
+    const cursorFromEnd = input.value.length - input.selectionStart;
+    
+    // Get value without commas and other non-digits
+    const rawValue = input.value.replace(/[^\d]/g, '');
+    
+    // Format with commas
+    if (rawValue) {
+        const formattedValue = parseInt(rawValue).toLocaleString('en-US');
+        input.value = formattedValue;
+        
+        // Restore cursor position relative to the end
+        const newCursorPos = Math.max(0, input.value.length - cursorFromEnd);
+        input.setSelectionRange(newCursorPos, newCursorPos);
+    } else {
+        input.value = '';
+    }
+    
+    // Call calculation function directly
+    calculateCompensation();
+}
+
+// Add this to the end of your existing setupEventListeners function
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for the initial setup to complete
+    setTimeout(function() {
+        // Simple direct event binding for all three fields
+        const maxSalary = document.getElementById('max-salary');
+        const maxEquity = document.getElementById('max-equity');
+        const maxShares = document.getElementById('max-shares');
+        
+        // Add input event for max salary
+        if (maxSalary) {
+            // Remove old listeners and add new ones
+            maxSalary.addEventListener('input', function(event) {
+                formatSalaryInput(event);
+                calculateCompensation();
+            });
+        }
+        
+        // Add input event for max equity
+        if (maxEquity) {
+            // Add direct event listener
+            maxEquity.addEventListener('input', calculateCompensation);
+        }
+        
+        // Add input event for max shares
+        if (maxShares) {
+            // Override the shares input handler
+            maxShares.addEventListener('input', fixedFormatSharesInput);
+        }
+        
+        // Force an initial calculation
+        calculateCompensation();
+    }, 100); // Short delay to ensure DOM is ready
+});
 // Initialize the application when the DOM is ready
 document.addEventListener('DOMContentLoaded', initializeApp);
