@@ -819,10 +819,10 @@ function createOfferEmailBody(details) {
 
 You've received a compensation offer from ${details.companyName} for the ${details.positionTitle} position as of ${details.offerDate} with the following parameters:
 
-- Maximum Salary: ${details.formattedMaxSalary}
+- Maximum Annual Salary: ${details.formattedMaxSalary}
 ${equityText}
 
-Please use the link below to choose your preferred combination of salary and equity:
+Please use the link below to choose your preferred combination of annual salary and equity:
 ${details.shareUrl}
 
 Once you have made your selection and submitted your response, formal contracts will be sent accordingly.
