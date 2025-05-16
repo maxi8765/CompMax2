@@ -1014,10 +1014,10 @@ function createAcceptanceEmailBody(senderName, employeeName, positionTitle, comp
 
 ${employeeName} has accepted the following compensation package for the ${positionTitle} position at ${companyName}:
 
-- Salary: ${formattedSalary}
+- Annual Salary: ${formattedSalary}
 - ${equityLabel}: ${formattedEquityValue}
 
-This is based on the offer dated ${offerDate} with maximum salary of ${formattedMaxSalary} and ${maxEquityLabel} of ${formattedMaxEquityValue}.
+This is based on the offer dated ${offerDate} with maximum annual salary of ${formattedMaxSalary} and ${maxEquityLabel} of ${formattedMaxEquityValue}.
 
 Please prepare the formal contracts accordingly.
 
