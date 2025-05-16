@@ -729,7 +729,6 @@ Link to Share: ${shareUrl}
 `;
     
     Elements['all-details'].value = allDetailsText;
-    Elements['all-details'].style.display = 'block';
 }
 
 /**
