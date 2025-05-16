@@ -785,6 +785,7 @@ function sendOfferEmail() {
     const templateParams = {
         to_name: details.employeeName,
         to_email: details.employeeEmail,
+        cc: details.employerEmail, // Add this line to CC the employer
         subject: subject,
         message: body,
         from_name: details.senderName,
