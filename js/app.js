@@ -1118,12 +1118,13 @@ function sendEmail(params, statusElement, buttonElement, successMessage, success
  * Copy share link to clipboard
  */
 function copyShareLink() {
-    // Instead of copying just the link, copy all the details
+    // Only copy the share link
+    Elements['all-details'].value = Elements['share-link'].textContent;
     copyTextToClipboard(
         Elements['all-details'], 
         Elements['copy-link'], 
-        'Copy All Details', 
-        'Copied All Details!'
+        'Copy Link to Clipboard', 
+        'Copied!'
     );
 }
 
